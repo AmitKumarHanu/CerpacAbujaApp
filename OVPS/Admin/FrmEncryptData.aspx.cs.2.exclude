@@ -1,0 +1,302 @@
+﻿#region Using directives
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.IO;
+using System.Globalization;
+using System.Text;
+using System.Runtime;
+using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using System.Security.Permissions;
+using System.Windows.Forms;
+
+//using Access = Microsoft.Office.Interop.Access;
+//using Microsoft.Office.Interop.Access.Dao;
+using System.IO;
+#endregion Using directives
+
+namespace EncryptedImagePrint
+{
+    public partial class FrmEncryptData : System.Web.UI.Page
+    {
+        #region "Declarations"
+        //Session Holder  for Persisting Data Class Object intialization
+        BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+        BusinessEntityLayer.BalPrintPaperVisa objbalencryptdata = null;
+        BaseLayer.General_function objgenbal = null;
+        #endregion
+
+
+        [DllImport(@"C:\Cerpac\OVPS\Bin\EncryptedPrintDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        [SecurityPermission(SecurityAction.Assert, Unrestricted = true)]
+        public static extern int ReturnEncryptedImage(byte[] FaceImage, int FaceImageSize, byte[] EncryptedImage, int EncryptedImageSize, string EncryptedData, int EncryptedDataSize, int PrintResolution = 600, int FaceImageType = 1);
+        [DllImport(@"C:\Cerpac\OVPS\Bin\EncryptedPrintDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        [SecurityPermission(SecurityAction.Assert, Unrestricted = true)]
+        public static extern int ReturnZintQRCode(byte[] QRCodeImage, int QRCodeImageSize, string EncryptedData, int EncryptedDataSize);
+        [DllImport(@"C:\Cerpac\OVPS\Bin\EncryptedPrintDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        public static extern int ReturnZintPDF417ToFile(string BarCodeFileName, int BarCodeFileNameSize, string EncodedData, int EncodedDataSize);
+        
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+            //if (objectSessionHolderPersistingData == null)
+            //{
+            //    Response.Redirect("../Login.aspx");
+
+            //}
+            if (Request.QueryString["cerpacno"] != "" || Request.QueryString["formno"] != "")
+            {
+                string cerpacno= Request.QueryString["cerpacno"].ToString();
+                string formno = Request.QueryString["formno"].ToString();
+                EncryptData(cerpacno,formno);
+ 
+            }
+        }
+
+        protected void EncryptData(string cno, string fno)
+        {
+            if (cno != "" || fno !="")
+            {
+               string logopath = System.Configuration.ConfigurationManager.AppSettings["logoimagepath"].ToString();
+               string mrzLine = LoadEncryptedData(cno);
+                //creation of Barcode
+                Bitmap BCBMP = new Bitmap(700, 80 , PixelFormat.Format24bppRgb);
+                System.Drawing.Graphics BCTest = Graphics.FromImage(BCBMP);
+                BCTest.Clear(Color.White);
+                BCTest.Flush();
+                System.IO.MemoryStream bcstream = new System.IO.MemoryStream();
+                BCBMP.Save(bcstream, System.Drawing.Imaging.ImageFormat.Bmp);
+                bcstream.Position = 0;
+                byte[] BCCodeImage = new byte[bcstream.Length];
+                bcstream.Read(BCCodeImage, 0, (int)bcstream.Length);
+                byte[] EncodedData = System.Text.Encoding.ASCII.GetBytes(mrzLine);
+                bcstream.Close();
+                BCTest.Dispose();
+                BCBMP.Dispose();
+                string barcodename = cno.ToString()+"BCCode.bmp";
+                string filenamebarcode = logopath.ToString() + @"\Barcode\"+ barcodename;
+                int bcerr = ReturnZintPDF417ToFile(filenamebarcode, 50, mrzLine, mrzLine.Length);
+               // Image1.ImageUrl = @"~/Images/Logo/Barcode/" + barcodename;
+                Response.Redirect("ProductionDetailCard.aspx?cerpacno="+cno.ToString().Trim()+"&formno="+fno.ToString().Trim()+"");              
+            }
+            else
+            {//-------------------------------------------com for barcode-------------------------------
+                Response.Write("<script>alert('Error')</script>");
+                //---------------------------------------------------end----------------------------------
+            }
+        }
+
+        
+
+        public string LoadEncryptedData(string a)
+        {
+            //Loading the encrypted data ;)
+            System.Text.StringBuilder mrzDATA = mrzDATA = new System.Text.StringBuilder();
+            
+            //========================chitresh==========================
+
+            string connectionstring = System.Configuration.ConfigurationManager.ConnectionStrings["connectionstring"].ConnectionString;
+            SqlConnection con1 = new SqlConnection(connectionstring);
+            con1.Open();
+            SqlCommand cmd = new SqlCommand("Select passport_no,forename,surname,nationality from people where cerpac_no ='" + a.ToString() + "' ", con1);
+
+
+            //============================end===============================
+
+            
+
+
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                
+                for (int i = 0; i < dr.FieldCount; i++)
+                {
+                    if (dr.GetName(i).ToString() == "forename")
+                    {
+                        mrzDATA.Append("mrzFirstName=");
+                        mrzDATA.Append(dr.GetValue(i).ToString());
+                        mrzDATA.Append(";");
+                    }
+                    else if (dr.GetName(i).ToString() == "surname")
+                    {
+                        mrzDATA.Append("mrzLastName=");
+                        mrzDATA.Append(dr.GetValue(i).ToString());
+                        mrzDATA.Append(";");
+                    }
+                    else if (dr.GetName(i).ToString() == "passport_no")
+                    {
+                        mrzDATA.Append("mrzNumber=");
+                        mrzDATA.Append(dr.GetValue(i).ToString());
+                        mrzDATA.Append(";");
+                    }
+                    else if (dr.GetName(i).ToString() == "nationality")
+                    {
+                        mrzDATA.Append("mrzDOB=");
+                       //DateTime DOB = Convert.ToDateTime(dr.GetValue(i).ToString());
+                        mrzDATA.Append(dr.GetValue(i).ToString());//DOB.ToString("yyMMdd"));
+                        mrzDATA.Append(";");
+                    }
+                }
+            }
+            dr.Close();
+            con1.Close();
+            return mrzDATA.ToString();
+        }
+
+        //public bool ConvertImage(byte[] bytInFile, int intToFormat, out byte[] bytOutFile)
+        //{
+        //    // has something been sent or not...
+        //    bytOutFile = null;
+        //    if (bytInFile.Length == 0)
+        //    {
+        //        // nope.. indicate failure
+        //        return false;
+        //    }
+
+        //    // Since webservices are stateless, and each webmethod call is
+        //    // indepedent of another, we must have a unique file name for
+        //    // processing each request.
+        //    string strFileName = Server.MapPath(".") + "\\" +
+        //    Guid.NewGuid().ToString();
+
+        //    // write the byte array sent to us as a file..
+        //    FileStream fsFile = null;
+        //    try
+        //    {
+        //        fsFile = File.Create(strFileName);
+        //    }
+        //    catch
+        //    {
+        //        // unable to create input file..
+        //        return false;
+        //    }
+
+        //    // write the byte array to it..
+        //    try
+        //    {
+        //        fsFile.Write(bytInFile, 0, bytInFile.Length);
+        //    }
+        //    catch
+        //    {
+        //        // unable to write to the file..
+        //        fsFile.Close();
+        //        return false;
+        //    }
+
+        //    // close the file..
+        //    fsFile.Close();
+
+        //    // load the image from the file..
+        //    System.Drawing.Image imgInFile = System.Drawing.Image.FromFile(strFileName);
+
+        //    // save to the format specified..
+        //    string strOutFileName = strFileName;
+
+        //    switch (intToFormat)
+        //    {
+        //        case 1: // BMP
+        //            strOutFileName = strOutFileName + ".BMP";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Bmp);
+        //            break;
+        //        case 2: // EXIF
+        //            strOutFileName = strOutFileName + ".EXIF";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Exif);
+        //            break;
+        //        case 3: // EMF
+        //            strOutFileName = strOutFileName + ".EMF";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Emf);
+        //            break;
+        //        case 4: // GIF
+        //            strOutFileName = strOutFileName + ".GIF";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Gif);
+        //            break;
+        //        case 5: // ICO
+        //            strOutFileName = strOutFileName + ".ICO";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Icon);
+        //            break;
+        //        case 6: // JPEG
+        //            strOutFileName = strOutFileName + ".JPG";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Jpeg);
+        //            break;
+        //        case 7: // PNG
+        //            strOutFileName = strOutFileName + ".PNG";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Png);
+        //            break;
+        //        case 8: // TIFF
+        //            strOutFileName = strOutFileName + ".TIFF";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Tiff);
+        //            break;
+        //        case 9: // WMF
+        //            strOutFileName = strOutFileName + ".WMF";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Wmf);
+        //            break;
+        //        default:
+        //            strOutFileName = strOutFileName + ".JPEG";
+        //            imgInFile.Save(strOutFileName, ImageFormat.Jpeg);
+        //            break;
+        //    }
+
+        //    // read the output file..
+        //    try
+        //    {
+        //        fsFile = File.Open(strOutFileName, FileMode.Open, FileAccess.Read);
+        //    }
+        //    catch
+        //    {
+        //        // unable to read output file..
+        //        return false;
+        //    }
+
+        //    // write to the output byte array..
+        //    try
+        //    {
+        //        // create array to read in image file..
+        //        int iSize = Convert.ToInt32(fsFile.Length);
+        //        bytOutFile = new byte[iSize];
+
+        //        // read the converted image...
+        //        fsFile.Read(bytOutFile, 0, iSize);
+        //    }
+        //    catch
+        //    {
+        //        // unable to write to the array..
+        //        fsFile.Close();
+        //        return false;
+        //    }
+
+        //    //close the file..
+        //    fsFile.Close();
+
+        //    // delete the created files..
+        //    try
+        //    {
+        //        imgInFile.Dispose();
+        //        File.Delete(strFileName);
+        //        File.Delete(strOutFileName);
+        //    }
+        //    catch
+        //    {
+        //        // do nothing..
+        //    }
+
+        //    return true;
+        //}
+    }
+}

@@ -1,0 +1,147 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+
+public partial class User_Default : System.Web.UI.Page
+{
+
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    Label LabelMessage = null;
+    BaseLayer.General_function objgenenral = null;
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (!IsPostBack)
+        {
+            if (objectSessionHolderPersistingData == null)
+            {
+                Response.Redirect("../Login.aspx");
+            }
+            string qualuser = ConfigurationManager.AppSettings["qualuser"].ToString();
+
+            Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+            string queryforzonename = "select b.ZoneName from UserZoneRelation as a, Zonemaster as b where a.ZoneCode=b.ZoneCode and a.UserId=" + objectSessionHolderPersistingData.User_ID + "";
+            objgenenral = new BaseLayer.General_function();
+            DataTable dt = new DataTable();
+      
+            ////////////////////////
+            //DataTable dt_n = new DataTable();
+            //string qry_n = "select * from te where cerpac_no is not null";
+            //dt_n = objgenenral.FetchData(qry_n);
+            //string txt = "";
+            //for (int i = 0; i < dt_n.Rows.Count; i++)
+            //{
+            //   // txt = txt + "update people set nationality='" + dt_n.Rows[i]["adjective"].ToString() + "' where nationality='" + dt_n.Rows[i]["country"].ToString() + "'";
+            //    txt = txt + "update people set cerpac_file_no='" + dt_n.Rows[i]["new_cerpac_file_no"].ToString() + "' where cerpac_no='" + dt_n.Rows[i]["cerpac_no"].ToString() + "'";
+            //    txt = txt + "       ";
+            //}
+            ///////////////////////
+
+            /**********************Auto Quality*****************************/
+            BusinessEntityLayer.BalProductionModule objProduction = new BusinessEntityLayer.BalProductionModule();
+            
+
+           // select cerpacno from (select cerpacno , DATEDIFF(DAY,ProducedOn,GETDATE()) as d from PeopleChild) a  where d > 20
+            try
+            {
+                string queryforAutoqual = "select cerpacno from (select cerpacno , DATEDIFF(DAY,ProducedOn,GETDATE()) as d, isqual from PeopleChild where VerifiedOn is not null) a  where d > 20 and (isqual<>1 or isqual is null)";
+                objgenenral = new BaseLayer.General_function();
+                dt = objgenenral.FetchData(queryforAutoqual);
+
+                for (int l = 0; l < dt.Rows.Count; l++)
+                {
+                    objProduction.UpdateQualityFlag(dt.Rows[l]["cerpacno"].ToString(), Convert.ToInt32(qualuser));
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            /**************************************************************/
+
+            SqlConnection Connection = new SqlConnection();
+            Connection.ConnectionString = ConfigurationManager.ConnectionStrings["NigeriaConnectionString"].ConnectionString;
+            Connection.Open();
+            SqlCommand cmd11 = new SqlCommand("Delete from compnew where regno in (select regno from compnew_rep)", Connection);
+            cmd11.ExecuteNonQuery();
+                   
+            
+            try
+            {
+                dt = objgenenral.FetchData(queryforzonename);
+                if (dt.Rows.Count > 0)
+                {
+                    LabelMessage.Text = "Zone" + " " + dt.Rows[0]["ZoneName"].ToString();
+                    LabelMessage.Visible = true;
+                    LabelMessage.BorderStyle = BorderStyle.None;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                dt = null;
+                objgenenral = null;
+            }
+
+            int intAppCompleteCount = 0;
+            BusinessEntityLayer.BalAdminForm ObjBalAdminForm = new BusinessEntityLayer.BalAdminForm();
+
+            HttpContext.Current.Trace.Warn("objectSessionHolderPersistingData.User_ID :: " + objectSessionHolderPersistingData.User_ID);
+            string strSqlStatement = "select COUNT(ApplicationId) as flagcompletecount from VisaApplicationInfo where flagcomplete='N' and AppliedByUserId = " + objectSessionHolderPersistingData.User_ID + "";
+            intAppCompleteCount = ObjBalAdminForm.GetCompleteAppCount(strSqlStatement);
+            HttpContext.Current.Trace.Warn("intAppCompleteCount :: " + intAppCompleteCount);
+
+            if (intAppCompleteCount == 1)
+            {
+                Response.Redirect("../Admin/FrmVisaStatus.aspx");
+            }
+
+            // Set Application message
+            if (Request.QueryString["Msg"] != null)
+            {
+                if (Request.QueryString["Msg"] == "Y")
+                {
+
+                    LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+                    LabelMessage.CssClass = "successmsg";
+                    LabelMessage.Text = " Visa Application submitted successfully and Confirmation Email has been sent to your mail id ";
+                    if (Request.QueryString["AppId"] != null)
+                    {
+                        string iAppId;
+                        iAppId = Request.QueryString["AppId"].ToString();
+                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "VisaApp", "<script>window.open('../Admin/FrmVisaApplicationSubmit.aspx?id=" + iAppId + "','_blank','menubar=no,status=yes,Width=1000,Height=600,top=50,left=50');</script>");
+                    }
+                }
+                else if (Request.QueryString["Msg"].ToUpper() == "UPDATE")
+                {
+
+                    LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+                    LabelMessage.CssClass = "successmsg";
+                    LabelMessage.Text = " Visa Application Updated successfully ";
+                    if (Request.QueryString["AppId"] != null)
+                    {
+                        string iAppId;
+                        iAppId = Request.QueryString["AppId"].ToString();
+                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "VisaApp", "<script>window.open('../Admin/FrmVisaApplicationSubmit.aspx?id=" + iAppId + "','_blank','menubar=no,status=yes,Width=1000,Height=600,top=50,left=50');</script>");
+                    }
+                }
+            }
+        }
+    }
+
+    
+}

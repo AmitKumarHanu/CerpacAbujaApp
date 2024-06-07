@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.Sql;
+using System.Threading;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.Text;
+using DataAccessLayer;
+using System.Xml;
+using System.IO;
+
+
+
+public partial class Admin_PassportDetails : System.Web.UI.Page
+{
+    BaseLayer.General_function ObjGenBal = null;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+       
+        //Request.QueryString["data"] = xmlText;
+        if (Request.QueryString["data"].ToString() != "")
+        {
+            string val = Request.QueryString["data"].ToString(); //Session["data"].ToString();
+            string[] val1 = val.Split(',');
+            if (val1[0].ToString() == "P")
+            {
+                lblDocName.Text = "PASSPORT";
+            }
+            else if (val1[0].ToString() == "V")
+            {
+                lblDocName.Text = "VISA";
+            }
+            else
+            {
+                lblDocName.Text = "UNKNOWN";
+            }
+           // lblIS.Text = val1[1].ToString();
+            lblFamily.Text = val1[2].ToString().ToUpper().Trim();
+            lblName.Text = val1[3].ToString().ToUpper().Trim();
+            lblDocNo.Text = val1[4].ToString().ToUpper();
+            lblNationality.Text = val1[5].ToString().ToUpper();
+            lblDOB.Text = val1[6].ToString().ToUpper();
+           
+            //Trace.Warn("date" + val1[6].ToString());
+            //if (val1[7].ToString() == "F")
+            //{
+            //    lblSex.Text = "Female";
+
+            //}
+            //else if (val1[7].ToString() == "M")
+            //{
+            //    lblSex.Text = "Male";
+            //}
+            //else
+            //{
+            //    lblSex.Text = "Unknown";
+            //}
+            lblSex.Text = val1[7].ToString();
+           lbldoe.Text = val1[8].ToString();
+          //  lblOptional.Text = val1[9].ToString();
+        }
+    }
+
+    public static string ConvertDate(string date, string pattern)
+    {
+
+        if (string.IsNullOrEmpty(date) == false && date != "")
+        {
+            DateTime date2;
+            if (DateTime.TryParseExact(date, pattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out date2))
+            {
+                return date2.ToString("MM/d/yy");
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+
+    protected void btnverify_Click(object sender, EventArgs e)
+    {
+        if (Request.QueryString["id"] != "")
+        {
+            string id = Request.QueryString["id"].ToString().Trim();
+            //string dateob = string.Format("{0:d-MM-yyyy}", lblDOB.Text).ToString();
+            //string dateoe = string.Format("{0:d-MM-yyyy}", lbldoe.Text).ToString();
+            //string dob = ConvertDate(dateob, "d-MM-yy");
+            //string doe = ConvertDate(dateoe, "d-MM-yy");
+
+            SqlParameter[] pram = new SqlParameter[4];
+
+            pram[0] = new SqlParameter("@FirstName", lblName.Text.ToString());
+            pram[1] = new SqlParameter("@LastName", lblFamily.Text.ToString());
+            pram[2] = new SqlParameter("@Nationality", lblNationality.Text.ToString());
+            pram[3] = new SqlParameter("@CerpacNo", id.ToString());
+            
+            SqlHelper.ExecuteNonQuery(AppSetting.ActivateConnection, CommandType.StoredProcedure, "USP_CERPAC_MRZ_UPDATE", pram);
+            Response.Write("<script>window.close()</script>");
+        }
+        
+        
+    }
+}

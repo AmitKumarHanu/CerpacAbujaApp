@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using DataAccessLayer;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing.Printing;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
+using System.Drawing;
+using System.Text;
+using System.IO;
+using System.Globalization;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+
+public partial class Admin_repCardPro : System.Web.UI.Page
+{
+
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function objgenenral = null;
+    BaseLayer.General_function ObjGeneral = null;
+    protected BaseLayer.General_function ObjGenBal = null;
+    protected DataSet objDs = new DataSet();
+    protected DataSet objDs_wasted = new DataSet();
+
+
+
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        objgenenral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        string query = "";
+        query = "SELECT TOP (100) PERCENT ISNULL(dbo.vw_rep_cnt1.Month, dbo.vw_rep_cnt.Month) AS Month_S, ISNULL(dbo.vw_rep_cnt1.Year, dbo.vw_rep_cnt.Year) AS Year_S,"+
+                " dbo.vw_rep_cnt1.AO AS AO_S, dbo.vw_rep_cnt1.CR AS CR_S, ISNULL(dbo.vw_rep_cnt.Total, 0) AS Total, ISNULL(dbo.vw_rep_cnt.ZoneName, '') "+
+                " AS ZoneName, ISNULL(dbo.vw_rep_cnt.AO, 0) AS AO, ISNULL(dbo.vw_rep_cnt.AR, 0) AS AR, ISNULL(dbo.vw_rep_cnt.CR, 0) AS CR, dbo.vw_rep_cnt1.mon "+
+                " FROM dbo.vw_rep_cnt FULL OUTER JOIN   dbo.vw_rep_cnt1 ON dbo.vw_rep_cnt.Month = dbo.vw_rep_cnt1.Month AND dbo.vw_rep_cnt.Year = dbo.vw_rep_cnt1.Year "+
+                " ORDER BY Year_S, dbo.vw_rep_cnt1.mon";
+
+        dt = objgenenral.FetchData(query);
+        objDs = SqlHelper.ExecuteDataset(AppSetting.ActivateConnection, CommandType.Text, query);
+
+        DataTable dt_wasted = new DataTable();
+        string qry_wasted = " SELECT SUM(dbo.UserStickerRelation.StickerWastedYN) AS WasteCards, CONVERT(varchar(3), dbo.PeopleChild.ProducedOn, 100) AS Month, "+
+                            " YEAR(dbo.PeopleChild.ProducedOn) AS Year, dbo.Zonemaster.ZoneName FROM (SELECT cerpac_no, cerpac_file_no FROM dbo.People) AS a INNER JOIN "+
+                            " dbo.UserStickerRelation ON a.cerpac_no = dbo.UserStickerRelation.StickerIssuedToApplicationID INNER JOIN dbo.PeopleChild ON a.cerpac_file_no = dbo.PeopleChild.FORMNO AND a.cerpac_no = dbo.PeopleChild.CerpacNo INNER JOIN "+
+                            " dbo.UserZoneRelation ON dbo.PeopleChild.VerifiedBy = dbo.UserZoneRelation.UserId INNER JOIN dbo.Zonemaster ON dbo.UserZoneRelation.ZoneCode = dbo.Zonemaster.ZoneCode "+ 
+                            " WHERE (dbo.UserStickerRelation.StickerWastedYN = 1) GROUP BY CONVERT(varchar(3), dbo.PeopleChild.ProducedOn, 100), YEAR(dbo.PeopleChild.ProducedOn), dbo.Zonemaster.ZoneName";
+        dt_wasted = objgenenral.FetchData(qry_wasted);
+        objDs_wasted = SqlHelper.ExecuteDataset(AppSetting.ActivateConnection, CommandType.Text, qry_wasted);
+
+       // return dt;
+    }
+
+
+    protected void btn_excel_Click(object sender, ImageClickEventArgs e)
+    {
+
+        string html = HdnValue.Value;
+        ExportToExcel(ref html, "MyReport");
+        // ClientScript.RegisterStartupScript(this.GetType(), "GetData", "a=GetValue();alert(a)", true);
+        // Data = a;//a is Javascript Variable
+
+        // string html = "";
+        //var sb = new StringBuilder();
+        //divmain.RenderControl(new HtmlTextWriter(new System.IO.StringWriter(sb)));
+
+        //string s = sb.ToString();
+
+
+        //Response.Clear();
+        //Response.AddHeader("content-disposition", "attachment;filename=FileName.xls");
+        //Response.Charset = "";
+        //Response.ContentType = "application/vnd.xls";
+        //System.IO.StringWriter stringWrite = new System.IO.StringWriter();
+        //System.Web.UI.HtmlTextWriter htmlWrite = new HtmlTextWriter(stringWrite);
+        //DivReport.RenderControl(htmlWrite);
+        //Response.Write(stringWrite.ToString());
+        //Response.End();  
+    }
+
+    public void ExportToExcel(ref string html, string fileName)
+    {
+
+        html = html.Replace("&gt;", ">");
+        html = html.Replace("&lt;", "<");
+        HttpContext.Current.Response.ClearContent();
+        HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename=" + fileName + "_" + DateTime.Now.ToString("M_dd_yyyy_H_M_s") + ".xls");
+        HttpContext.Current.Response.ContentType = "application/xls";
+        HttpContext.Current.Response.Write(html);
+        HttpContext.Current.Response.End();
+
+
+        /***********
+        Response.ContentType = "application/pdf";
+        Response.AddHeader("content-disposition", "attachment;filename=Panel.pdf");
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        StringWriter sw = new StringWriter();
+        HtmlTextWriter hw = new HtmlTextWriter(sw);
+        //DivReport.RenderControl(hw);
+
+        //hw.ToString() = html;
+        StringReader sr = new StringReader(sw.ToString());
+        Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+        HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+        PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+        pdfDoc.Open();
+        htmlparser.Parse(sr);
+        pdfDoc.Close();
+        Response.Write(pdfDoc);
+        Response.End();
+**************/
+
+    }
+}

@@ -1,0 +1,140 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using Microsoft.Reporting.WebForms;
+
+public partial class Admin_From_To_Date_Report : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function ObjGeneral = null;
+    Label LabelMessage = null;
+    public static DataTable dt = new DataTable();
+    #endregion
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            tblReport.Visible = false;
+        }
+        AD.HRef = "javascript:NewCal('" + txtVisaDate.ClientID + "','DDMMMYYYY')";
+        DD.HRef = "javascript:NewCal('" + txtVisaToDate.ClientID + "','DDMMMYYYY')";
+    }
+    protected void btnGenReport_Click(object sender, EventArgs e)
+    {
+        tblFilter.Visible = false;
+        tblReport.Visible = true;
+
+        GenerateReport();
+
+    }
+
+    public void GenerateReport()
+    {
+
+        string strVisaDate = txtVisaDate.Value;
+        string strVisaToDate = txtVisaToDate.Value;
+
+        ObjGeneral = new BaseLayer.General_function();
+
+        string query = @" 
+                          select ROW_NUMBER() over(order by PaymentReceiptNo) as Sl_No, va.PaymentReceiptNo as RNo,
+                             ('T' + va.PassportNumber + Convert(varchar(3), va.AppliedByUserId)) as TranId,
+                             va.PassportNumber,va.PassportType, (va.FirstName + ' ' + va.MiddleName + ' ' + va.LastName) as ApplicantName,
+                             convert(varchar(11),va.DateOfBirth,113)as DateOfBirth,
+                            (select CountryName from CountryMaster where CountryCode = va.Nationality) as Nationality,
+                            'Sex' = case when va.Sex = 'M' then 'Male' else 'Female' end, 
+                            (select VisaTypeName  from VisaTypeMaster where VisaTypeCode = va.VisaTypeCode) as VisaType, 
+                            'EntryType' = case when va.EntryType = 'S' then 'Single' end,
+                            'DurationType' = case when va.DurationType = 'D' then 'Day' when va.DurationType = 'M' then 'Month' 
+                              when va.DurationType = 'Y' then 'Year' else va.DurationType end,
+                            va.Duration,va.RateCurrency,va.Rate as Ammount,
+                            convert(varchar(11),va.VISAVALIDFROM,113) as VISAVALIDFROM,convert(varchar(11),va.VISAVALIDTHRU,113) as VISAVALIDTHRU,
+                            convert(varchar(11),va.ModifiedOn,113)as ModifiedOn,(case when va.PaymentMadeYN=1 then 'Cash' else '' end) as PaymentMode,va.PlaceOfIssue as IssuingPlace
+                            ,( select username from UserMaster where UserID= va.ModifiedBy ) as Modifiedby from VisaApplicationInfo as va 
+                            Where  PaymentMadeYN=1";
+
+        if (strVisaDate != "" && strVisaDate != null)
+        {
+
+            DateTime VisaDate = Convert.ToDateTime(strVisaDate);
+            query = query + "  where day(va.ModifiedOn) = '" + VisaDate.Day + "' and MONTH(va.ModifiedOn) = '" + VisaDate.Month + "' and YEAR(va.ModifiedOn) = '" + VisaDate.Year + "'";
+        }
+        if (strVisaToDate != "" && strVisaToDate != null)
+        {
+
+            DateTime VisaToDate = Convert.ToDateTime(strVisaToDate);
+            query = query + "  where day(va.ModifiedOn) = '" + VisaToDate.Day + "' and MONTH(va.ModifiedOn) = '" + VisaToDate.Month + "' and YEAR(va.ModifiedOn) = '" + VisaToDate.Year + "'";
+        }
+
+        dt = ObjGeneral.FetchData(query);
+        /*---------------------------*/
+        if (dt.Rows.Count > 0 && dt != null)
+        {
+
+            ReportParameter[] Reportparam = new ReportParameter[2];
+            if (dt.Rows.Count > 0)
+            {
+
+                Reportparam[0] = new ReportParameter("VD", strVisaDate, true);
+                Reportparam[1] = new ReportParameter("TD", strVisaToDate, true);
+            }
+
+            string bindDs_name = "From_To_DateReport_From_To_DateReport";
+
+            ReportViewer1.LocalReport.EnableHyperlinks = true;
+            ReportViewer1.Style.Add("margin-bottom", "30px");
+            ReportViewer1.LocalReport.ReportPath = "VisaReports/From_To_DateReport.rdlc";
+            ReportViewer1.LocalReport.DataSources.Clear();
+            ReportViewer1.LocalReport.DataSources.Add(new
+            ReportDataSource(bindDs_name.Trim(), dt));
+            ReportViewer1.LocalReport.Refresh();
+            this.ReportViewer1.LocalReport.SetParameters(Reportparam);
+            ReportViewer1.ServerReport.Refresh();
+        }
+        else
+        {
+            // No record found?
+        }
+    }
+    protected void btnBack_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("From_To_DateReport.aspx");
+    }
+    protected void btnExcel_Click(object sender, EventArgs e)
+    {
+        ExportToExcel(dt);
+    }
+
+    private void ExportToExcel(DataTable dt)
+    {
+        if (dt.Rows.Count > 0)
+        {
+            string filename = "From_To_DateReport.xls";
+            System.IO.StringWriter tw = new System.IO.StringWriter();
+            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(tw);
+            DataGrid dgGrid = new DataGrid();
+            dgGrid.DataSource = dt;
+            dgGrid.DataBind();
+
+            //Get the HTML for the control.
+            dgGrid.RenderControl(hw);
+            //Write the HTML back to the browser.
+            //Response.ContentType = application/vnd.ms-excel;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + filename + "");
+            this.EnableViewState = false;
+            Response.Write(tw.ToString());
+            Response.End();
+        }
+    }
+}

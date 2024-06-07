@@ -1,0 +1,213 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using DataAccessLayer;
+using System.Data;
+using System.Data.SqlClient;
+using Microsoft.Reporting.WebForms;
+using System.Drawing.Printing;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
+using System.Drawing;
+using System.Text;
+using System.IO;
+
+using System.Globalization;
+
+public partial class Admin_BankSaleReports : System.Web.UI.Page
+{
+
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function objgenenral = null;
+    BaseLayer.General_function ObjGeneral = null;
+    protected BaseLayer.General_function ObjGenBal = null;
+
+    #endregion
+
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+
+        //LocalReport report = new LocalReport();
+        //report.ReportPath = @"Admin/Reports/ProductionRep.rdlc";
+        //report.DataSources.Add(new ReportDataSource("DataSet1", LoadData()));
+        if (!IsPostBack)
+        {
+            ReportDataSource datasource = new ReportDataSource("DataSet1", FormLoadData());
+            ReportViewer1.LocalReport.DataSources.Clear();
+            ReportViewer1.LocalReport.DataSources.Add(datasource);
+            ReportViewer1.LocalReport.Refresh();
+            Nationality();
+            //Zone();
+        }
+    }
+
+
+    private DataTable LoadData()
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        string query = "SELECT * from ProdReportCerpacCard ";
+        dt = ObjGeneral.FetchData(query);
+
+       // DataSet dataSet = new DataSet();
+       // dataSet.ReadXml(@"..\..\data.xml");
+        return dt;
+    }
+
+    private DataTable FormLoadData()
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        string query = "SELECT * from ProdReportCerpacCard where 1<>1 ";
+        dt = ObjGeneral.FetchData(query);
+
+        // DataSet dataSet = new DataSet();
+        // dataSet.ReadXml(@"..\..\data.xml");
+        return dt;
+    }
+    protected void btn_generate_report_Click(object sender, EventArgs e)
+    {
+
+   
+
+        //LoadData();
+        
+
+        ReportDataSource datasource = new ReportDataSource("DataSet1", CerpacDate());
+        ReportViewer1.LocalReport.DataSources.Clear();
+        ReportViewer1.LocalReport.DataSources.Add(datasource);
+        ReportViewer1.LocalReport.Refresh();
+
+       
+
+    }
+    private DataTable CerpacDate()
+    {
+       
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        string query = "SELECT * from ProdReportCerpacCard Where " ;
+        string condition = "";
+        if (TxtFromDate.Value != "" && txtToDate.Value != "")
+        {
+            CallDate();
+            if (condition != "")
+                condition = condition + " And ";
+
+            condition = condition + "createdon between '" + ConvertDate(TxtFromDate.Value, "d-MM-yyyy") + "' And '" + ConvertDate(txtToDate.Value, "d-MM-yyyy") + "'";
+        }
+       if (txtCerpacNo.Value != "")
+       {
+           if (condition != "")
+               condition = condition + " And ";
+
+
+           condition = condition + "cerpac_no='" + txtCerpacNo.Value + "'";
+       
+       }
+
+       if (ddlNationality.SelectedIndex >=1 )
+       {
+           if (condition != "")
+               condition = condition + " And ";
+
+
+           condition = condition + "nationality ='" + ddlNationality.SelectedItem.Text + "'";
+       
+       }
+
+       //if ( ddlZone.SelectedIndex >= 1 )
+       //{
+       //    if (condition != "")
+       //        condition = condition + "And ";
+
+
+       //    condition = condition + "Zone ='" +  ddlZone.SelectedItem.Text + "'";
+
+       //}
+
+       if ( txt_amount.Value != "")
+       {
+           if (condition != "")
+               condition = condition + "And ";
+
+
+           condition = condition + "Amount ='" +  Convert.ToDecimal( txt_amount.Value) + "'";
+
+       }
+
+       if (TxtFromDate.Value != "" || TxtFromDate.Value != "" || txtCerpacNo.Value != "" || txt_amount.Value != "" || ddlNationality.SelectedIndex >=1 )
+       {
+           query = query + condition;
+           dt = ObjGeneral.FetchData(query);
+       }
+       return dt;
+    }
+
+
+    public void CallDate()
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        string query = "Select DATEDIFF(d, '" + ConvertDate(TxtFromDate.Value, "d-MM-yyyy") + "','" + ConvertDate(txtToDate.Value, "d-MM-yyyy") + "')";
+        //  "SELECT * from ProdReportCerpacCard";
+        dt = ObjGeneral.FetchData(query);
+        if (TxtFromDate.Value != "" && txtToDate.Value != "")
+        {
+            if (Convert.ToInt32(dt.Rows[0].ItemArray[0].ToString()) < 0)
+            {
+                Response.Write("<script language=javascript>alert('To-Date must be greater than From-Date')</script>");
+                return;
+            }
+        }
+    }
+
+    public void Nationality()
+    {
+  
+       BaseLayer.General_function  ObjItemCode = new BaseLayer.General_function();
+       string NationalityQuery = "SELECT Distinct(Nationality) FROM ProdReportCerpacCard ";
+        ObjItemCode.Fill_DDL(ddlNationality, NationalityQuery, "Nationality", "Nationality");
+    }
+    //public void Zone()
+    //{
+
+    //    BaseLayer.General_function ObjItemCode = new BaseLayer.General_function();
+    //    string ZoneQuery = "SELECT Distinct(Zone) FROM ProdReportCerpacCard ";
+    //    ObjItemCode.Fill_DDL( ddlZone, ZoneQuery, "Zone", "Zone");
+    //}
+    public static string ConvertDate(string date, string pattern)
+    {
+
+        if (string.IsNullOrEmpty(date) == false && date != "")
+        {
+            DateTime date2;
+            if (DateTime.TryParseExact(date, pattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out date2))
+            {
+                return date2.ToString("MM/dd/yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+}

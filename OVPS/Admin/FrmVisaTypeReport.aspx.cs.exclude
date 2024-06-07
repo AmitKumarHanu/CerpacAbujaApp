@@ -1,0 +1,318 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using Microsoft.Reporting.WebForms;
+using System.Globalization;
+
+
+public partial class Admin_FrmVisaTypeReport : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function ObjGeneral = null;
+    Label LabelMessage = null;
+    public static DataTable dt = new DataTable();
+
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+
+        if (!IsPostBack)
+        {
+            tblReport.Visible = false;
+            Binddropdown();
+        }
+        AD.HRef = "javascript:NewCal('" + txtfrmDate.ClientID + "','DDMMMYYYY','','',20,20)";
+        DD.HRef = "javascript:NewCal('" + txtVisaToDate.ClientID + "','DDMMMYYYY','','',20,20)";
+    }
+
+    protected void btnGenReport_Click(object sender, EventArgs e)
+    {
+        if (radsummarized.Checked == true)
+        {
+            GenerateReport();
+        }
+        else if (raddetail.Checked == true)
+        {
+            GenerateDetailReport();
+        }
+        else
+        {
+            lblerror.Text = "Please select the type of report you want";
+        }
+
+    }
+
+    public void Binddropdown()
+    {
+        string VisaTypeQuery ="select distinct(isnull(company,'Others'))as companyname from Issue";
+        ObjGeneral = new BaseLayer.General_function();
+        ObjGeneral.Fill_DDL(ddlVisaType, VisaTypeQuery, "companyname", "companyname");
+        ddlVisaType.Items.Insert(0, new ListItem("ALL"));
+        ddlVisaType.Items.RemoveAt(1);
+        string NationalityQuery = "  select distinct(ISNULL(nationality,'Others')) as nationality from Issue";
+        ObjGeneral = new BaseLayer.General_function();
+        ObjGeneral.Fill_DDL(ddlnationality, NationalityQuery, "nationality", "nationality");
+        ddlnationality.Items.Insert(0, new ListItem("ALL"));
+        ddlnationality.Items.RemoveAt(1);
+        string BorderQuery = "select ZoneName,ZoneCode from ZoneMaster order by ZoneName";
+        ObjGeneral = new BaseLayer.General_function();
+        ObjGeneral.Fill_DDL(ddlborder, BorderQuery, "ZoneName", "ZoneCode");
+        ddlborder.Items.Insert(0, new ListItem("ALL", "ALL"));
+        ddlborder.Items.RemoveAt(1);
+        
+    }
+
+    public void GenerateReport()
+    {
+        LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string strvisatype = ddlVisaType.SelectedItem.Value;
+        string strVisaTypeName = ddlVisaType.SelectedItem.Text;
+        //string strVisaDate = txtVisaDate.Text;
+        string strFromVisaDate = txtfrmDate.Text;
+        string strVisaToDate = txtVisaToDate.Text;
+        string strNationality = ddlnationality.SelectedItem.Value;
+
+        string strNationalityName=ddlnationality.SelectedItem.Text;
+        string strBorder = ddlborder.SelectedItem.Value;
+        string strBorderName = ddlborder.SelectedItem.Text;
+        //string strAgent = txtagent.Text;
+        
+
+
+        //////////////////////////////////////
+        ObjGeneral = new BaseLayer.General_function();
+        //DataTable dt = new DataTable();
+        string query = "";
+        if (strBorderName != "ALL")
+        {
+            query = @" select a.nationality,count(a.nationality) as 'No of Cerpac' from Issue as a, UserZoneRelation as b where cerpac_no is not null and a.issued_by_user_id = b.UserId";
+            query = query + " and  b.ZoneCode='" + strBorder + "' ";
+        }
+        else
+        {
+            query = "select nationality,count(nationality) as 'No of Cerpac' from Issue where cerpac_no is not null ";
+        }
+        if (strvisatype != "ALL")
+        {
+            query = query + " and company  ='" + strvisatype + "'";
+        }
+        if (strNationality != "ALL")
+        {
+            query = query + " and nationality ='" + strNationality + "'";
+        }
+
+
+
+        if ((strFromVisaDate != "" && strFromVisaDate != null) && (strVisaToDate == "" || strVisaToDate == null))
+        {
+
+            string VisaDate = ConvertDate(strFromVisaDate.ToString(), "d-MM-yyyy");
+            string currentDate = ConvertDate(DateTime.Today.ToString(), "d-MM-yyyy");
+            strVisaToDate = currentDate.ToString();
+            query = query + " AND cerpac_receipt_date between '" + VisaDate + "' and GETDATE()";
+        }
+        if (strFromVisaDate != "" && strFromVisaDate != null && strVisaToDate != "" && strVisaToDate != null)
+        {
+            string VisaFromDate = ConvertDate(strFromVisaDate.ToString(), "d-MM-yyyy");
+            string VisaToDate = ConvertDate(strVisaToDate.ToString(), "d-MM-yyyy");
+            //DateTime currentDate = DateTime.Today;
+            query = query + " AND cerpac_receipt_date between '" + VisaFromDate + "' and '" + VisaToDate + "'";
+        }
+
+        if ((strFromVisaDate == "" || strFromVisaDate == null) && (strVisaToDate != "" && strVisaToDate != null))
+        {
+            tblFilter.Visible = true;
+            tblReport.Visible = false;
+            lblerror.Visible = true;
+            lblerror.Text = "Please select Visa From Date !!";
+            txtfrmDate.Focus();
+            return;
+        }
+
+        query = query + " group by nationality";
+        dt = ObjGeneral.FetchData(query);
+        if (dt.Rows.Count > 0)
+        {
+            tblFilter.Visible = false;
+            tblReport.Visible = false;
+            ExportToExcel(dt);
+            
+        }
+        else
+        {
+            lblerror.Visible = true;
+        }
+        /*---------------------------*/
+        
+    }
+
+    public void GenerateDetailReport()
+    {
+        LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string strvisatype = ddlVisaType.SelectedItem.Value;
+        string strVisaTypeName = ddlVisaType.SelectedItem.Text;
+        //string strVisaDate = txtVisaDate.Text;
+        string strFromVisaDate = txtfrmDate.Text;
+        string strVisaToDate = txtVisaToDate.Text;
+        string strNationality = ddlnationality.SelectedItem.Value;
+
+        string strNationalityName = ddlnationality.SelectedItem.Text;
+        string strBorder = ddlborder.SelectedItem.Value;
+        string strBorderName = ddlborder.SelectedItem.Text;
+        //string strAgent = txtagent.Text;
+
+
+
+        //////////////////////////////////////
+        ObjGeneral = new BaseLayer.General_function();
+        //DataTable dt = new DataTable();
+        //string query = @" select (a.forename+''+a.surname)as Name,a.date_of_birth,a.passport_no,a.cerpac_no,a.nationality,a.company from Issue as a, UserZoneRelation as b where cerpac_no is not null ";
+        string query = "";
+        if (strBorderName != "ALL")
+        {
+            query = @" select (a.forename+''+a.surname)as Name,a.date_of_birth,a.passport_no,a.cerpac_no,a.nationality,a.company from Issue as a, UserZoneRelation as b where cerpac_no is not null and a.issued_by_user_id = b.UserId";
+            query = query + " and  b.ZoneCode='" + strBorder + "' ";
+        }
+        else
+        {
+            query = "select (a.forename+''+a.surname)as Name,a.date_of_birth,a.passport_no,a.cerpac_no,a.nationality,a.company from Issue as a, UserZoneRelation as b where cerpac_no is not null ";
+        }
+        if (strvisatype != "ALL")
+        {
+            query = query + " and company  ='" + strvisatype + "'";
+        }
+        if (strNationality != "ALL")
+        {
+            query = query + " and nationality ='" + strNationality + "'";
+        }
+        if (strBorderName != "ALL")
+        {
+            query = query + " and a.issued_by_user_id = b.UserId and b.ZoneCode='" + strBorder + "' ";
+        }
+
+
+
+        if ((strFromVisaDate != "" && strFromVisaDate != null) && (strVisaToDate == "" || strVisaToDate == null))
+        {
+
+            string VisaDate = ConvertDate(strFromVisaDate.ToString(), "d-MM-yyyy");
+            string currentDate = ConvertDate(DateTime.Today.ToString(), "d-MM-yyyy");
+            strVisaToDate = currentDate.ToString();
+            query = query + " AND cerpac_receipt_date between '" + VisaDate + "' and GETDATE()";
+        }
+        if (strFromVisaDate != "" && strFromVisaDate != null && strVisaToDate != "" && strVisaToDate != null)
+        {
+            string VisaFromDate = ConvertDate(strFromVisaDate.ToString(), "d-MM-yyyy");
+            string VisaToDate = ConvertDate(strVisaToDate.ToString(), "d-MM-yyyy");
+            //DateTime currentDate = DateTime.Today;
+            query = query + " AND cerpac_receipt_date between '" + VisaFromDate + "' and '" + VisaToDate + "'";
+        }
+
+        if ((strFromVisaDate == "" || strFromVisaDate == null) && (strVisaToDate != "" && strVisaToDate != null))
+        {
+            tblFilter.Visible = true;
+            tblReport.Visible = false;
+            lblerror.Visible = true;
+            lblerror.Text = "Please select Visa From Date !!";
+            txtfrmDate.Focus();
+            return;
+        }
+
+        
+        dt = ObjGeneral.FetchData(query);
+        if (dt.Rows.Count > 0)
+        {
+            tblFilter.Visible = false;
+            tblReport.Visible = false;
+            ExportToExcel(dt);
+            dt = null;
+
+        }
+        else
+        {
+            lblerror.Visible = true;
+        }
+        /*---------------------------*/
+
+    }
+ public static string ConvertDate(string date, string pattern)
+    {
+
+        if (string.IsNullOrEmpty(date) == false && date != "")
+        {
+            DateTime date2;
+            if (DateTime.TryParseExact(date, pattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out date2))
+            {
+                return date2.ToString("MM/d/yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    protected void btnBack_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("FrmVisaTypeReport.aspx");
+    }
+
+    protected void btnExcel_Click(object sender, EventArgs e)
+    {
+        LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        if (dt.Rows.Count > 0)
+        {
+            ExportToExcel(dt);
+        }
+        else
+        {
+            LabelMessage.Text = "No Data found with this combination";
+        }
+    }
+
+    private void ExportToExcel(DataTable dt)
+    {
+        if (dt.Rows.Count > 0)
+        {
+            string filename = "VisaTypeReport.xls";
+            System.IO.StringWriter tw = new System.IO.StringWriter();
+            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(tw);
+            DataGrid dgGrid = new DataGrid();
+            dgGrid.DataSource = dt;
+            dgGrid.DataBind();
+
+            //Get the HTML for the control.
+            dgGrid.RenderControl(hw);
+            //Write the HTML back to the browser.
+            //Response.ContentType = application/vnd.ms-excel;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + filename + "");
+            this.EnableViewState = false;
+            Response.Write(tw.ToString());
+            Response.End();
+        }
+    }
+}
+
+

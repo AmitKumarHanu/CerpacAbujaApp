@@ -1,0 +1,319 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage/MasterPageUser.master" AutoEventWireup="true" CodeFile="BankSaleReports.aspx.cs" Inherits="Admin_BankSaleReports" %>
+
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <link rel="stylesheet" type="text/css" media="all" href="Date/jsDatePick_ltr.min.css" />
+
+<script type="text/javascript" src="Date/jsDatePick.min.1.3.js"></script>
+<script type="text/javascript" src="../JS/popcalender.js"></script>
+
+<script type="text/javascript">
+    window.onload = function () {
+        new JsDatePick({
+            useMode: 2,
+            target: "inputField",
+            
+            dateFormat: "%d-%M-%Y"
+            /*selectedDate:{				This is an example of what the full configuration offers.
+            day:5,						For full documentation about these settings please see the full version of the code.
+            month:9,
+            year:2006
+            },
+            yearsRange:[1978,2020],
+            limitToToday:false,
+            cellColorScheme:"beige",
+            dateFormat:"%m-%d-%Y",
+            imgPath:"img/",
+            weekStartDay:1*/
+        });
+    };
+    function dtval(d, e) {
+        var pK = e ? e.which : window.event.keyCode;
+        if (pK == 8) { d.value = substr(0, d.value.length - 1); return; }
+        var dt = d.value;
+        var da = dt.split('-');
+        for (var a = 0; a < da.length; a++) { if (da[a] != +da[a]) da[a] = da[a].substr(0, da[a].length - 1); }
+        if (da[0] > 31) { da[1] = da[0].substr(da[0].length - 1, 1); da[0] = '0' + da[0].substr(0, da[0].length - 1); }
+        if (da[1] > 12) { da[2] = da[1].substr(da[1].length - 1, 1); da[1] = '0' + da[1].substr(0, da[1].length - 1); }
+        if (da[2] > 9999) da[1] = da[2].substr(0, da[2].length - 1);
+        dt = da.join('-');
+        if (dt.length == 2 || dt.length == 5) dt += '-';
+        d.value = dt;
+    }
+
+    function NumNSign(t) {
+
+        var cod = "+-0123456789";
+        var v = cod
+        var w = "";
+        for (var i = 0; i < t.value.length; i++) {
+            x = t.value.charAt(i);
+            if (v.indexOf(x, 0) != -1)
+                w += x;
+        }
+        t.value = w;
+    }
+
+    function AlfaNumeric(t) {
+        var cod = " ";
+        var v = cod
+        var w = "";
+        if (event.keyCode >= 37 && event.keyCode <= 40) {
+        }
+        else {
+            for (var i = 0; i < t.value.length; i++) {
+                x = t.value.charAt(i);
+                if (v.indexOf(x, 0) == -1)
+                    w += x;
+            }
+            t.value = w;
+        }
+    }
+
+    function validateFromDate() {
+
+        var currVal = document.getElementById("<%= TxtFromDate.ClientID%>").value;
+        if (currVal == "") {
+            alert("Please enter From Date ");
+            return false;
+        }
+
+        //Declare Regex 
+        var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
+        var dtArray = currVal.match(rxDatePattern); // is format OK?
+
+        if (dtArray == null) {
+            alert("Please enter valid From Date ");
+            return false;
+        }
+
+        var today = new Date();
+
+        //Checks for mm/dd/yyyy format.
+        dtDay = dtArray[1];
+        dtMonth = dtArray[3];
+        dtYear = dtArray[5]
+
+        if (process(currVal) > today) {
+            //msg += "Date of Issue should be less than today's date \n";
+            alert("Form date should be less than today's date");
+            //objdoi.value = "";
+            //blnFalg = false;
+            //blnDoiFalg = false;
+            //objdoi.value = "";
+            currVal = "";
+            return false;
+        }
+
+
+        if (dtMonth < 1 || dtMonth > 12) {
+            alert("Please enter valid month for From Date ");
+            return false;
+        }
+        else if (dtDay < 1 || dtDay > 31) {
+            alert("Please enter valid day for  From Date ");
+            return false;
+        }
+        else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31) {
+            alert("Please enter valid day for date  ");
+            return false;
+        }
+        else if (dtYear == 0 || dtYear < minYear || dtYear > today) {
+            alert("Please enter a valid 4 digit year between " + minYear + " and " + today);
+            return false;
+        }
+        else if (dtMonth == 2) {
+            var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+            if (dtDay > 29 || (dtDay == 29 && !isleap)) {
+                alert("Please enter valid From date ");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function process(date) {
+        var parts = date.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+
+    function validateToDate() {
+
+        var currVal = document.getElementById("<%= txtToDate.ClientID%>").value;
+        if (currVal == "") {
+            alert("Please enter To Date ");
+            return false;
+        }
+
+        //Declare Regex 
+        var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
+        var dtArray = currVal.match(rxDatePattern); // is format OK?
+
+        if (dtArray == null) {
+            alert("Please enter valid To Date ");
+            return false;
+        }
+
+        var today = new Date();
+
+        //Checks for mm/dd/yyyy format.
+        dtDay = dtArray[1];
+        dtMonth = dtArray[3];
+        dtYear = dtArray[5]
+
+        if (process(currVal) => today) {
+            //msg += "Date of Issue should be less than today's date \n";
+            alert("To date should be less or equal than today's date");
+            //objdoi.value = "";
+            //blnFalg = false;
+            //blnDoiFalg = false;
+            //objdoi.value = "";
+            currVal = "";
+            return false;
+        }
+
+
+        if (dtMonth < 1 || dtMonth > 12) {
+            alert("Please enter valid month for To Date ");
+            return false;
+        }
+        else if (dtDay < 1 || dtDay > 31) {
+            alert("Please enter valid day for  To Date ");
+            return false;
+        }
+        else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31) {
+            alert("Please enter valid day for date  ");
+            return false;
+        }
+        else if (dtYear == 0 || dtYear < minYear || dtYear > today) {
+            alert("Please enter a valid 4 digit year between " + minYear + " and " + today);
+            return false;
+        }
+        else if (dtMonth == 2) {
+            var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+            if (dtDay > 29 || (dtDay == 29 && !isleap)) {
+                alert("Please enter valid To date ");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function process(date) {
+        var parts = date.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    
+    
+
+</script>
+
+<%--<asp:ScriptManager ID="ScriptManager1" runat="server">
+                </asp:ScriptManager>--%>
+
+ <div align="center" class="bcolour">
+        <table cellpadding="2" cellspacing="10" style="width: 95%" id="combox" >
+            <tr>
+                
+                <td colspan="5" style="height: 5px">
+                    <div class="PageNameHeadingCSS" style="text-align: center">
+                        <font class="b12"><span style="font-size: 16px; color:White;">&nbsp;Bank Sale Report &nbsp; </span>
+                        </font>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="b11">
+            <td><asp:Label ID="lbl_from_date" runat="server" Text="From Date:"></asp:Label></td>
+            <td> 
+            <input type="text" class="textbox2" onkeyup="dtval(this,event)" AutoComplete="off" TabIndex="13" id="TxtFromDate" onblur="validateFromDate();" placeholder="DD-MM-YYYY" style="border-width: 1px; width: 132px;" runat="server" />
+
+                                   <%-- <script id="script1" language="javascript" type="text/javascript">
+                                        if (!document.layers) {
+                                            document.write("<img src='../Images/cal.jpg' onclick='popUpCalendar(this, txt_from_date, \"dd/mm/yyyy\")' > ")
+                                        }
+                                    </script>--%>
+
+                                  
+            </td>
+            <td></td>
+            <td><asp:Label ID="LblToDate" runat="server" Text="To Date:"></asp:Label></td>
+            <td> 
+            <input type="text" class="textbox2" onkeyup="dtval(this,event)" AutoComplete="off" 
+                    TabIndex="13" id="txtToDate" onblur="validateToDate();" on 
+                    placeholder="DD-MM-YYYY" style="border-width: 1px; width: 132px;" 
+                    runat="server" /></td>
+          </tr>
+
+          <tr class="b11">
+            <td style="height: 32px"><asp:Label ID="LblCerpac" runat="server" Text="Cerpac No:"></asp:Label></td>
+            <td style="height: 32px"> 
+            <input id="txtCerpacNo" tabindex="9" maxlength="10" runat="server" type="text" 
+                    style="width: 130px" class="textbox2" />
+
+                                   <%-- <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+                        ConnectionString="<%$ ConnectionStrings:NigeriaConnectionString %>" 
+                        SelectCommand="SELECT * FROM [ProdReportCerpacCard]"></asp:SqlDataSource>--%>
+
+                                  
+            </td>
+            <td style="height: 32px"></td>
+            <td style="height: 32px">&nbsp;</td>
+            <td style="height: 32px">
+                &nbsp;</td>
+          </tr>
+          <tr class="b11">
+            <td>Nationality</td>
+            <td> 
+            &nbsp;<%-- <script id="script1" language="javascript" type="text/javascript">
+                                        if (!document.layers) {
+                                            document.write("<img src='../Images/cal.jpg' onclick='popUpCalendar(this, txt_from_date, \"dd/mm/yyyy\")' > ")
+                                        }
+                                    </script>--%><asp:DropDownList ID="ddlNationality" 
+                    runat="server" Width="130px" CssClass="dropdown3">
+                </asp:DropDownList>
+              </td>
+            <td></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+          <td class="b11"><asp:Label ID="lblamt" runat="server" Text="Amount:"></asp:Label></td>
+            <td> <input type="text" id="txt_amount" runat="server"  onkeyup="AlfaNumeric(this)" 
+                    class="textbox2"  /></td>
+            <td> &nbsp;</td>
+            <td colspan="2"><asp:Button ID="btn_generate_report" runat="server" 
+                    Text="Generate Report" class="adminbutton" 
+                    onclick="btn_generate_report_Click" /> </td>
+              
+            
+            </tr>
+             <tr>
+                <td colspan="5" >
+
+
+                    <rsweb:ReportViewer ID="ReportViewer1" runat="server" Width="700px" 
+                        Font-Names="Verdana" Font-Size="8pt" InteractiveDeviceInfos="(Collection)" 
+                        WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Height="619px" 
+                        DocumentMapWidth="100%">
+                    <LocalReport ReportPath="Admin\Reports\ProductionRep.rdlc">
+                       
+                        </LocalReport>
+                    </rsweb:ReportViewer>
+
+                    
+                   <%-- <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+                        ConnectionString="<%$ ConnectionStrings:NigeriaConnectionString %>" 
+                        SelectCommand="SELECT * FROM [ProdReportCerpacCard]"></asp:SqlDataSource>--%>
+                </td>
+                </tr>
+                </table>
+                </div>
+
+
+</asp:Content>
+

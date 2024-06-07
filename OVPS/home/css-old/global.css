@@ -1,0 +1,246 @@
+/*
+'
+'  Copyright (C) 2006 Fry Multimedia, All Rights Reserved.
+'
+'  Purpose:
+'  The style sheet used by all IMS sites
+'  This clears out margins, padding, and image borders
+*/
+
+/* - - - - - - - - - -
+   +Global
+- - - - - - - - - - */
+
+* html {
+    margin: 0px;
+    padding: 0px;
+}
+
+img {
+	border: 0px none;
+}
+
+a {
+    color: #000;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.clear {
+	clear:both;
+}
+
+sup.mark {
+    font-size: 60%;
+}
+
+/* -------------------------------------------
+    +Wrapper
+   -------------------------------------------*/
+
+#wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+span.hide {
+   display:none;
+   padding-bottom:5px;
+}
+
+span.show {
+   display:block;
+   padding-bottom:5px;
+}
+
+div#qTip {
+  padding: 3px;
+  border: 1px solid #666;
+  /*border-right-width: 2px;
+  border-bottom-width: 2px;*/
+  display: none;
+  /*background: #999;*/
+  background: #FFFFEE;
+  /*color: #FFF;*/
+  color: #000000;
+  /*font: bold 9px Verdana, Arial, Helvetica, sans-serif;*/
+  font-size: 10px;
+  text-align: left;
+  position: absolute;
+  z-index: 1000;
+}
+
+#rightcol {
+	float:right;
+	width:750px;
+}
+
+#product {
+	
+	float:left;
+	width:750px;
+	padding:10px;
+}
+#product strong {
+	float:left;
+	display:block;
+	width:781px;
+	margin-bottom:30px;
+}
+.product_box {
+	float:left;
+	width:238px;
+	margin:20px 10px;
+	border-bottom: dotted 1px #bababa;
+}
+.producttext {
+	font-size:11px;
+	padding-left:5px;
+	width:135px;
+	float:left;
+}
+.producttext p {
+	margin-bottom:10px;
+}
+.producttext b {
+	color:#f00;
+	display:block;
+	line-height:20px;
+}
+.imgbox {
+	float:left;
+	width:92px;
+	height:84px;
+	border:solid 1px #bababa;
+	position:relative;
+	margin-bottom:10px;
+}
+img.offer {
+	position:absolute;
+	top:-20px;
+}
+#winner {
+	float:left;
+	width:801px;
+	height:128px;
+}
+.reader {
+	float:left;
+	width:160px;
+	border:solid 1px #bababa;
+	padding:4px;
+	margin-right:18px;
+	font-size:11px;
+	text-align:center;
+	height:115px;
+}
+.reader p { text-align:left; line-height:15px;}
+.reader strong {
+	display:block;
+	color:#f00;
+}
+.reader img {
+	margin:10px 0;
+}
+.reader a { color:#f00;}
+.winneradd {
+	float:left;
+	width:157px;
+	height: auto;
+	border:solid 1px #bababa;
+}
+#product2 {
+	float:right;
+	width:760px;
+	border:solid 1px #bababa;
+	height:auto;
+	text-align:center;
+	margin-right: 10px;
+}
+#product2 strong {
+	padding:10px;
+	display:block;
+	text-align:left;
+}
+#product2 ul {
+	list-style:none;
+	float:right;
+	width:801px;
+	background:url(../images/head_bottom_bg.jpg) repeat-x;
+	height:29px;
+	margin:0;
+	padding:0;
+}
+#product2 ul li {
+	float:left;
+}
+#product2 ul li a {
+	padding:0px 10px;
+	line-height:29px;
+	font-size:11px;
+}
+#product2 ul li a:hover {
+	color:#666;
+	text-decoration:none;
+}
+.product2box {
+	width:170px;
+	float:left;
+	padding:8px;
+	font-size:11px;
+}
+.product2box img {
+	width:150px;
+	height:153px;
+	border:solid 1px #bababa;
+}
+.product2box img:hover {
+	border:solid 1px #000;
+}
+.product2box a {
+	text-align:center;
+	display:block;
+	margin-bottom:10px;
+}
+.product2box b {
+	background:url(../images/price_btn.jpg) no-repeat;
+	
+	color:#fff; width:80px; height:35px;
+	font-weight:normal; display:block; float:left;
+}
+
+.product2box b a{ display:block; font-size:11px; color:#FFFFFF;}
+
+.btn {
+	display: inline-block;
+	background: url(btn.bg.png) repeat-x 0px 0px;
+	padding:5px 10px 6px 10px;
+	margin-left:490px;
+	font-weight:bold;
+	text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+	border:1px solid rgba(0,0,0,0.4);
+	-moz-border-radius: 5px;
+	-moz-box-shadow: 0px 0px 2px rgba(0,0,0,0.5);
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 0px 0px 2px rgba(0,0,0,0.5);
+}
+
+.btn:hover {
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+	cursor:pointer;
+}
+
+/* COLOR VARIATIONS */
+
+.blue		{background-color: #CCCCCC; color: #141414;}
+.blue:hover	{background-color: #00c0ff; color: #ffffff;}
+
+.green		{background-color: #CCCCCC; color: #141414;}
+.green:hover{background-color: #0C0; color: #ffffff;}
+
+.red		{background-color: #CCCCCC; color: #141414;}
+.red:hover	{background-color: #ff004e; color: #ffffff;}
+

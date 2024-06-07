@@ -1,0 +1,182 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPageCompany.master.cs" Inherits="MasterPage_MasterPageCompany" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Company</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+    <script language="javascript" type="text/javascript">
+        window.history.forward(1);
+       // window.history.back(1);
+        if(window.history.length >0)
+        {
+            window.history.go(4);
+        }
+   </script>
+      <link href="../App_theme/css/StyleSheet_Sugar.css" rel="stylesheet" type="text/css" />
+
+    <script language="javascript" type="text/javascript" src="../JS/datetimepicker.js"></script>
+ 
+    <script language="javascript" type="text/javascript" src="../JS/checkFileExt.js"></script> 
+     <script language="javascript" type="text/javascript" src="../JS/validation.js"></script> 
+</head>
+
+  <body>
+    <center>
+        <form id="theForm" runat="server"  enctype="multipart/form-data">
+            <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+               <asp:UpdatePanel runat="server" id="UpdatePanel1">
+<ContentTemplate>
+<asp:Timer runat="server" id="Timer1" Interval="5000" OnTick="Timer1_Tick"></asp:Timer>
+
+</ContentTemplate>
+</asp:UpdatePanel>
+
+            <div id="main" >
+                <!-----------------Main Table----------------->
+                <table style="width: 100%; height: 100%;" cellpadding="0" cellspacing="0">
+                    <tr style="vertical-align: top; background-color:#000000;">
+                        <td colspan="2" class="master">
+                            <table border="0px" cellpadding="0px" cellspacing="0px" style="width: 100%; height: 70px;">
+                                <tr align="center" style="vertical-align: middle; background-color: #FFFFFF;">
+                                    <td style="width: 10%; vertical-align: middle; text-align: left; padding-left: 20px;
+                                        height: 70px;">
+                                        <asp:Image ID="Image1" runat="server" height="60px" 
+                                            ImageUrl="~/Images/Logo/logo_rensys.jpg" Width="140px" />
+                                        </td>
+                                    <td style="width: 90%; vertical-align: middle; text-align: right; padding-right: 20px;
+                                        height: 70px;" class="Project_Text">
+                                        Contec Global
+                                    </td
+                                </tr>
+                                <tr align="center" style="vertical-align: middle; background-color: #FFFFFF;">
+                                    <td>&nbsp;</td>
+                                    <td>
+                                       <div style="float: right; padding-right: 10px;">
+                                <asp:Label ID="LabelSysDate" runat="Server" CssClass="lblWB" Font-Size="Smaller" Font-Bold="True"></asp:Label></div>
+                                    </td>
+                                </tr>
+                               
+                                
+                            </table>
+                             <table border="0px" cellpadding="0px" cellspacing="0px" style="width: 100%; border-bottom-color: #F0D788;
+                                border-bottom-style: solid; border-bottom-width: 3px;">
+                                <tr style="width: 100%; background-color: Transparent;">
+                                    <td colspan="3" style="width: 100%; ">
+                                    <div style="float: left; padding-right: 5px;">
+                                    <asp:Label ID="LabelLoginUser" runat="server" CssClass="w11"   Font-Bold="True" 
+                                            Font-Names="Palatino Linotype" Font-Size="Medium" ForeColor="#F0D788" 
+                                            Width="194px"></asp:Label> </div>
+                                    <div style="float: right; padding-right: 5px;">
+                                    <span class="w11"><asp:ImageButton ID="btnlogout" runat="server" AlternateText="Logout"  ImageUrl="~/Images/logout.jpg" OnClick="btnlogout_Click" Height="23px" /></span>&nbsp; <span class="w11"></span></div>                                     
+                                    </td>
+                                </tr>
+                            </table>
+                            <table border="0px" cellpadding="0px" cellspacing="0px" style="width: 100%; height: 10px;
+                                background-color: #63659C; border-collapse:collapse" >
+                                <tr align="center" style="vertical-align: top; background-color:#ffffff">
+                                
+                                    <td class="error_msg" colspan="2" valign="top">
+                                       <asp:Label ID="lblmsg" runat="server" BorderColor=Black></asp:Label>
+                                    </td>
+                                    
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                     <tr style="vertical-align: top;">
+                        <td class="master" style="width: 20%; text-align: left; vertical-align: top; padding: 0;" >
+                            <asp:TreeView ID="TVLeftMenu" runat="server" Width="95%" 
+                                ImageSet="BulletedList4" NodeWrap="True">
+                                <NodeStyle BorderStyle="None" Width="100%" BackColor="Transparent" BorderWidth="0px"
+                                    Font-Names="Arial" Font-Size="12px" ForeColor="White" HorizontalPadding="5px"
+                                    VerticalPadding="5px" NodeSpacing="0px" ChildNodesPadding="1px" />
+                                <RootNodeStyle Font-Bold="True" ForeColor="White" Font-Underline="True" />
+                                <ParentNodeStyle Font-Bold="False" />
+                                <HoverNodeStyle Font-Underline="True" ForeColor="Black" />
+                                <SelectedNodeStyle ForeColor="Black" Font-Underline="True" HorizontalPadding="0px"
+                                    VerticalPadding="0px" />
+                                    <Nodes>
+                                    <asp:TreeNode Text="System Configuration" Value="System Configuration"  >
+                                                <asp:TreeNode Text="Company Registration" SelectAction="Expand" Value="Company Registration">
+                                                    <asp:TreeNode Text="Listing" NavigateUrl="~/companyPage/RegisteredCompanyList.aspx" Value="Listing" ></asp:TreeNode>
+                                                    <asp:TreeNode Text="Add" NavigateUrl="~/companyPage/CompanyRegistration.aspx" Value="Add" ></asp:TreeNode>
+                                                </asp:TreeNode> 
+                                                 
+                                                       
+                                                 <asp:TreeNode Text="Group " SelectAction="Expand" Value="User Registration">
+                                                   
+                                                    <asp:TreeNode Text="Add" NavigateUrl="~/Admin/Admin_AddGroup.aspx" Value="Add" ></asp:TreeNode>
+                                                    <asp:TreeNode Text="List" NavigateUrl="~/Admin/Admin_ListGroup.aspx" Value="List" ></asp:TreeNode>
+                                                </asp:TreeNode> 
+                                                   <asp:TreeNode Text="Group Form Relation " SelectAction="Expand" Value="User Registration">
+                                                                                                   
+                                                    <asp:TreeNode Text="List" NavigateUrl="~/Admin/AdminGroupFormRelation.aspx" Value="List" ></asp:TreeNode>
+                                                </asp:TreeNode> 
+                                                <asp:TreeNode Text="Module " SelectAction="Expand" Value="User Registration">
+                                                
+                                                    <asp:TreeNode Text="Add" NavigateUrl="~/Admin/Admin_AddModule.aspx" Value="Add" ></asp:TreeNode>
+                                                    <asp:TreeNode Text="List" NavigateUrl="~/Admin/Admin_ListModule.aspx" Value="List" ></asp:TreeNode>
+                                                </asp:TreeNode>  
+                                                <asp:TreeNode Text="Module Form Linking " SelectAction="Expand" Value="User Registration">
+                                                                                                   
+                                                    <asp:TreeNode Text="List" NavigateUrl="~/Admin/Admin_ListForm.aspx" Value="List" ></asp:TreeNode>
+                                                </asp:TreeNode> 
+                                            
+                                                   
+                                                <asp:TreeNode Text="User Registration" SelectAction="Expand" Value="User Registration">
+                                                    <asp:TreeNode Text="Listing" NavigateUrl="~/Admin/ViewRegisteredUser.aspx" Value="Listing" ></asp:TreeNode>
+                                                    <asp:TreeNode Text="Add" NavigateUrl="~/Admin/AdminUserRegistration.aspx" Value="Add" ></asp:TreeNode>
+                                                </asp:TreeNode>  
+                                                <asp:TreeNode Text="Manage Forms" SelectAction="Expand" Value="Manage Forms">
+                                                    <asp:TreeNode Text="Form Access Rights" 
+                                                        NavigateUrl="~/Admin/FormAccessRights.aspx" Value="Form Access Rights" ></asp:TreeNode>
+                                                 
+                                                    <asp:TreeNode NavigateUrl="~/Admin/FrmFormMasterList.aspx" Text="Listing" 
+                                                        Value="Listing"></asp:TreeNode>
+                                                 
+                                                </asp:TreeNode>                           
+                                             
+                                         
+                                              <asp:TreeNode Text="Change Password" SelectAction="Expand" Value="Change Password">
+                                                                                                   
+                                                    <asp:TreeNode Text="Change Password" NavigateUrl="~/User/FrmChangePassword.aspx" Value="Change Password" ></asp:TreeNode>
+                                                    
+                                                </asp:TreeNode>  
+                                                 
+                                                   
+                                              
+                                          </asp:TreeNode>
+                                    </Nodes>
+                            </asp:TreeView>
+                        </td>
+                        <td style="width: 79%; vertical-align: top; height: 430px;" class="Div_ContentPlaceHolder">
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align: top;">
+                        <td id="footer" style="width: 100%; text-align: left; vertical-align: top; padding: 0;" class="t11" 
+                            colspan="2">
+                            <div style="float: left; padding-left: 5px; font-size:10px;">
+                                Best Viewed On 1024 X 768 Resolution</div>
+                          
+                                 <div style="float:left; padding-left: 250px; " >
+                               <asp:Label ID="LabelCompanyAddress" runat="server" CssClass="lbl" Text="" ></asp:Label></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+             <div style="display:none;"> <asp:Label ID="lbl_id" runat="Server"></asp:Label></div>
+        </form>
+    </center>
+</body>
+
+</html>

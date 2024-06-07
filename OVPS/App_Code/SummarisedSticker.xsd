@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SummarisedSticker" targetNamespace="http://tempuri.org/SummarisedSticker.xsd" xmlns:mstns="http://tempuri.org/SummarisedSticker.xsd" xmlns="http://tempuri.org/SummarisedSticker.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SummarisedSticker" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="SummarisedSticker" msprop:Generator_DataSetName="SummarisedSticker">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="SummarisedSticker" msprop:Generator_UserTableName="SummarisedSticker" msprop:Generator_RowDeletedName="SummarisedStickerRowDeleted" msprop:Generator_RowChangedName="SummarisedStickerRowChanged" msprop:Generator_RowClassName="SummarisedStickerRow" msprop:Generator_RowChangingName="SummarisedStickerRowChanging" msprop:Generator_RowEvArgName="SummarisedStickerRowChangeEvent" msprop:Generator_RowEvHandlerName="SummarisedStickerRowChangeEventHandler" msprop:Generator_TableClassName="SummarisedStickerDataTable" msprop:Generator_TableVarName="tableSummarisedSticker" msprop:Generator_RowDeletingName="SummarisedStickerRowDeleting" msprop:Generator_TablePropName="_SummarisedSticker">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Sl_No" msprop:Generator_UserColumnName="Sl_No" msprop:Generator_ColumnVarNameInTable="columnSl_No" msprop:Generator_ColumnPropNameInRow="Sl_No" msprop:Generator_ColumnPropNameInTable="Sl_NoColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="ModifiedOn" msprop:Generator_UserColumnName="ModifiedOn" msprop:Generator_ColumnVarNameInTable="columnModifiedOn" msprop:Generator_ColumnPropNameInRow="ModifiedOn" msprop:Generator_ColumnPropNameInTable="ModifiedOnColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Ammount" msprop:Generator_UserColumnName="Ammount" msprop:Generator_ColumnVarNameInTable="columnAmmount" msprop:Generator_ColumnPropNameInRow="Ammount" msprop:Generator_ColumnPropNameInTable="AmmountColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="IssuingPlace" msprop:Generator_UserColumnName="IssuingPlace" msprop:Generator_ColumnVarNameInTable="columnIssuingPlace" msprop:Generator_ColumnPropNameInRow="IssuingPlace" msprop:Generator_ColumnPropNameInTable="IssuingPlaceColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

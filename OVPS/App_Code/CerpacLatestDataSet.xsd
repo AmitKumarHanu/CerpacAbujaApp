@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CerpacLatestDataSet" targetNamespace="http://tempuri.org/CerpacLatestDataSet.xsd" xmlns:mstns="http://tempuri.org/CerpacLatestDataSet.xsd" xmlns="http://tempuri.org/CerpacLatestDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="NigeriaConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="NigeriaConnectionString (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.NigeriaConnectionString.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ProdReportCerpacCardTableAdapter" Name="ProdReportCerpacCard">
+            <MainSource>
+              <DbSource ConnectionRef="NigeriaConnectionString (Web.config)" DbObjectName="CerpacLatest.dbo.ProdReportCerpacCard" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT people_id, title, forename, middle_name, surname, sex, residence_permit_no, residence_issue_loc, deedmark_no, issue_no, printed, label_print_count, card_print_count, picture, directory, notes, cerpac_no, cerpac_file_no, cerpac_receipt_date, cerpac_expiry_date, registration_area, registration_code, file_no, label_no, book_no, passport_no, nationality, passport_issue_date, passport_expiry_date, passport_issue_loc, passport_issue_by, date_of_birth, place_of_birth, nigeria_add_1, nigeria_add_2, nigeria_tel_no, abroad_add_1, abroad_add_2, abroad_tel_no, company, company_add_1, company_add_2, designation, employment_date, company_tel_no, company_fax_no, email, date_added, added_by_user_id, date_modified, modified_by_user_id, picture_taken, picture_by_user_id, verid_template, verid_template_1, arcanet_2d_command, date_system_modified, ApplicationId, Date1, Branch, RequisitionNO, PassportNo, FORMNO, TELLERNO, AMOUNT, CerpacNo, StrVisaNo, ContactNo, Expr1, CreatedBY, CreatedON, MOdifiedBY, ModifiedOn, IsVerified, IsAuthorized, IsProduced, VerifiedBy, AuthorizedBy, ProducedBy, VerifiedOn, AuthorizedOn, ProducedOn FROM dbo.ProdReportCerpacCard</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="people_id" DataSetColumn="people_id" />
+              <Mapping SourceColumn="title" DataSetColumn="title" />
+              <Mapping SourceColumn="forename" DataSetColumn="forename" />
+              <Mapping SourceColumn="middle_name" DataSetColumn="middle_name" />
+              <Mapping SourceColumn="surname" DataSetColumn="surname" />
+              <Mapping SourceColumn="sex" DataSetColumn="sex" />
+              <Mapping SourceColumn="residence_permit_no" DataSetColumn="residence_permit_no" />
+              <Mapping SourceColumn="residence_issue_loc" DataSetColumn="residence_issue_loc" />
+              <Mapping SourceColumn="deedmark_no" DataSetColumn="deedmark_no" />
+              <Mapping SourceColumn="issue_no" DataSetColumn="issue_no" />
+              <Mapping SourceColumn="printed" DataSetColumn="printed" />
+              <Mapping SourceColumn="label_print_count" DataSetColumn="label_print_count" />
+              <Mapping SourceColumn="card_print_count" DataSetColumn="card_print_count" />
+              <Mapping SourceColumn="picture" DataSetColumn="picture" />
+              <Mapping SourceColumn="directory" DataSetColumn="directory" />
+              <Mapping SourceColumn="notes" DataSetColumn="notes" />
+              <Mapping SourceColumn="cerpac_no" DataSetColumn="cerpac_no" />
+              <Mapping SourceColumn="cerpac_file_no" DataSetColumn="cerpac_file_no" />
+              <Mapping SourceColumn="cerpac_receipt_date" DataSetColumn="cerpac_receipt_date" />
+              <Mapping SourceColumn="cerpac_expiry_date" DataSetColumn="cerpac_expiry_date" />
+              <Mapping SourceColumn="registration_area" DataSetColumn="registration_area" />
+              <Mapping SourceColumn="registration_code" DataSetColumn="registration_code" />
+              <Mapping SourceColumn="file_no" DataSetColumn="file_no" />
+              <Mapping SourceColumn="label_no" DataSetColumn="label_no" />
+              <Mapping SourceColumn="book_no" DataSetColumn="book_no" />
+              <Mapping SourceColumn="passport_no" DataSetColumn="passport_no" />
+              <Mapping SourceColumn="nationality" DataSetColumn="nationality" />
+              <Mapping SourceColumn="passport_issue_date" DataSetColumn="passport_issue_date" />
+              <Mapping SourceColumn="passport_expiry_date" DataSetColumn="passport_expiry_date" />
+              <Mapping SourceColumn="passport_issue_loc" DataSetColumn="passport_issue_loc" />
+              <Mapping SourceColumn="passport_issue_by" DataSetColumn="passport_issue_by" />
+              <Mapping SourceColumn="date_of_birth" DataSetColumn="date_of_birth" />
+              <Mapping SourceColumn="place_of_birth" DataSetColumn="place_of_birth" />
+              <Mapping SourceColumn="nigeria_add_1" DataSetColumn="nigeria_add_1" />
+              <Mapping SourceColumn="nigeria_add_2" DataSetColumn="nigeria_add_2" />
+              <Mapping SourceColumn="nigeria_tel_no" DataSetColumn="nigeria_tel_no" />
+              <Mapping SourceColumn="abroad_add_1" DataSetColumn="abroad_add_1" />
+              <Mapping SourceColumn="abroad_add_2" DataSetColumn="abroad_add_2" />
+              <Mapping SourceColumn="abroad_tel_no" DataSetColumn="abroad_tel_no" />
+              <Mapping SourceColumn="company" DataSetColumn="company" />
+              <Mapping SourceColumn="company_add_1" DataSetColumn="company_add_1" />
+              <Mapping SourceColumn="company_add_2" DataSetColumn="company_add_2" />
+              <Mapping SourceColumn="designation" DataSetColumn="designation" />
+              <Mapping SourceColumn="employment_date" DataSetColumn="employment_date" />
+              <Mapping SourceColumn="company_tel_no" DataSetColumn="company_tel_no" />
+              <Mapping SourceColumn="company_fax_no" DataSetColumn="company_fax_no" />
+              <Mapping SourceColumn="email" DataSetColumn="email" />
+              <Mapping SourceColumn="date_added" DataSetColumn="date_added" />
+              <Mapping SourceColumn="added_by_user_id" DataSetColumn="added_by_user_id" />
+              <Mapping SourceColumn="date_modified" DataSetColumn="date_modified" />
+              <Mapping SourceColumn="modified_by_user_id" DataSetColumn="modified_by_user_id" />
+              <Mapping SourceColumn="picture_taken" DataSetColumn="picture_taken" />
+              <Mapping SourceColumn="picture_by_user_id" DataSetColumn="picture_by_user_id" />
+              <Mapping SourceColumn="verid_template" DataSetColumn="verid_template" />
+              <Mapping SourceColumn="verid_template_1" DataSetColumn="verid_template_1" />
+              <Mapping SourceColumn="arcanet_2d_command" DataSetColumn="arcanet_2d_command" />
+              <Mapping SourceColumn="date_system_modified" DataSetColumn="date_system_modified" />
+              <Mapping SourceColumn="ApplicationId" DataSetColumn="ApplicationId" />
+              <Mapping SourceColumn="Date1" DataSetColumn="Date1" />
+              <Mapping SourceColumn="Branch" DataSetColumn="Branch" />
+              <Mapping SourceColumn="RequisitionNO" DataSetColumn="RequisitionNO" />
+              <Mapping SourceColumn="PassportNo" DataSetColumn="PassportNo" />
+              <Mapping SourceColumn="FORMNO" DataSetColumn="FORMNO" />
+              <Mapping SourceColumn="TELLERNO" DataSetColumn="TELLERNO" />
+              <Mapping SourceColumn="AMOUNT" DataSetColumn="AMOUNT" />
+              <Mapping SourceColumn="CerpacNo" DataSetColumn="CerpacNo" />
+              <Mapping SourceColumn="StrVisaNo" DataSetColumn="StrVisaNo" />
+              <Mapping SourceColumn="ContactNo" DataSetColumn="ContactNo" />
+              <Mapping SourceColumn="Expr1" DataSetColumn="Expr1" />
+              <Mapping SourceColumn="CreatedBY" DataSetColumn="CreatedBY" />
+              <Mapping SourceColumn="CreatedON" DataSetColumn="CreatedON" />
+              <Mapping SourceColumn="MOdifiedBY" DataSetColumn="MOdifiedBY" />
+              <Mapping SourceColumn="ModifiedOn" DataSetColumn="ModifiedOn" />
+              <Mapping SourceColumn="IsVerified" DataSetColumn="IsVerified" />
+              <Mapping SourceColumn="IsAuthorized" DataSetColumn="IsAuthorized" />
+              <Mapping SourceColumn="IsProduced" DataSetColumn="IsProduced" />
+              <Mapping SourceColumn="VerifiedBy" DataSetColumn="VerifiedBy" />
+              <Mapping SourceColumn="AuthorizedBy" DataSetColumn="AuthorizedBy" />
+              <Mapping SourceColumn="ProducedBy" DataSetColumn="ProducedBy" />
+              <Mapping SourceColumn="VerifiedOn" DataSetColumn="VerifiedOn" />
+              <Mapping SourceColumn="AuthorizedOn" DataSetColumn="AuthorizedOn" />
+              <Mapping SourceColumn="ProducedOn" DataSetColumn="ProducedOn" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="CerpacLatestDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="False">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ProdReportCerpacCard">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="people_id" type="xs:int" />
+              <xs:element name="title" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="forename" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="middle_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="surname" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="sex" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="residence_permit_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="residence_issue_loc" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="deedmark_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="12" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="issue_no" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="printed">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="label_print_count" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="card_print_count" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="picture" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="directory" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="notes" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cerpac_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="7" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cerpac_file_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="7" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cerpac_receipt_date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="cerpac_expiry_date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="registration_area" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="registration_code" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="file_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="label_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="7" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="book_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="7" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="passport_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="nationality" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="passport_issue_date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="passport_expiry_date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="passport_issue_loc" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="passport_issue_by" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="date_of_birth" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="place_of_birth" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="nigeria_add_1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="nigeria_add_2" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="nigeria_tel_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="abroad_add_1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="abroad_add_2" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="abroad_tel_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="company" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="company_add_1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="company_add_2" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="designation" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="employment_date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="company_tel_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="company_fax_no" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="email" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="date_added" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="added_by_user_id" type="xs:short" minOccurs="0" />
+              <xs:element name="date_modified" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="modified_by_user_id" type="xs:short" minOccurs="0" />
+              <xs:element name="picture_taken" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="picture_by_user_id" type="xs:short" minOccurs="0" />
+              <xs:element name="verid_template" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="52" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="verid_template_1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="52" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="arcanet_2d_command" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="date_system_modified" type="xs:dateTime" />
+              <xs:element name="ApplicationId" type="xs:int" />
+              <xs:element name="Date1" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Branch">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="RequisitionNO" type="xs:int" />
+              <xs:element name="PassportNo">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="FORMNO">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TELLERNO" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AMOUNT" type="xs:decimal" />
+              <xs:element name="CerpacNo">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StrVisaNo" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ContactNo" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Expr1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CreatedBY" type="xs:int" minOccurs="0" />
+              <xs:element name="CreatedON" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="MOdifiedBY" type="xs:int" minOccurs="0" />
+              <xs:element name="ModifiedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="IsVerified" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="IsAuthorized" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="IsProduced" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="VerifiedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="AuthorizedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="ProducedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="VerifiedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="AuthorizedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ProducedOn" type="xs:dateTime" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:ProdReportCerpacCard" />
+      <xs:field xpath="mstns:people_id" />
+      <xs:field xpath="mstns:CerpacNo" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

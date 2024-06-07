@@ -1,0 +1,201 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="test_card.aspx.cs" Inherits="Admin_test_card" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+<div id="bill_print" style="display:block;">
+
+    <table style="font-family: Verdana; left: 20px; position: relative; top: 38px;">
+       
+      
+    <tr>
+    <td  rowspan="6" valign="middle" align="left">
+        <img id="ImgPhoto2" alt="Img" src="Saurabh.jpg" runat="server" style="height: 95px; width: 88px; left: -6px; position: relative; top: -48px;" /><br />
+       </td>
+
+         <td class="style11" valign="top" colspan="2">
+       
+     <asp:Label ID="Label5" runat="server" Text="Name"  Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+    <br />
+        <asp:Label ID="txt_name_1" runat="server" Text="Saurabh Bansal" Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    </td>
+
+   
+    
+    </tr>
+
+     <tr>
+    <td class="style11" valign="top" colspan="2">
+        
+     <asp:Label ID="Label1" runat="server" Text="Passport No." Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+        <br />
+        <asp:Label ID="txt_pass_no" runat="server" Text="J284455" Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    
+    </td>
+    <%--<td class="style12" valign="top">
+     
+    
+    </td>--%>
+    </tr>
+
+        <tr>
+    <td class="style11" valign="top" colspan="2">
+      
+     <asp:Label ID="Label11" runat="server" Text="Nationality" Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+    <br />
+        <asp:Label ID="txt_nationality_4" runat="server" Text="Indian" Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    </td>
+   
+    </tr>    
+<tr style="display:none;">
+    <td class="style11" valign="top" colspan="2">
+       
+     <asp:Label ID="Label7" runat="server" Text="DOB"  Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+    <br />
+         <asp:Label ID="txt_dob_2" runat="server" Text="25 Dec 82"  Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    </td>
+    
+    </tr>
+
+        <tr>
+    <td class="style11" colspan="2">
+     
+     <asp:Label ID="lbl_comp" runat="server" Text="Company" valign="top"  Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+    <br />
+        <asp:Label ID="txt_comp" runat="server" Text="Software Engineer" Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    </td>
+  
+    </tr>
+
+<tr>
+    <td class="style11" colspan="2">
+     
+     <asp:Label ID="Label9" runat="server" Text="Designation" valign="top"  Font-Size="X-Small" ForeColor="DarkGreen"></asp:Label>
+    <br />
+        <asp:Label ID="txt_desig_3" runat="server" Text="Software Engineer" Font-Size="X-Small" Font-Bold="true"></asp:Label>
+    </td>
+  
+    </tr>
+
+
+
+<%--<tr>
+    <td class="style2" colspan="2" valign="top">
+      
+     <asp:Label ID="Label14" runat="server" Text="Signature" ></asp:Label>
+    
+    </td>
+    </tr>--%>
+       
+
+   <%-- <tr>
+    <td class="style11" colspan="2">
+        <br />
+        <br />
+        </td>
+  
+    
+    </tr>--%>
+   
+                                   <tr>
+                                 
+                                  <td style="text-align: center" colspan="3" class="auto-style1">
+                                
+                                     <asp:Image ID="img_sign_card" runat="server" Height="37px" Width="174px"/>
+                                
+                                      </td>
+                                 
+                                  
+                                 
+                                  </tr>
+                                  <tr>
+                                 <td></td>
+                                  <td style="text-align: left; font-size:smaller;"  class="auto-style1" valign="top" colspan="2">
+                                Authorized Signatory     
+                                      <br />
+                                
+                                      </td>
+                                 
+                                  
+                                 
+                                  </tr>
+
+
+                                 <%-- <tr>
+                                 
+                                  <td style="text-align: left" colspan="3" class="auto-style1">
+                                
+                                      <br />
+                                
+                                      </td>
+                                 
+                                  
+                                 
+                                  </tr>--%>
+        
+         <tr>
+                                 
+                                  <td style="text-align: left" colspan="3" class="auto-style1">
+                                
+                                      <br />
+                                      <asp:Label ID="Label2" runat="server" Text="For Comptroller-General, Nigeria Immigration Service" Font-Size="XX-Small"></asp:Label>
+                                      </td>
+                                 
+                                  
+                                 
+                                  </tr>
+                                   <tr>
+                                       
+                                   <td style="font-size:X-Small;" valign="bottom"></td>
+                                  <td style="text-align: left;font-size:x-small;" align="left" class="style12">Cerpac No.:
+
+                                  
+                                  </td>
+                                 <td><asp:Label ID="txt_cer_no_5" runat="server" Text="AO455877" Font-Size="X-Small" Font-Bold="true"></asp:Label></td>
+                                  </tr>
+                                  
+                                  
+                                   <tr>
+                                       
+                                   <td  style="font-size:X-Small;" valign="bottom"></td>
+                                  <td style="text-align: left;font-size:x-small;" align="left" class="style12">Date Of Issue:
+                                      
+                                  </td>
+                                 <td><asp:Label ID="txt_date_of_issue_6" runat="server" Text="9 Jul 13" Font-Size="X-Small" Font-Bold="true"></asp:Label></td>
+                                  </tr>
+                                  
+                                  
+
+                                   <tr>
+                                       
+                                   <td  style="font-size:X-Small;" valign="bottom"></td>
+                                  <td style="text-align: left;font-size:x-small;" align="left" class="style12">Place Of Issue:
+                                  </td>
+                                 <td><asp:Label ID="txt_place_of_issue_7" runat="server" Text="Abuja" Font-Size="X-Small" Font-Bold="true"></asp:Label></td>
+                                  </tr>
+                                  
+                                      
+                                  
+
+                                  <tr>
+                                      
+                                  <td  style="font-size:X-Small;" valign="bottom"></td>
+                                  <td style="text-align: left;font-size:x-small;" align="left" class="style12" >Date Of Expiry:
+                                    
+                                      </td>
+                                 
+                                  <td><asp:Label ID="txt_date_of_exp_8" runat="server" Text="1 Nov 13" Font-Size="X-Small" Font-Bold="true"></asp:Label></td>
+                                 
+                                  </tr>
+
+
+    </table>
+ </div>
+    </form>
+</body>
+</html>

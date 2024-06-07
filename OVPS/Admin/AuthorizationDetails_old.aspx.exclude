@@ -1,0 +1,358 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage/MasterPageUser.master" AutoEventWireup="true" CodeFile="AuthorizationDetails.aspx.cs" Inherits="Admin_AuthorizationDetails" %>
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <%--<asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>--%>
+  
+  <script type="text/javascript">
+      function reason() {
+          document.getElementById('<%=lblreason.ClientID %>').style.display = '';
+          document.getElementById('<%=txtreason.ClientID %>').className = '';
+          document.getElementById('<%=btnsubmit.ClientID %>').style.display = '';
+      }
+
+      function validate() {
+          var a = document.getElementById('<%=txtreason.ClientID %>').value;
+          if (a == '') {
+              alert('Please give the reason for rejection');
+              return false;
+          }
+      }
+  </script>
+    <style type="text/css">
+        .a {
+        display:none;
+        }
+        .modalBackground
+        {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 10000;
+        }
+        .information-box, .confirmation-box, .error-box, .warning-box {
+	padding: 0.833em 0.833em 0.833em 3em; /* 10/12 36/12 */
+	margin-bottom: 0.833em; /* 20/12 */ }
+
+.confirmation-box {
+	background: #e7fae6 url('../Images/icons/confirmation.png') no-repeat 0.833em center;
+	border: 1px solid #b7cbb6;
+	color: #52964f;
+}
+.warning-box {
+	background: #fdf7e4 url('../Images/icons/warning.png') no-repeat 0.833em center;
+	border: 1px solid #e5d9b2;
+	color: #b28a0b;
+}
+    </style>
+    <div id="Div_ContentPlaceHolder" align="center" class="bcolour">
+        <table cellpadding="2" cellspacing="5" class="bcolour" style="width: 95%">
+            <tr>
+                <td colspan="3" style="height: 5px">
+                    <div class="PageNameHeadingCSS" style="text-align: center">
+                        <font class="b12"><span style="font-size: 16px; color:White;">&nbsp; Applicant Status Master &nbsp;
+                        </span></font>
+                    </div>
+                </td>
+            </tr>
+            <tr class="t11">
+                <td align="center" colspan="2">
+                    <asp:Label ID="reviewmsg" runat="server" ForeColor="#990000"></asp:Label>
+                    <asp:Label ID="msg" runat="server" ForeColor="#339933"></asp:Label>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <center>
+                        <table id="tbl1" cellpadding="5" cellspacing="2" border="0" width="750px">
+                            <tr class="b11">
+                                <td align="center" style="width: 10%; vertical-align: middle; text-align: center;
+                                    background-repeat: no-repeat;">
+                                    <asp:Image runat="server" ID="ImgPhoto" Width="100px" Height="120px" ImageUrl="~/Images/Logo/default_logo.gif" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table cellpadding="5" cellspacing="2" border="0" width="750px" id=detailtable runat=server>
+                            <tr class="b11">
+                                <td colspan="4" align="left">
+                                    <strong>Passport Details</strong>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Passport No.
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtPassportNo" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Nationality
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtNationality" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Passport Issue By
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtPassportType" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Date Of Issue
+                                </td>
+                                <td align="left" style="width: 190px">
+                                    <asp:Label ID="TxtDateOfIssue" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                             <td align="left" style="width: 150px;">
+                             Date of Expiry
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                <asp:Label ID=txtdoe runat=server></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Place of Issue
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtPlaceOfIssue" runat="server"></asp:Label>
+                                </td>
+                               
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td colspan="4" align="left">
+                                    <strong>Personal Details</strong>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    First Name
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtFirstName" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Last Name
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtLastName" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Middle Name
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtMiddleName" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Sex
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtSex" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Email Id
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtemailprsn" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Contact Number
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtcntcnoprsn" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td colspan="4" align="left">
+                                    <strong>Cerpac Details</strong>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                           
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Cerpac Number
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtCerpacNo" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Cerpac Issue Date
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtIssueDate" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Cerpac Expiry Date
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="TxtExpDate" runat="server"></asp:Label>
+                                </td>
+                                 <td align="left" style="width: 150px;">
+                                    Cerpac File No.
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtfileno" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                             <tr class="b11">
+                                <td colspan="4" align="left">
+                                    <strong>Company Details</strong>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td colspan="4" align="center" style="height: 2px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Company Id
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtcompid" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Company Name
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtcompname" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Company Address 1
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtcompadd1" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Company Address 2
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtcompadd2" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Designation
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtdesig" runat="server"></asp:Label>
+                                </td>
+                                <td align="left" style="width: 150px;">
+                                    Company Telephone No.
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtphno" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr class="b11">
+                                <td align="left" style="width: 150px;">
+                                    Company Fax No.
+                                </td>
+                                <td align="left" style="width: 190px;">
+                                    <asp:Label ID="txtfaxno" runat="server"></asp:Label>
+                                </td>
+                                
+                            </tr>
+                             
+            <tr class="b11">
+                <td colspan="4" align="left" style="height: 20px;">
+                    </td>
+            </tr>
+                            <tr class="b11">
+                                <td align="left">Previous Notes</td>
+                <td colspan="3" align="left" style="height: 20px;"><asp:TextBox ID="txtprevnote" runat="server" Height="43px" Width="548px"></asp:TextBox>
+                    </td>
+            </tr>
+                            <tr class="b11">
+                <td colspan="4" align="left" style="height: 20px;">
+                    </td>
+            </tr>
+                            <tr class="b11">
+                                <td align="left">Notes</td>
+                <td colspan="3" align="left" style="height: 20px;"><asp:TextBox ID="txtauthnotes" runat="server" Height="43px" Width="548px"></asp:TextBox>
+                    </td>
+            </tr>
+                            <tr class="b11">
+                <td colspan="4" align="left" style="height: 20px;">
+                    </td>
+            </tr>
+             <tr class="b11">
+             <td align=left><asp:Label ID=lblreason Text="Rejection Reason" style="display:none;" runat=server></asp:Label> </td>
+                <td colspan="2" align="left">
+                <asp:DropDownList ID="txtreason" CssClass="a" runat="server" Height="21px" Width="141px"></asp:DropDownList>
+                    </td>
+                    <td align=center><asp:Button ID="btnsubmit" runat=server Text="Submit" width=149px
+                            CssClass=adminbutton onclick="btnsubmit_Click" style="display:none;" OnClientClick="return validate()" /></td>
+            </tr> <tr class="b11">
+                <td colspan="4" align="left" style="height: 20px;">
+                    </td>
+            </tr>
+            <tr class="b11">
+                <td align="center" colspan="1">
+                    <asp:Button ID="btnverify" runat="server" class="adminbutton" Text="Authorize"  
+                        Width="140px" onclick="btnverify_Click" />
+                    
+                </td>
+                <td align="center" colspan="1">
+                <input type=button value=Deny class=adminbutton onclick="reason()" style="width:149px;" />
+                    
+                    
+                </td>
+                 <td align="center" colspan="2">
+                    <asp:Button ID="btnbio" runat="server" class="adminbutton" 
+                         Text="Retrieve Bio Metrics" onclick="btnbio_Click"/>
+                    
+                </td>
+            </tr>
+            <tr><td height=25px></td></tr>
+        </table>
+
+        <tr><td><div class="confirmation-box" height=10px style="display:none;" id=confirm width=650px runat=server><p style="color:Gray" id="p" runat=server>Applicant Authorized Sucessfully</p></div></td></tr>
+        <tr><td><div class="warning-box" height=10px style="display:none;" id=warn width=650px runat=server><p style="color:Gray">Cerpac Number has been authorized</p></div></td></tr>
+        </center> </td> </tr> </table>
+    </div>
+</asp:Content>
+

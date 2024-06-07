@@ -1,0 +1,187 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using DataAccessLayer;
+using System.Data;
+using System.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Admin_ProdCardPersonalisation : System.Web.UI.Page
+{
+
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function objgenenral = null;
+    BaseLayer.General_function ObjGeneral = null;
+    protected BaseLayer.General_function ObjGenBal = null;
+
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+
+        //Commented on 22 Aug after discussion with Sanjay Sir & Gagan Sir
+
+        //DataTable dt_cerpac_serial = new DataTable();
+        //string query = "select top(1) * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and USERID=" + objectSessionHolderPersistingData.User_ID + " ";
+        //dt_cerpac_serial = ObjGeneral.FetchData(query);
+
+        //if (dt_cerpac_serial.Rows.Count > 0)
+        //{
+        //    TxtCardSerialNo.Text = dt_cerpac_serial.Rows[0]["stickerserialno"].ToString();
+        //    txt_reprint_card_serial_no.Text = dt_cerpac_serial.Rows[0]["stickerserialno"].ToString();
+        //}
+        //else
+        //{
+        //    TxtCardSerialNo.Text = "";
+        //    txt_reprint_card_serial_no.Text = "";
+        //}
+
+        //DataTable dt_cerpac_card_stock = new DataTable();
+        //string query1 = "select * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and USERID=" + objectSessionHolderPersistingData.User_ID + " ";
+        //dt_cerpac_card_stock = ObjGeneral.FetchData(query1);
+        //txtStock.Text = Convert.ToString(dt_cerpac_card_stock.Rows.Count);
+
+        //if (txtStock.Text == "0")
+        //{
+        //    btnCardProceed.Visible = false;
+        //    btnOtherCard.Visible = false;
+
+        //   // detailtable.Style.Add("display", "none");
+        //    warn.Style.Add("display", "");
+        //    warn.InnerText = "Card Not Available in Stock";
+            
+        //}
+
+    }
+
+   
+    protected void btnCardProceed_Click(object sender, System.EventArgs e)
+    {
+        if (TxtCardSerialNo.Text == "")
+        {
+            confirm.Style.Add("display", "none");
+            warn.Style.Add("display", "");
+            warn.InnerText = "Please Enter Card No.";
+            return;
+        }
+        DataTable dt_cerpac_card_stock = new DataTable();
+        string query1 = "select * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and StickerNumber='" + TxtCardSerialNo.Text + "'";
+        dt_cerpac_card_stock = ObjGeneral.FetchData(query1);
+        txtStock.Text = Convert.ToString(dt_cerpac_card_stock.Rows.Count);
+
+        if (txtStock.Text == "0")
+        {
+
+            // detailtable.Style.Add("display", "none");
+            warn.Style.Add("display", "");
+            warn.InnerText = "This Card Is Not Available or Already Used";
+
+        }
+        else
+        {
+            Session["CardNo"] = TxtCardSerialNo.Text;
+            Response.Redirect("ProductionDetails.aspx");
+        }
+    }
+    protected void btnCancel_Click(object sender, System.EventArgs e)
+    {
+        Response.Redirect("ProductionProcess.aspx");
+    }
+
+
+    string reason = "";
+    protected void btn_Reason_Print_Click(object sender, EventArgs e)
+    {
+        int res = 0;
+        BusinessEntityLayer.BalProductionModule objProduction = new BusinessEntityLayer.BalProductionModule();
+        // objectSessionHolderPersistingData = Session["SessionHolderPersistingData"];
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        DataTable Dt = null;
+        Dt = new DataTable();
+        ObjGenBal = new BaseLayer.General_function();
+        string queryforcerpac = "select * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and USERID=" + objectSessionHolderPersistingData.User_ID + "";
+        Dt = ObjGenBal.FetchData(queryforcerpac);
+
+        if (Rd1.Checked)
+            reason = Rd1.Text;
+        else if (Rd2.Checked)
+            reason = Rd2.Text;
+        else if (Rd3.Checked)
+            reason = Rd3.Text;
+        else
+            reason = Rd4.Text;
+
+        if (reason == "")
+        {
+            confirm.Style.Add("display", "none");
+            warn.Style.Add("display", "");
+            warn.InnerText = "Please Give Reason First";
+            return;
+        }
+
+        if (Dt.Rows.Count > 0)
+        {
+
+            res = objProduction.UpdateStikerFlag(TxtCardSerialNo.Text, reason, Convert.ToInt32(objectSessionHolderPersistingData.User_ID));
+
+            //---------Insert Into Audit---------
+            //BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+            ObjGenBal.audittype = ENUMAUDITTYPE.Login.GetHashCode().ToString();
+            ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+            ObjGenBal.auditdetail = "Update Flag in Stiker Table Print Case";
+            ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+            ObjGenBal.AuditInsert();
+            //-----------END---------------------
+
+            if (res == 1)
+            {
+                //confirm.Style.Add("display", "");
+                //warn.Style.Add("display", "none");
+
+                DataTable dt_cerpac_serial = new DataTable();
+                string query = "select top(1) * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and USERID=" + objectSessionHolderPersistingData.User_ID + " ";
+                dt_cerpac_serial = ObjGeneral.FetchData(query);
+
+                TxtCardSerialNo.Text = dt_cerpac_serial.Rows[0]["stickerserialno"].ToString();
+                txt_reprint_card_serial_no.Text = dt_cerpac_serial.Rows[0]["stickerserialno"].ToString();
+
+                DataTable dt_cerpac_card_stock = new DataTable();
+                string query1 = "select * from userstickerrelation where StickerWastedYN=0 and StickerPrintedYN=0 and USERID=" + objectSessionHolderPersistingData.User_ID + " ";
+                dt_cerpac_card_stock = ObjGeneral.FetchData(query1);
+                txtStock.Text = Convert.ToString(dt_cerpac_card_stock.Rows.Count);
+
+            }
+        }
+
+        else
+        {
+            confirm.Style.Add("display", "none");
+            warn.Style.Add("display", "");
+            warn.InnerText = "Card Not Issued";
+        }
+
+    }
+}

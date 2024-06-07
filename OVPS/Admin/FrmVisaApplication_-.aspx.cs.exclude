@@ -1,0 +1,2985 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+
+
+public partial class Admin_FrmApplicaintReg : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function ObjGeneral = null;
+    Label LabelMessage = null;
+    string LogoPath1 = string.Empty;
+    #endregion
+
+   protected void Page_Load(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+        ObjGeneral = new BaseLayer.General_function();
+        // set session variable for form 
+        
+        Session["form"] = "FrmApplicaintReg";
+
+        btnSubmit.Attributes.Add("onclick", "if(!datevalidate()) return false;");
+
+        LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.Cache.SetExpires(DateTime.Now.AddDays(-1));
+        Response.Cache.SetNoStore();
+        if (Request.Cookies.Count > 0)
+        {
+            //HttpCookie cookie = Request.Cookies["ASPXAUTH"];
+            //cookie.Expires = DateTime.Now.AddYears(-10);
+            //Response.AppendCookie(cookie);
+        }
+
+        DOE.HRef = "javascript:NewCal('" + TxtDOE.ClientID + "','DDMMMYYYY')";
+        DOB.HRef = "javascript:NewCal('" + txtDOB.ClientID + "','DDMMMYYYY')";
+        DOI.HRef = "javascript:NewCal('" + TxtDOI.ClientID + "','DDMMMYYYY')";
+        AD.HRef = "javascript:NewCal('" + txtArrivalDate.ClientID + "','DDMMMYYYY')";
+        DD.HRef = "javascript:NewCal('" + txtDepartureDate.ClientID + "','DDMMMYYYY')";
+
+        aPreVisit1FromDate.HRef = "javascript:NewCal('" + txtPreVisit1FromDate.ClientID + "','DDMMMYYYY')";
+        aPreVisit1ToDate.HRef = "javascript:NewCal('" + txtPreVisit1ToDate.ClientID + "','DDMMMYYYY')";
+        aPreVisit2FromDate.HRef = "javascript:NewCal('" + txtPreVisit2FromDate.ClientID + "','DDMMMYYYY')";
+        aPreVisit2ToDate.HRef = "javascript:NewCal('" + txtPreVisit2ToDate.ClientID + "','DDMMMYYYY')";
+        aPreVisit3FromDate.HRef = "javascript:NewCal('" + txtPreVisit3FromDate.ClientID + "','DDMMMYYYY')";
+        aPreVisit3ToDate.HRef = "javascript:NewCal('" + txtPreVisit3ToDate.ClientID + "','DDMMMYYYY')";
+       
+        aOldPaasportIssueDate.HRef = "javascript:NewCal('" + txtOldPaasportIssueDate.ClientID + "','DDMMMYYYY')";
+        aDateRejected.HRef = "javascript:NewCal('" + txtDateRejected.ClientID + "','DDMMMYYYY')";
+        aRefusedVisaOnArrivalDate.HRef = "javascript:NewCal('" + txtRefusedVisaOnArrivalDate.ClientID + "','DDMMMYYYY')";
+        aDeportedNotice.HRef = "javascript:NewCal('" + txtDeportedNotice.ClientID + "','DDMMMYYYY')";
+        aConvictionDate.HRef = "javascript:NewCal('" + txtConvictionDate.ClientID + "','DDMMMYYYY')";
+
+        FromDate.HRef = "javascript:NewCal('" + txtFromDate.ClientID + "','DDMMMYYYY')";
+        ToDate.HRef = "javascript:NewCal('" + txtToDate.ClientID + "','DDMMMYYYY')";
+
+        LastVisitDeptDate1.HRef = "javascript:NewCal('" + txtLastVisitDeptDate1.ClientID + "','DDMMMYYYY')";
+        LastVisitDeptDate2.HRef = "javascript:NewCal('" + txtLastVisitDeptDate2.ClientID + "','DDMMMYYYY')";
+        LastVisitDeptDate3.HRef = "javascript:NewCal('" + txtLastVisitDeptDate3.ClientID + "','DDMMMYYYY')";
+        aLastLivedDepartureDate1.HRef = "javascript:NewCal('" + txtLastLivedDepartureDate1.ClientID + "','DDMMMYYYY')";
+        aLastLivedDepartureDate2.HRef = "javascript:NewCal('" + txtLastLivedDepartureDate2.ClientID + "','DDMMMYYYY')";
+        aLastLivedDepartureDate3.HRef = "javascript:NewCal('" + txtLastLivedDepartureDate3.ClientID + "','DDMMMYYYY')";  
+
+        if (!IsPostBack)
+        {
+            pnlOldPassport.Attributes.Add("style", "display:none");
+            pnlPermaneneAddress.Attributes.Add("style", "display:none");
+            trPrevApplied.Attributes.Add("style", "display:none");
+            trVisit.Attributes.Add("style", "display:none");
+            trOtherNationality.Attributes.Add("style", "display:none");
+            pnlMillitery.Attributes.Add("style", "display:none");
+            pnlEmpl.Attributes.Add("style", "display:none");
+            pnlEmplSp.Attributes.Add("style", "display:none");
+            pnlVisaRejected.Attributes.Add("style", "display:none");
+            pnlRefusedOnArrival.Attributes.Add("style", "display:none");
+            pnlCrimeRecord.Attributes.Add("style", "display:none");
+            pnlDeported.Attributes.Add("style", "display:none");
+            trRefusedAnyCountry.Attributes.Add("style", "display:none");
+            trConvictionInOtherCountry.Attributes.Add("style", "display:none");
+           
+            trPrevApplied.Attributes.Add("style", "display:none");
+            trVisit.Attributes.Add("style", "display:none");
+            trDisease.Attributes.Add("style", "display:none");
+            trDrugReport.Attributes.Add("style", "display:none");
+            
+            trFraudRecord.Attributes.Add("style", "display:none");
+            trOtherNationality.Attributes.Add("style", "display:none");
+            trDeportedOtherCountry.Attributes.Add("style", "display:none");
+            hldEmbassy.Visible = false;
+
+            pnlPrevVisit2.Attributes.Add("style", "display:none");
+            pnlPrevVisit3.Attributes.Add("style", "display:none");
+
+            pnlLastVisitCountries2.Attributes.Add("style", "display:none");
+            pnlLastVisitCountries3.Attributes.Add("style", "display:none");
+
+            pnlLastLived2.Attributes.Add("style", "display:none");
+            pnlLastLived2.Attributes.Add("style", "display:none");
+
+            BindDropDownList();
+
+           
+            //To Fill the Burundi's Visa Types/Border Name DropDown Lists
+           
+            if (Request.QueryString["ApplicationId"] != null)
+            {
+                ViewState["ApplicationID"] = Request.QueryString["ApplicationId"].ToString();
+                
+                FillFields4Update(Request.QueryString["ApplicationId"].ToString());
+
+                BtnUpdate.Visible = true;
+                btnSubmit.Visible = false;
+
+                btnSave1.Visible = false;
+                btnSave2.Visible = false;
+                btnSave3.Visible = false;
+                btnSave4.Visible = false;
+                btnSave5.Visible = false;
+                btnSave6.Visible = false;
+                btnSave7.Visible = false;
+                btnSave8.Visible = false;
+                btnSave9.Visible = false; 
+                btnSave10.Visible = false;
+                btnSave11.Visible = false;
+                btnSave12.Visible = false;
+
+                btnUpdate1.Visible = true;
+                btnUpdate2.Visible = true;
+                btnUpdate3.Visible = true;
+                btnUpdate4.Visible = true;
+                btnUpdate5.Visible = true;
+                btnUpdate6.Visible = true;
+                btnUpdate7.Visible = true;
+                btnUpdate8.Visible = true;
+                btnUpdate9.Visible = true;
+                btnUpdate10.Visible = true;
+                btnUpdate11.Visible = true;
+                btnUpdate12.Visible = true;
+
+
+                if (objectSessionHolderPersistingData.User_Type == "AP")
+                {                    
+                    panel1.Visible = false;
+                }
+                else if (objectSessionHolderPersistingData.User_Type == "AG")
+                {
+                    panel1.Visible = true;         
+
+                }
+            }
+            else
+            {
+                if (objectSessionHolderPersistingData.User_Type == "AP")
+                {
+                    GetApplicantDetail();
+                    panel1.Visible = false;
+                }
+
+                else if (objectSessionHolderPersistingData.User_Type == "AG")
+                {
+                    panel1.Visible = true;
+                    BindDropDownSearchNation();
+                }
+                BtnUpdate.Visible = false;
+                btnSubmit.Visible = true;
+                btnUploadCancel.Visible = false;               
+            }
+
+           
+            /***************//////////////////*/
+            string nationalityCountryEACFlag = strEACFlagFun();
+            if (nationalityCountryEACFlag != null && nationalityCountryEACFlag == "Y") { chkcommunity.Checked = true; chkcommunity.Enabled = false; }
+            else { chkcommunity.Checked = false; chkcommunity.Enabled = true; }
+            /***************//////////////////*/
+        }        
+        
+        LabelMessage.Text = "";
+    }
+
+    protected void BindDropDownSearchNation()
+    {
+
+        ObjGeneral = new BaseLayer.General_function();
+
+        string QueryNationalitySearch = "Select CountryCode,CountryName from CountryMaster where Status='A' order by Abbreviation";
+        ObjGeneral.Fill_DDL(ddlNationalitySearch, QueryNationalitySearch, "CountryName", "CountryCode");
+        
+    }
+
+    protected void BindDropDownList()
+    {
+
+        ObjGeneral = new BaseLayer.General_function();
+
+        string QueryNationality = "Select Countryname,CountryCode from CountryMaster where Status='A' and  CountryCode <>'234' order by CountryName";
+        ObjGeneral.Fill_DDL(ddlNationality, QueryNationality, "Countryname", "CountryCode");             
+
+        ObjGeneral.Fill_DDL(ddlLastLivedCountry1, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlLastLivedCountry2, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlLastLivedCountry3, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlLastVisitCountry1, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlLastVisitCountry2, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlLastVisitCountry3, QueryNationality, "Countryname", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlCurrentLocation, QueryNationality, "CountryName", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlCurrentCountry, QueryNationality, "CountryName", "CountryCode");
+        ObjGeneral.Fill_DDL(ddlPerCountry, QueryNationality, "CountryName", "CountryCode");                           
+        
+        // string CountryNameQuery = "SELECT CountryCode,CountryName  FROM CountryMaster WHERE  STATUS='A' order by CountryName";
+        //ObjGeneral.Fill_DDL(ddlCountry, CountryNameQuery, "CountryName", "CountryCode");
+
+        //string QueryEntryPoint = "Select BorderCode, BorderName from BorderMaster where Status='A' order by BorderName";
+        //ObjGeneral.Fill_DDL(ddlEntryPoint, QueryEntryPoint, "BorderName", "BorderName");
+
+        //ObjGeneral.Fill_DDL(ddlExitPoint, QueryEntryPoint, "BorderName", "BorderName");
+
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        BusinessEntityLayer.BalVisaApplicationSubmit ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+        DataTable dt = new DataTable();
+        int iAppId = 0;
+        string strScript = string.Empty;
+        //string strtype = "";
+
+        ObjBalVisa.EntryType = (ddlEntryPoint.SelectedValue.ToString());
+
+        //try
+        //{
+          
+                int AppliedBy = Convert.ToInt32(objectSessionHolderPersistingData.User_ID.ToString());
+                string queryappliedby = "select (case when UserType ='AP' then '0' when UserType = 'AG' then '1' end) as UserType from UserMaster where UserID = '" + AppliedBy + "'";
+                DataTable dt1 = null;
+                dt1 = ObjGeneral.FetchData(queryappliedby);
+                ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+
+                ObjBalVisa.ratecurrency = lblRateCurrency.Text;
+                ObjBalVisa.logobrowse = Convert.ToString(ViewState["imagepath"]);
+                ObjBalVisa.PassportNo = this.TxtPassportNumber.Text;
+                ObjBalVisa.Nationality = this.ddlNationality.SelectedValue;
+                ObjBalVisa.PassportType = this.TxtPassportType.Text;
+                ObjBalVisa.Doissue = this.TxtDOI.Value;
+                ObjBalVisa.DoExp = this.TxtDOE.Value;
+                ObjBalVisa.Poissue = this.TxtPlaceofIssue.Text;
+                ObjBalVisa.issuingauthority = this.TxtIssuingAuthority.Text;
+                ObjBalVisa.fname = this.txtFirstName.Text;
+                ObjBalVisa.mname = this.txtMiddlename.Text;
+                ObjBalVisa.lname = this.txtLastName.Text;
+                ObjBalVisa.sex = this.ddlSex.SelectedValue;
+                ObjBalVisa.dob = this.txtDOB.Value;               
+                ObjBalVisa.pob = this.txtplaceofbirth.Text;
+                ObjBalVisa.maritalstatus = this.ddlMS.SelectedValue;
+                ObjBalVisa.fathername = this.txtFatherName.Text;
+                ObjBalVisa.mothername = this.txtMotherName.Text;
+                ObjBalVisa.spousename = this.txtSpousename.Text;
+                ObjBalVisa.currentaddress = this.txtcurrentAdds.Text;
+                ObjBalVisa.permanentaddress = this.txtPermanentAdds.Text;
+                ObjBalVisa.mobilenumber = this.TxtMobileNumber.Text;
+                ObjBalVisa.landlinenumber = this.TxtLandLineNumber.Text;
+                ObjBalVisa.primaryemail = this.txtPrimaryEmail.Text;
+                ObjBalVisa.alternateemail = this.txtAlternatEmail.Text;
+                ObjBalVisa.presentoccupation = this.txtPO.Text;
+                ObjBalVisa.country = this.ddlCountry.SelectedValue;
+                ObjBalVisa.VisaType = this.ddlVISAType.SelectedValue;
+                ObjBalVisa.EntryType = this.ddlEntryType.SelectedValue;
+                ObjBalVisa.periodtype = this.ddlPeriodType.SelectedValue;
+                ObjBalVisa.Duration = this.ddlPeriod.SelectedValue;
+                if (string.IsNullOrEmpty(Convert.ToString(this.txtRate.Text)) == true || Convert.ToString(this.txtRate.Text) == "")
+                {
+                    ObjBalVisa.rate = 0;
+                }
+                else
+                {
+                    ObjBalVisa.rate = Convert.ToDecimal(this.txtRate.Text);
+                }               
+                ObjBalVisa.ratecurrency = this.lblRateCurrency.Text;
+                ObjBalVisa.ArivalDate = this.txtArrivalDate.Value;
+                ObjBalVisa.DepDate = this.txtDepartureDate.Value;
+                ObjBalVisa.burundiaddress = this.txtBurundiAddress.Text;
+                ObjBalVisa.psb = this.txtPSB.Text;
+                ObjBalVisa.severaljourney = Convert.ToInt32(this.rbl5.SelectedValue.ToString());
+                ObjBalVisa.returnticket = Convert.ToInt32(this.rbl6.SelectedValue.ToString());
+                ObjBalVisa.EntryPoint = this.ddlEntryPoint.SelectedValue;
+                ObjBalVisa.ExitPoint = this.ddlExitPoint.SelectedValue;
+
+                ObjBalVisa.AppliedBy = (dt1.Rows.Count >0 ) ? Convert.ToInt32(dt1.Rows[0]["UserType"].ToString()): 1;
+                ObjBalVisa.AppliedByUserId = AppliedBy;
+                
+                ObjBalVisa.CreatedBy = AppliedBy;
+                ObjBalVisa.Status = (chkcommunity.Checked == true) ? 1 : 0;
+
+                ObjBalVisa.EmployerName = txtEmployerName.Text.ToString();
+                ObjBalVisa.JobDesc = txtJobDesc.Text.ToString();
+                ObjBalVisa.OcuPossition = txtOcuPossition.Text.ToString();
+
+                 ObjBalVisa.MoneyForTravellUSD  = txtMoney.Text.ToString();
+                 ObjBalVisa.ModeOfTravel = ddlModeOfTravel.SelectedValue.ToString()  ;
+                 ObjBalVisa.IntededDuration = "3";
+
+                 ObjBalVisa.flagPrevApplied = ddlPrevApplied.Text.ToString();
+                 ObjBalVisa.flagPrevVisit = ddlPrevVisit.Text.ToString();
+                 ObjBalVisa.flagVisaGranted = ddlVisaGranted.Text.ToString();
+                 ObjBalVisa.PrevAppliedVisaPlace = txtPrevAppliedVisaPlace.Text.ToString();
+                 ObjBalVisa.PrevVisitReason = txtPrevVisitReason.Text.ToString();
+                 ObjBalVisa.PrevVisaRejReason = txtPrevVisaRejReason.Text.ToString();
+
+                 ObjBalVisa.PreVisit1FromDate = txtPreVisit1FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit1ToDate = txtPreVisit1ToDate.Value.ToString();
+                 ObjBalVisa.PreVisit1Addr1 = txtPreVisit1Addr1.Text.ToString();
+                 ObjBalVisa.PreVisit1Addr2 = txtPreVisit1Addr2.Text.ToString();
+                 ObjBalVisa.PreVisit1City = txtPreVisit1City.Text.ToString();
+                 ObjBalVisa.PreVisit1State = txtPreVisit1State.Text.ToString();
+                 ObjBalVisa.PreVisit1District = txtPreVisit1District.Text.ToString();
+                 ObjBalVisa.PreVisit1Postcode = txtPreVisit1Postcode.Text.ToString();
+
+                 ObjBalVisa.PreVisit2FromDate = txtPreVisit2FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit2ToDate = txtPreVisit2ToDate.Value.ToString();
+                 ObjBalVisa.PreVisit2Addr1 = txtPreVisit2Addr1.Text.ToString();
+                 ObjBalVisa.PreVisit2Addr2 = txtPreVisit2Addr2.Text.ToString();
+                 ObjBalVisa.PreVisit2City = txtPreVisit2City.Text.ToString();
+                 ObjBalVisa.PreVisit2State = txtPreVisit2State.Text.ToString();
+                 ObjBalVisa.PreVisit2District = txtPreVisit2District.Text.ToString();
+                 ObjBalVisa.PreVisit2Postcode = txtPreVisit2Postcode.Text.ToString();
+
+                 ObjBalVisa.PreVisit3FromDate = txtPreVisit3FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit3ToDate = txtPreVisit3ToDate.Value.ToString(); 
+                 ObjBalVisa.PreVisit3Addr1 = txtPreVisit3Addr1.Text.ToString(); 
+                 ObjBalVisa.PreVisit3Addr2 = txtPreVisit3Addr2.Text.ToString(); 
+                 ObjBalVisa.PreVisit3City = txtPreVisit3City.Text.ToString(); 
+                 ObjBalVisa.PreVisit3State = txtPreVisit3State.Text.ToString(); 
+                 ObjBalVisa.PreVisit3District = txtPreVisit3District.Text.ToString(); 
+                 ObjBalVisa.PreVisit3Postcode = txtPreVisit3Postcode.Text.ToString();
+
+                 ObjBalVisa.ColorHair = ddlHairColor.SelectedValue.ToString();
+                 ObjBalVisa.ColorEye = ddlEyeColor.SelectedValue.ToString();
+                 ObjBalVisa.IndentityMark = txtMark.Text.ToString();
+                 ObjBalVisa.Height = txtHeights.Text.ToString();
+
+                 ObjBalVisa.InMilitary = txtInMilitary.Text.ToString();
+                 ObjBalVisa.FromDate = txtFromDate.Value.Trim().ToString();
+                 ObjBalVisa.ToDate = txtToDate.Value.Trim().ToString();
+
+                 ObjBalVisa.EmpName = txtEmpName.Text.Trim().ToString();
+                 ObjBalVisa.EmpPhoneNo = txtEmpPhoneNo.Text.Trim().ToString();
+                 ObjBalVisa.EmpLivedFrom = txtEmpLivedFrom.Text.Trim().ToString();
+                 ObjBalVisa.Address1 = txtEmpAddr1.Text.Trim().ToString();
+                 ObjBalVisa.Address2 = txtEmpAddr2.Text.Trim().ToString();
+                 ObjBalVisa.EmpCity = txtEmpCity.Text.Trim().ToString();
+                 ObjBalVisa.EmpState = txtEmpState.Text.Trim().ToString();
+                 ObjBalVisa.EmpPostCode = txtEmpPostCode.Text.Trim().ToString();
+
+                 ObjBalVisa.IntedAddress1 = txtBurundiAddress.Text.Trim().ToString();
+                 ObjBalVisa.IntedAddress2 = txtIntedAddress2.Text.Trim().ToString();
+                 ObjBalVisa.IntedCity = txtIntedCity.Text.Trim().ToString();
+                 ObjBalVisa.IntedState = txtIntedState.Text.Trim().ToString();
+                 ObjBalVisa.IntedDistrict = txtIntedDistrict.Text.Trim().ToString();
+                 ObjBalVisa.IntedPostcode = txtIntedPostcode.Text.Trim().ToString();
+
+                 ObjBalVisa.ApplyCountryYears = txtApplyCountryYears.Text.Trim().ToString();
+                 ObjBalVisa.FlagSeriousDisease = ddlSeriousDisease.SelectedValue.ToString();
+                 ObjBalVisa.FlagCrimeRecord = ddlCrimeRecord.SelectedValue.ToString();
+                 ObjBalVisa.FlagDrugReport = ddlDrugReport.SelectedValue.ToString();
+                 ObjBalVisa.FlagDeported = ddlDeported.SelectedValue.ToString();
+                 ObjBalVisa.FlagFraudRecord = ddlFraudRecord.SelectedValue.ToString();
+
+                 //Last visited countries details
+                 ObjBalVisa.CountryCode1 = ddlLastVisitCountry1.SelectedValue.ToString();
+                 ObjBalVisa.CityName1 = txtLastVisitCity1.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate1 = txtLastVisitDeptDate1.Value.Trim().ToString();
+                 ObjBalVisa.CountryCode2 = ddlLastVisitCountry2.SelectedValue.ToString();
+                 ObjBalVisa.CityName2 = txtLastVisitCity2.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate2 = txtLastVisitDeptDate2.Value.Trim().ToString();
+                 ObjBalVisa.CountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                 ObjBalVisa.CityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate3 = txtLastVisitDeptDate3.Value.Trim().ToString();
+
+                 //Last Lived countries details
+                 ObjBalVisa.LastLivedCountryCode1 = ddlLastLivedCountry1.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName1 = txtLastLivedCityName1.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate1 = txtLastLivedDepartureDate1.Value.Trim().ToString();
+                 ObjBalVisa.LastLivedCountryCode2 = ddlLastLivedCountry2.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName2 = txtLastLivedCityName2.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate2 = txtLastLivedDepartureDate2.Value.Trim().ToString();
+                 ObjBalVisa.LastLivedCountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate3 = txtLastLivedDepartureDate3.Value.Trim().ToString();
+
+                 ObjBalVisa.flagFastTrack = (chkFastTrack.Checked == true) ? "Y" : "N";   
+                 
+                 ObjBalVisa.OtherName  = txtOtherName.Text.Trim().ToString();
+
+                 ObjBalVisa.FatherLastName = txtFatherLastName.Text.Trim().ToString();
+                 ObjBalVisa.FatherDateOfBirth = txtFatherDateOfBirth.Value.Trim().ToString();
+                 ObjBalVisa.FatherAddress = txtFatherAddress.Text.Trim().ToString();
+                 ObjBalVisa.FatherNationality = txtFatherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.MotherLastName = txtMotherLastName.Text.Trim().ToString();
+                 ObjBalVisa.MotherDateOfBirth = txtMotherDateOfBirth.Value.Trim().ToString();
+                 ObjBalVisa.MotherAddress = txtMotherAddress.Text.Trim().ToString();
+                 ObjBalVisa.MotherNationality = txtMotherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.OldPassport = txtOldPassport.Text.Trim().ToString();
+                 ObjBalVisa.OldPaasportIssueDate = txtOldPaasportIssueDate.Value.Trim().ToString();
+                 ObjBalVisa.PlaceIssueOldPassport = txtPlaceIssueOldPassport.Text.Trim().ToString();
+
+                 ObjBalVisa.currAddress2 = txtAddress2.Text.Trim().ToString();
+                 ObjBalVisa.City = txtCity.Text.Trim().ToString();
+                 ObjBalVisa.State = txtState.Text.Trim().ToString();
+                 ObjBalVisa.District = txtDistrict.Text.Trim().ToString();
+                 ObjBalVisa.Postcode = txtPostcode.Text.Trim().ToString();
+                 ObjBalVisa.CurrentCountry = ddlCurrentCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.LivedInCurrentAdd = txtLivedInCurrentAdd.Text.Trim().ToString();
+
+                 ObjBalVisa.PerAddres2 = txtPerAddres2.Text.Trim().ToString();
+                 ObjBalVisa.PerCity = txtPerCity.Text.Trim().ToString();
+                 ObjBalVisa.PerState = txtPerState.Text.Trim().ToString();
+                 ObjBalVisa.PerPostcode = txtPerPostcode.Text.Trim().ToString();
+                 ObjBalVisa.PerDistrict = txtPerDistrict.Text.Trim().ToString();
+                 ObjBalVisa.PerCountry = ddlPerCountry.SelectedValue.Trim().ToString();
+
+                 ObjBalVisa.CurrentLocation = ddlCurrentLocation.SelectedValue.Trim().ToString();
+
+                 ObjBalVisa.flagOtherNationality = rblOtherNationality.SelectedValue.Trim().ToString();
+                 ObjBalVisa.OtherNationality = txtOtherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.DateRejected = txtDateRejected.Value.Trim().ToString();
+                 ObjBalVisa.LastRejectedVisaType = txtLastRejectedVisaType.Text.Trim().ToString();
+                 ObjBalVisa.flagRejeAppeal = rblRejeAppeal.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RejectedAppDiffer = txtRejectedAppDiffer.Text.Trim().ToString();
+
+                 ObjBalVisa.flagRefusedAnyCountry = rblRefusedAnyCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedAnyCountry = txtRefusedAnyCountry.Text.Trim().ToString();
+
+                 ObjBalVisa.flagRefuseEntryOnArrival = rblRefuseEntryOnArrival.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalPlace = txtRefusedVisaOnArrivalPlace.Text.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalDate = txtRefusedVisaOnArrivalDate.Value.Trim().ToString();
+                 ObjBalVisa.flagRefusedVisArriAppeal = rblRefusedVisArriAppeal.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedVisArriAppOutcome = txtRefusedVisArriAppOutcome.Text.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalReason = txtRefusedVisaOnArrivalReason.Text.Trim().ToString();
+
+                 ObjBalVisa.Disease = txtDisease.Text.Trim().ToString();
+
+                 ObjBalVisa.CrimeRecord = txtCrimeRecord.Text.Trim().ToString();
+                 ObjBalVisa.ConvictionDate = txtConvictionDate.Value.Trim().ToString();
+                 ObjBalVisa.ConvictedPlace = txtConvictedPlace.Text.Trim().ToString();
+                 ObjBalVisa.Sentence = txtSentence.Text.Trim().ToString();
+
+                 ObjBalVisa.flagConvictionInOtherCountry = rblConvictionInOtherCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.ConvictionInOtherCountry = txtConvictionInOtherCountry.Text.Trim().ToString();
+                 ObjBalVisa.DrugReport = txtDrugReport.Text.Trim().ToString();
+
+                 ObjBalVisa.DeportedNoticeDate = txtDeportedNotice.Value.Trim().ToString();
+                 ObjBalVisa.DeportedNoticeType = rblDeportedNotice.SelectedValue.Trim().ToString();
+                 
+                 ObjBalVisa.DeportedLeave = txtDeportedLeave.Text.Trim().ToString();
+                ObjBalVisa.DeportedAppealeddetails = txtDeportedAppealeddetails.Text.Trim().ToString();
+
+                ObjBalVisa.flagDeportedOtherCountry = rblDeportedOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.DeportedOtherCountry = txtDeportedOtherCountry.Text.Trim().ToString();
+                
+                ObjBalVisa.FraudRecord = txtFraudRecord.Text.Trim().ToString();
+                ObjBalVisa.flagComplete = "N";
+                ObjBalVisa.flagFreshPassport = rblFreshPaasport.SelectedValue.Trim()  ;
+                ObjBalVisa.flagCuurContactDetails = rblContactDetails.SelectedValue.Trim();
+                ObjBalVisa.EmbassyId = ddlEmbassyPref.SelectedValue;
+                ObjBalVisa.flagInMillitary = rblInMillitary.SelectedValue;
+                ObjBalVisa.flagEmployement = rblEmplSp.SelectedValue;
+                ObjBalVisa.flagEmplDt = rblEmplDt.SelectedValue;
+                ObjBalVisa.flagLastVisit = rblDisplayVisit.SelectedValue;
+                ObjBalVisa.flagLastVisitCountries = rblLastVisitCountries.SelectedValue;
+                ObjBalVisa.flagLastLived = rblLastLived.SelectedValue;
+                      
+                iAppId = ObjBalVisa.GetVisaAppsubmit();
+
+                //----------------by chitresh------------------               
+                string visatypecode = ddlVISAType.SelectedValue.ToString();
+                //int iAppId = 3;
+
+                SqlConnection con1 = new SqlConnection(@"Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                con1.Open();
+                SqlCommand cmd1 = new SqlCommand("select  dm.DocCode from DocumentMaster dm, VisatypeDocLink vd where dm.DocCode=vd.DocCode and vd.VisaTypeCode='" + visatypecode + "'", con1);
+                SqlDataReader dr = cmd1.ExecuteReader();
+                DataTable dt4 = new DataTable();
+                dt4.Load(dr);
+                int cnt = dt4.Rows.Count;
+                con1.Close();
+                string[] a = new string[100];
+                for (int j = 0; j < cnt; j++)
+                {
+                    a[j + 1] = dt4.Rows[j]["DocCode"].ToString();
+                }
+
+                string filepath = @"C:/OVPS/new";
+                HttpFileCollection uploadfile = Request.Files;
+                for (int i = 0; i < uploadfile.Count; i++)
+                {
+                    HttpPostedFile uploadpostfile = uploadfile[i];
+                    if (uploadpostfile.ContentLength > 0)
+                    {
+                        string path = filepath + " " + "Application id " + iAppId + " " + "Doc" + " " + "(" + i + ")" + " " + System.IO.Path.GetFileName(uploadpostfile.FileName);
+                        uploadpostfile.SaveAs(path);
+                        SqlConnection con = new SqlConnection(@"Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("insert into VisaApplicationDocumentLink (ApplicationID,Filename,DocCode) values ('" + iAppId + "','" + path.ToString() + "','" + a[i].ToString() + "')", con);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                //------------------------------------end task--------------------------             
+
+                Response.Redirect("FrmVisaStatus.aspx");  
+        //}
+        //catch (Exception ex)
+        //{
+        //    //throw (ex);
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = ex.Message.ToString();
+
+        //}
+
+
+
+    }
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        BusinessEntityLayer.BalVisaApplicationSubmit ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+        DataTable dt = new DataTable();
+        int iAppId = 0;
+        string strScript = string.Empty;
+        //string strtype = "";
+
+        ObjBalVisa.EntryType = (ddlEntryPoint.SelectedValue.ToString());
+
+        //try
+        //{
+            if (ViewState["imagepath"] != null)
+            {
+                int AppliedBy = Convert.ToInt32(objectSessionHolderPersistingData.User_ID.ToString());
+                string queryappliedby = "select (case when UserType ='AP' then '0' when UserType = 'AG' then '1' end) as UserType from UserMaster where UserID = '" + AppliedBy + "'";
+                DataTable dt1 = null;
+                dt1 = ObjGeneral.FetchData(queryappliedby);
+                ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+
+                ObjBalVisa.ratecurrency = lblRateCurrency.Text;
+                ObjBalVisa.logobrowse = Convert.ToString(ViewState["imagepath"]);
+                ObjBalVisa.PassportNo = this.TxtPassportNumber.Text;
+                ObjBalVisa.Nationality = this.ddlNationality.SelectedValue;
+                ObjBalVisa.PassportType = this.TxtPassportType.Text;
+                ObjBalVisa.Doissue = this.TxtDOI.Value;
+                ObjBalVisa.DoExp = this.TxtDOE.Value;
+                ObjBalVisa.Poissue = this.TxtPlaceofIssue.Text;
+                ObjBalVisa.issuingauthority = this.TxtIssuingAuthority.Text;
+                ObjBalVisa.fname = this.txtFirstName.Text;
+                ObjBalVisa.mname = this.txtMiddlename.Text;
+                ObjBalVisa.lname = this.txtLastName.Text;
+                ObjBalVisa.sex = this.ddlSex.SelectedValue;
+                ObjBalVisa.dob = this.txtDOB.Value;               
+                ObjBalVisa.pob = this.txtplaceofbirth.Text;
+                ObjBalVisa.maritalstatus = this.ddlMS.SelectedValue;
+                ObjBalVisa.fathername = this.txtFatherName.Text;
+                ObjBalVisa.mothername = this.txtMotherName.Text;
+                ObjBalVisa.spousename = this.txtSpousename.Text;
+                ObjBalVisa.currentaddress = this.txtcurrentAdds.Text;
+                ObjBalVisa.permanentaddress = this.txtPermanentAdds.Text;
+                ObjBalVisa.mobilenumber = this.TxtMobileNumber.Text;
+                ObjBalVisa.landlinenumber = this.TxtLandLineNumber.Text;
+                ObjBalVisa.primaryemail = this.txtPrimaryEmail.Text;
+                ObjBalVisa.alternateemail = this.txtAlternatEmail.Text;
+                ObjBalVisa.presentoccupation = this.txtPO.Text;
+                ObjBalVisa.country = this.ddlCountry.SelectedValue;
+                ObjBalVisa.VisaType = this.ddlVISAType.SelectedValue;
+                ObjBalVisa.EntryType = this.ddlEntryType.SelectedValue;
+                ObjBalVisa.periodtype = this.ddlPeriodType.SelectedValue;
+                ObjBalVisa.Duration = this.ddlPeriod.SelectedValue;
+                ObjBalVisa.rate = Convert.ToDecimal(this.txtRate.Text);
+                ObjBalVisa.ratecurrency = this.lblRateCurrency.Text;
+                ObjBalVisa.ArivalDate = this.txtArrivalDate.Value;
+                ObjBalVisa.DepDate = this.txtDepartureDate.Value;
+                ObjBalVisa.burundiaddress = this.txtBurundiAddress.Text;
+                ObjBalVisa.psb = this.txtPSB.Text;
+                ObjBalVisa.severaljourney = Convert.ToInt32(this.rbl5.SelectedValue.ToString());
+                ObjBalVisa.returnticket = Convert.ToInt32(this.rbl6.SelectedValue.ToString());
+                ObjBalVisa.EntryPoint = this.ddlEntryPoint.SelectedValue;
+                ObjBalVisa.ExitPoint = this.ddlExitPoint.SelectedValue;
+
+                ObjBalVisa.AppliedBy = (dt1.Rows.Count >0 ) ? Convert.ToInt32(dt1.Rows[0]["UserType"].ToString()): 1;
+                ObjBalVisa.AppliedByUserId = AppliedBy;
+                
+                ObjBalVisa.CreatedBy = AppliedBy;
+                ObjBalVisa.Status = (chkcommunity.Checked == true) ? 1 : 0;
+
+                ObjBalVisa.EmployerName = txtEmployerName.Text.ToString();
+                ObjBalVisa.JobDesc = txtJobDesc.Text.ToString();
+                ObjBalVisa.OcuPossition = txtOcuPossition.Text.ToString();
+
+                 ObjBalVisa.MoneyForTravellUSD  = txtMoney.Text.ToString();
+                 ObjBalVisa.ModeOfTravel = ddlModeOfTravel.SelectedValue.ToString()  ;
+                 ObjBalVisa.IntededDuration = "3";
+
+                 ObjBalVisa.flagPrevApplied = ddlPrevApplied.Text.ToString();
+                 ObjBalVisa.flagPrevVisit = ddlPrevVisit.Text.ToString();
+                 ObjBalVisa.flagVisaGranted = ddlVisaGranted.Text.ToString();
+                 ObjBalVisa.PrevAppliedVisaPlace = txtPrevAppliedVisaPlace.Text.ToString();
+                 ObjBalVisa.PrevVisitReason = txtPrevVisitReason.Text.ToString();
+                 ObjBalVisa.PrevVisaRejReason = txtPrevVisaRejReason.Text.ToString();
+
+                 ObjBalVisa.PreVisit1FromDate = txtPreVisit1FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit1ToDate = txtPreVisit1ToDate.Value.ToString();
+                 ObjBalVisa.PreVisit1Addr1 = txtPreVisit1Addr1.Text.ToString();
+                 ObjBalVisa.PreVisit1Addr2 = txtPreVisit1Addr2.Text.ToString();
+                 ObjBalVisa.PreVisit1City = txtPreVisit1City.Text.ToString();
+                 ObjBalVisa.PreVisit1State = txtPreVisit1State.Text.ToString();
+                 ObjBalVisa.PreVisit1District = txtPreVisit1District.Text.ToString();
+                 ObjBalVisa.PreVisit1Postcode = txtPreVisit1Postcode.Text.ToString();
+
+                 ObjBalVisa.PreVisit2FromDate = txtPreVisit2FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit2ToDate = txtPreVisit2ToDate.Value.ToString();
+                 ObjBalVisa.PreVisit2Addr1 = txtPreVisit2Addr1.Text.ToString();
+                 ObjBalVisa.PreVisit2Addr2 = txtPreVisit2Addr2.Text.ToString();
+                 ObjBalVisa.PreVisit2City = txtPreVisit2City.Text.ToString();
+                 ObjBalVisa.PreVisit2State = txtPreVisit2State.Text.ToString();
+                 ObjBalVisa.PreVisit2District = txtPreVisit2District.Text.ToString();
+                 ObjBalVisa.PreVisit2Postcode = txtPreVisit2Postcode.Text.ToString();
+
+                 ObjBalVisa.PreVisit3FromDate = txtPreVisit3FromDate.Value.ToString();
+                 ObjBalVisa.PreVisit3ToDate = txtPreVisit3ToDate.Value.ToString(); 
+                 ObjBalVisa.PreVisit3Addr1 = txtPreVisit3Addr1.Text.ToString(); 
+                 ObjBalVisa.PreVisit3Addr2 = txtPreVisit3Addr2.Text.ToString(); 
+                 ObjBalVisa.PreVisit3City = txtPreVisit3City.Text.ToString(); 
+                 ObjBalVisa.PreVisit3State = txtPreVisit3State.Text.ToString(); 
+                 ObjBalVisa.PreVisit3District = txtPreVisit3District.Text.ToString(); 
+                 ObjBalVisa.PreVisit3Postcode = txtPreVisit3Postcode.Text.ToString();
+
+                 ObjBalVisa.ColorHair = ddlHairColor.SelectedValue.ToString();
+                 ObjBalVisa.ColorEye = ddlEyeColor.SelectedValue.ToString();
+                 ObjBalVisa.IndentityMark = txtMark.Text.ToString();
+                 ObjBalVisa.Height = txtHeights.Text.ToString();
+
+                 ObjBalVisa.InMilitary = txtInMilitary.Text.ToString();
+                 ObjBalVisa.FromDate = txtFromDate.Value.Trim().ToString();
+                 ObjBalVisa.ToDate = txtToDate.Value.Trim().ToString();
+
+                 ObjBalVisa.EmpName = txtEmpName.Text.Trim().ToString();
+                 ObjBalVisa.EmpPhoneNo = txtEmpPhoneNo.Text.Trim().ToString();
+                 ObjBalVisa.EmpLivedFrom = txtEmpLivedFrom.Text.Trim().ToString();
+                 ObjBalVisa.Address1 = txtEmpAddr1.Text.Trim().ToString();
+                 ObjBalVisa.Address2 = txtEmpAddr2.Text.Trim().ToString();
+                 ObjBalVisa.EmpCity = txtEmpCity.Text.Trim().ToString();
+                 ObjBalVisa.EmpState = txtEmpState.Text.Trim().ToString();
+                 ObjBalVisa.EmpPostCode = txtEmpPostCode.Text.Trim().ToString();
+
+                 ObjBalVisa.IntedAddress1 = txtBurundiAddress.Text.Trim().ToString();
+                 ObjBalVisa.IntedAddress2 = txtIntedAddress2.Text.Trim().ToString();
+                 ObjBalVisa.IntedCity = txtIntedCity.Text.Trim().ToString();
+                 ObjBalVisa.IntedState = txtIntedState.Text.Trim().ToString();
+                 ObjBalVisa.IntedDistrict = txtIntedDistrict.Text.Trim().ToString();
+                 ObjBalVisa.IntedPostcode = txtIntedPostcode.Text.Trim().ToString();
+
+                 ObjBalVisa.ApplyCountryYears = txtApplyCountryYears.Text.Trim().ToString();
+                 ObjBalVisa.FlagSeriousDisease = ddlSeriousDisease.SelectedValue.ToString();
+                 ObjBalVisa.FlagCrimeRecord = ddlCrimeRecord.SelectedValue.ToString();
+                 ObjBalVisa.FlagDrugReport = ddlDrugReport.SelectedValue.ToString();
+                 ObjBalVisa.FlagDeported = ddlDeported.SelectedValue.ToString();
+                 ObjBalVisa.FlagFraudRecord = ddlFraudRecord.SelectedValue.ToString();
+
+                 //Last visited countries details
+                 ObjBalVisa.CountryCode1 = ddlLastVisitCountry1.SelectedValue.ToString();
+                 ObjBalVisa.CityName1 = txtLastVisitCity1.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate1 = txtLastVisitDeptDate1.Value.Trim().ToString();
+                 ObjBalVisa.CountryCode2 = ddlLastVisitCountry2.SelectedValue.ToString();
+                 ObjBalVisa.CityName2 = txtLastVisitCity2.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate2 = txtLastVisitDeptDate2.Value.Trim().ToString();
+                 ObjBalVisa.CountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                 ObjBalVisa.CityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                 ObjBalVisa.DepartureDate3 = txtLastVisitDeptDate3.Value.Trim().ToString();
+
+                 //Last Lived countries details
+                 ObjBalVisa.LastLivedCountryCode1 = ddlLastLivedCountry1.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName1 = txtLastLivedCityName1.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate1 = txtLastLivedDepartureDate1.Value.Trim().ToString();
+                 ObjBalVisa.LastLivedCountryCode2 = ddlLastLivedCountry2.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName2 = txtLastLivedCityName2.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate2 = txtLastLivedDepartureDate2.Value.Trim().ToString();
+                 ObjBalVisa.LastLivedCountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                 ObjBalVisa.LastLivedCityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                 ObjBalVisa.LastLivedDepartureDate3 = txtLastLivedDepartureDate3.Value.Trim().ToString();
+
+                 ObjBalVisa.flagFastTrack = (chkFastTrack.Checked == true) ? "Y" : "N";   
+                 
+                 ObjBalVisa.OtherName  = txtOtherName.Text.Trim().ToString();
+
+                 ObjBalVisa.FatherLastName = txtFatherLastName.Text.Trim().ToString();
+                 ObjBalVisa.FatherDateOfBirth = txtFatherDateOfBirth.Value.Trim().ToString();
+                 ObjBalVisa.FatherAddress = txtFatherAddress.Text.Trim().ToString();
+                 ObjBalVisa.FatherNationality = txtFatherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.MotherLastName = txtMotherLastName.Text.Trim().ToString();
+                 ObjBalVisa.MotherDateOfBirth = txtMotherDateOfBirth.Value.Trim().ToString();
+                 ObjBalVisa.MotherAddress = txtMotherAddress.Text.Trim().ToString();
+                 ObjBalVisa.MotherNationality = txtMotherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.OldPassport = txtOldPassport.Text.Trim().ToString();
+                 ObjBalVisa.OldPaasportIssueDate = txtOldPaasportIssueDate.Value.Trim().ToString();
+                 ObjBalVisa.PlaceIssueOldPassport = txtPlaceIssueOldPassport.Text.Trim().ToString();
+
+                 ObjBalVisa.currAddress2 = txtAddress2.Text.Trim().ToString();
+                 ObjBalVisa.City = txtCity.Text.Trim().ToString();
+                 ObjBalVisa.State = txtState.Text.Trim().ToString();
+                 ObjBalVisa.District = txtDistrict.Text.Trim().ToString();
+                 ObjBalVisa.Postcode = txtPostcode.Text.Trim().ToString();
+                 ObjBalVisa.CurrentCountry = ddlCurrentCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.LivedInCurrentAdd = txtLivedInCurrentAdd.Text.Trim().ToString();
+
+                 ObjBalVisa.PerAddres2 = txtPerAddres2.Text.Trim().ToString();
+                 ObjBalVisa.PerCity = txtPerCity.Text.Trim().ToString();
+                 ObjBalVisa.PerState = txtPerState.Text.Trim().ToString();
+                 ObjBalVisa.PerPostcode = txtPerPostcode.Text.Trim().ToString();
+                 ObjBalVisa.PerDistrict = txtPerDistrict.Text.Trim().ToString();
+                 ObjBalVisa.PerCountry = ddlPerCountry.SelectedValue.Trim().ToString();
+
+                 ObjBalVisa.CurrentLocation = ddlCurrentLocation.SelectedValue.Trim().ToString();
+
+                 ObjBalVisa.flagOtherNationality = rblOtherNationality.SelectedValue.Trim().ToString();
+                 ObjBalVisa.OtherNationality = txtOtherNationality.Text.Trim().ToString();
+
+                 ObjBalVisa.DateRejected = txtDateRejected.Value.Trim().ToString();
+                 ObjBalVisa.LastRejectedVisaType = txtLastRejectedVisaType.Text.Trim().ToString();
+                 ObjBalVisa.flagRejeAppeal = rblRejeAppeal.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RejectedAppDiffer = txtRejectedAppDiffer.Text.Trim().ToString();
+
+                 ObjBalVisa.flagRefusedAnyCountry = rblRefusedAnyCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedAnyCountry = txtRefusedAnyCountry.Text.Trim().ToString();
+
+                 ObjBalVisa.flagRefuseEntryOnArrival = rblRefuseEntryOnArrival.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalPlace = txtRefusedVisaOnArrivalPlace.Text.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalDate = txtRefusedVisaOnArrivalDate.Value.Trim().ToString();
+                 ObjBalVisa.flagRefusedVisArriAppeal = rblRefusedVisArriAppeal.SelectedValue.Trim().ToString();
+                 ObjBalVisa.RefusedVisArriAppOutcome = txtRefusedVisArriAppOutcome.Text.Trim().ToString();
+                 ObjBalVisa.RefusedVisaOnArrivalReason = txtRefusedVisaOnArrivalReason.Text.Trim().ToString();
+
+                 ObjBalVisa.Disease = txtDisease.Text.Trim().ToString();
+
+                 ObjBalVisa.CrimeRecord = txtCrimeRecord.Text.Trim().ToString();
+                 ObjBalVisa.ConvictionDate = txtConvictionDate.Value.Trim().ToString();
+                 ObjBalVisa.ConvictedPlace = txtConvictedPlace.Text.Trim().ToString();
+                 ObjBalVisa.Sentence = txtSentence.Text.Trim().ToString();
+
+                 ObjBalVisa.flagConvictionInOtherCountry = rblConvictionInOtherCountry.SelectedValue.Trim().ToString();
+                 ObjBalVisa.ConvictionInOtherCountry = txtConvictionInOtherCountry.Text.Trim().ToString();
+                 ObjBalVisa.DrugReport = txtDrugReport.Text.Trim().ToString();
+
+                 ObjBalVisa.DeportedNoticeDate = txtDeportedNotice.Value.Trim().ToString();
+                 ObjBalVisa.DeportedNoticeType = rblDeportedNotice.SelectedValue.Trim().ToString();
+                ObjBalVisa.DeportedLeave = txtDeportedLeave.Text.Trim().ToString();
+                ObjBalVisa.DeportedAppealeddetails = txtDeportedAppealeddetails.Text.Trim().ToString();
+
+                ObjBalVisa.flagDeportedOtherCountry = rblDeportedOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.DeportedOtherCountry = txtDeportedOtherCountry.Text.Trim().ToString();
+
+                ObjBalVisa.FraudRecord = txtFraudRecord.Text.Trim().ToString();
+                ObjBalVisa.flagComplete = "Y";
+
+                ObjBalVisa.flagFreshPassport = rblFreshPaasport.SelectedValue.Trim();
+                ObjBalVisa.flagCuurContactDetails = rblContactDetails.SelectedValue.Trim();
+                ObjBalVisa.EmbassyId = ddlEmbassyPref.SelectedValue;
+                ObjBalVisa.flagInMillitary = rblInMillitary.SelectedValue;
+                ObjBalVisa.flagEmployement = rblEmplSp.SelectedValue;
+                ObjBalVisa.flagEmplDt = rblEmplDt.SelectedValue;
+                ObjBalVisa.flagLastVisit = rblDisplayVisit.SelectedValue;
+                ObjBalVisa.flagLastVisitCountries = rblLastVisitCountries.SelectedValue;
+                ObjBalVisa.flagLastLived = rblLastLived.SelectedValue;
+
+                iAppId = ObjBalVisa.GetVisaAppsubmit();
+
+                //----------------by chitresh------------------               
+                string visatypecode = ddlVISAType.SelectedValue.ToString();
+                //int iAppId = 3;
+
+                SqlConnection con1 = new SqlConnection(@"Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                con1.Open();
+                SqlCommand cmd1 = new SqlCommand("select  dm.DocCode from DocumentMaster dm, VisatypeDocLink vd where dm.DocCode=vd.DocCode and vd.VisaTypeCode='" + visatypecode + "'", con1);
+                SqlDataReader dr = cmd1.ExecuteReader();
+                DataTable dt4 = new DataTable();
+                dt4.Load(dr);
+                int cnt = dt4.Rows.Count;
+                con1.Close();
+                string[] a = new string[100];
+                for (int j = 0; j < cnt; j++)
+                {
+                    a[j + 1] = dt4.Rows[j]["DocCode"].ToString();
+                }
+
+                string filepath = @"C:/OVPS/new";
+                HttpFileCollection uploadfile = Request.Files;
+                for (int i = 0; i < uploadfile.Count; i++)
+                {
+                    HttpPostedFile uploadpostfile = uploadfile[i];
+                    if (uploadpostfile.ContentLength > 0)
+                    {
+                        string path = filepath + " " + "Application id " + iAppId + " " + "Doc" + " " + "(" + i + ")" + " " + System.IO.Path.GetFileName(uploadpostfile.FileName);
+                        uploadpostfile.SaveAs(path);
+                        SqlConnection con = new SqlConnection(@"Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("insert into VisaApplicationDocumentLink (ApplicationID,Filename,DocCode) values ('" + iAppId + "','" + path.ToString() + "','" + a[i].ToString() + "')", con);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                //------------------------------------end task--------------------------
+
+                if (iAppId > 0)
+                {
+                    //Send Email Confirmation about the successful Application
+                    BusinessEntityLayer.BalApplicantRegistration  ObjBalAppReg = new BusinessEntityLayer.BalApplicantRegistration();
+                    string sthtml = "";
+
+                    sthtml = sthtml + "<table border='0'>";
+                    sthtml = sthtml + "<tr><td>Dear "+ txtFirstName.Text +",</td><tr>";
+                    sthtml = sthtml + "<tr><td> </td><tr>";
+                    sthtml = sthtml + "<tr><td> </td><tr>";
+                    sthtml = sthtml + "<tr><td> <p align='justify'> Thank you for using our online Visa Application facility. ";
+                    sthtml = sthtml + " Your e-Visa application has been submitted successfully and the details are indicated below.</p> </td><tr>";
+                    sthtml = sthtml + "<tr><td><b>Application ID</b>: "+ iAppId +"</td><tr>";
+                    // Inner Table
+                    sthtml = sthtml + @" <style type='text/css'>
+body 
+    
+    .b12
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.t12
+{
+	font-size:12px;
+	font-family:Arial;	
+}
+.b15
+{
+	font-size:15px;
+	font-family:Arial;
+	font-weight:bold;
+}
+
+
+
+</style>";
+    
+                    sthtml = sthtml + @"<table id='tbl1' cellpadding='5' cellspacing='2' style='font-style:normal' width ='100%'>        
+          <tr>
+                  <td style='height:  15px' colspan ='4'  ></td>
+                </tr>            
+          <tr class='b12' >
+                    <td align='left'> <b>Name :</b></td>
+                    <td align='left'  > " + txtFirstName.Text  +" "+ txtMiddlename.Text  +" " + txtLastName.Text
+                     + @" </td>
+                   <td align='left' ><b>Nationality :</b></td>
+                   <td align='left'  > " + ddlNationality.SelectedItem.Text                    
+                   + @"</td></tr>                             
+                <tr>
+                  <td style='height:  5px' colspan ='4' ></td>
+                </tr>                 
+          <tr class='b12'>
+                    <td align='left' ><b>Passport&nbsp; No :</b></td>
+                    <td align='left' >" + TxtPassportNumber.Text
+                     + @" </td>
+                    <td align='left' ><b>Passport Type :</b></td>
+                    <td align='left' >
+                     " + TxtPassportType.Text 
+                       + @" </td>
+                 </tr>                               
+                 <tr>
+                  <td style='height:  5px' colspan ='4' ></td>
+                </tr>                
+          <tr class='b12'>
+                 <td align='left' ><b>Date of Issue :</b></td>
+                 <td align='left' >
+                  " + TxtDOI.Value + @" </td>
+                  <td align='left' ><b>Date of Expiry :</b></td>
+                    <td align='left' >
+                     " + TxtDOE.Value  
+                    + @"</td>
+                 </tr>                
+                <tr>
+                  <td style='height:  5px' colspan ='4' ></td>
+                </tr>
+                
+         <tr class='b12'>
+                 <td align='left' ><b>ArrivalDate :</b></td>                 
+                 <td align='left' >
+                  "+ txtArrivalDate.Value 
+                    + @"</td>
+                    <td align='left'  ><b>DepartureDate :</b></td>
+            <td  style='text-align: left;' >
+             " + txtDepartureDate.Value
+            + @"</td>
+                 </tr>              
+                 <tr>
+                  <td style='height:  5px' colspan ='4' ></td>
+                </tr>            
+         <tr class='b12'>
+             <td align='left' ><b>Visa Type :</b></td>
+            <td  style='text-align: left;'>
+             " + ddlVISAType.SelectedItem.Text
+            + @"</td>
+            <td align='left' ><b>Entry Type :</b></td>             
+         <td  style='text-align: left; ' >
+          " + ddlEntryType.SelectedItem.Text
+          + @"</td>
+         </tr> 
+                  
+              <tr>
+                  <td style='height:  5px' colspan ='4' ></td>
+                </tr>
+         
+         <tr class='b12'>
+         <td align='left'  ><b>Duration :</b></td>
+         <td style='text-align: left;' >
+          " + ddlPeriod.SelectedValue   +" "+ddlPeriodType.SelectedValue + @"</td>
+            <td align='left' ><b>Amount :</b></td>
+         <td  style='text-align: left;' >
+          " + txtRate.Text 
+       +@"</td>
+         </tr>
+         
+           <tr>
+                <td style='height:  20px' colspan ='4' ></td>
+              </tr>
+         </table></td></tr>";
+                    sthtml = sthtml + "<tr><td>Please keep Application Id for future reference </td></tr>";
+
+                    sthtml = sthtml + "<tr><td></td></tr><tr><td><br>Thank you<br> OVPS Team</td><tr>";
+
+                    sthtml = sthtml + "</table>";
+
+                
+                                        
+                    ObjBalAppReg.PrimaryEmail = txtPrimaryEmail.Text.Trim().ToString();
+                    ObjBalAppReg.AlternateEmail = txtAlternatEmail.Text.Trim().ToString();
+                    ObjBalAppReg.Subject = "Email From OVPS";
+                    ObjBalAppReg.Message = sthtml;
+                    
+                    int Status = ObjBalAppReg.EmailHandler();   
+
+                    if (Status == 1)
+                    {
+                        //this.ClientScript.RegisterClientScriptBlock(this.GetType(), "VisaApp1", "<script>alert('Visa Application Detail has been mail to your mail id !!');</script>");
+                        Response.Redirect("../Admin/view.aspx?AppID=" + iAppId);
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Applicantion has been submitted successfully.But due to internet connectivity failed to deliver the confirmation mail!!')</script>");
+                    }
+                    
+                }
+                else
+                {
+                    LabelMessage.CssClass = "errormsg";
+                    //LabelMessage.Text = "Visa Application can not submitted, Please check the inputs and retry!";
+                    LabelMessage.Text = "You can Apply only for three Visa Applications. Wait for the Approval...";
+
+                }
+            }
+            else
+            {
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = "Please Browse the photo and upload";
+            }
+
+        //}
+        //catch (Exception ex)
+        //{
+        //    //throw (ex);
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = ex.Message.ToString();
+
+        //}
+
+
+
+    }
+
+    //----------------by chitresh------------------
+    void generateuploader()
+    {
+        string visatypecode = ddlVISAType.SelectedValue.ToString();
+        string qury = "select dm.DocName, dm.DocDesc, dm.DocCode, vd.FlagMmendatory from DocumentMaster dm, VisatypeDocLink vd where dm.DocCode=vd.DocCode and vd.VisaTypeCode='" + visatypecode + "'";
+
+        DataTable dt = new DataTable();
+        dt = ObjGeneral.FetchData(qury);
+        int count;
+        count = dt.Rows.Count;
+        //Trace.Warn("value"+ dt.Rows[0]["DocName"]);
+        if (count > 0)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (dt.Rows[i]["FlagMmendatory"].ToString() == "y")
+                {
+                    Panel2.Controls.Add(new LiteralControl("<table border=0> <tr> <td width=150>"));
+                    Label lbl = new Label();
+                    lbl.ID = "label" + dt.Rows[i]["DocName"].ToString();
+                    lbl.Text = dt.Rows[i]["DocName"].ToString();
+                    Panel2.Controls.Add(lbl);
+                    Panel2.Controls.Add(new LiteralControl("</td>"));
+                    Panel2.Controls.Add(new LiteralControl("<td width=30> </td>"));
+                    Panel2.Controls.Add(new LiteralControl("<td>"));
+                    FileUpload fu = new FileUpload();
+                    fu.ID = "fileup" + dt.Rows[i]["DocName"].ToString();
+                    Panel2.Controls.Add(fu);
+                    Panel2.Controls.Add(new LiteralControl("</td>"));
+                    Panel2.Controls.Add(new LiteralControl("<td align=top><font color=red>*</font></td></tr><tr><td height=14></td></tr>"));
+
+                }
+                else
+                {
+                    Panel2.Controls.Add(new LiteralControl("<table border=0> <tr> <td width=150>"));
+                    Label lbl = new Label();
+                    lbl.ID = "label" + dt.Rows[i]["DocName"].ToString();
+                    lbl.Text = dt.Rows[i]["DocName"].ToString();
+                    Panel2.Controls.Add(lbl);
+                    Panel2.Controls.Add(new LiteralControl("</td>"));
+                    Panel2.Controls.Add(new LiteralControl("<td width=30 rowspan=2> </td>"));
+                    Panel2.Controls.Add(new LiteralControl("<td height=113 >"));
+                    FileUpload fu = new FileUpload();
+                    fu.ID = "fileup" + dt.Rows[i]["DocName"].ToString();
+                    Panel2.Controls.Add(fu);
+                    Panel2.Controls.Add(new LiteralControl("</td></tr>"));
+                }
+
+
+            }
+           // Panel2.Controls.Add(new LiteralControl("<tr><td></td></tr>"));
+            Panel2.Controls.Add(new LiteralControl("<tr> <td></td><td></td><td></td><td><font color=#f15f5f size=.4>* markerd fields are mandatory</font></td></tr>"));
+            Panel2.Controls.Add(new LiteralControl("</table>"));
+            //btnSave.Visible = true;
+        }
+
+        //------------- end task ------------------------ 
+    }
+  
+    private void FillDropDowns()
+    {
+        Trace.Warn("FillDropDowns called start");  
+        string countrycode = ddlNationality.SelectedValue.ToString();
+        Trace.Warn("countrycode : " + countrycode);
+        //*///////////////********************////////////////*/
+        /*-- For Applicant Visa Type --*/
+        string QueryVisaType = string.Empty;
+        if (objectSessionHolderPersistingData.User_Type == "AP")
+        {
+            Trace.Warn("inside if : ");
+            QueryVisaType = "select VisaTypeCode, VisaTypeName from VisaTypeMaster where VisaTypeCode in (select VisaTypeCode from CountryVisaMaster where CountryCode='" + countrycode + "' and status='A' and VisaTypeForApplicant=1) and status='A' ";
+            Trace.Warn("QueryVisaType " + QueryVisaType); 
+            ObjGeneral.Fill_DDL(ddlVISAType, QueryVisaType, "VisaTypeName", "VisaTypeCode");
+        }
+        //*//////////////************************///////////////*/
+        else
+        {
+            QueryVisaType = "select VisaTypeCode, VisaTypeName from VisaTypeMaster where VisaTypeCode in (select VisaTypeCode from CountryVisaMaster where CountryCode='" + countrycode + "' and status='A') and status='A'";
+            ObjGeneral.Fill_DDL(ddlVISAType, QueryVisaType, "VisaTypeName", "VisaTypeCode");
+        }
+        string cCode = ddlCountry.SelectedValue;
+        string QueryEntryPoint = "Select BorderCode, BorderName from BorderMaster where Status='A' and CountryCode='" + cCode + "' order by BorderName";
+        ObjGeneral.Fill_DDL(ddlEntryPoint, QueryEntryPoint, "BorderName", "BorderName");
+
+        ObjGeneral.Fill_DDL(ddlExitPoint, QueryEntryPoint, "BorderName", "BorderName");
+        Trace.Warn("FillDropDowns called end");  
+       
+    }
+
+    protected void ddlVISAType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string visatypecode = ddlVISAType.SelectedValue.ToString();
+        string countrycode = ddlNationality.SelectedValue.ToString();
+        string QueryEntryType = string.Empty;
+        if (objectSessionHolderPersistingData.User_Type == "AP")
+        {
+            QueryEntryType = "select distinct(case when EntryType='S' then 'Single' end)as EntryTypeName, EntryType from CountryVisaMaster where VisaTypeCode ='" + visatypecode + "' and CountryCode = '" + countrycode + "' and VisaTypeForApplicant = 1";
+
+        }
+        else
+        {
+            QueryEntryType = "select distinct(case when EntryType='S' then 'Single' end)as EntryTypeName, EntryType from CountryVisaMaster where VisaTypeCode ='" + visatypecode + "' and CountryCode = '" + countrycode + "'";
+        }
+            //string QueryEntryType = "select distinct(case when EntryType='S' then 'Single' when  EntryType='M' then 'Multiple' end)as EntryTypeName, EntryType from CountryVisaMaster where VisaTypeCode ='" + visatypecode + "' and CountryCode = '" + countrycode + "'";
+
+        ObjGeneral.Fill_DDL(ddlEntryType, QueryEntryType, "EntryTypeName", "EntryType");
+        generateuploader();
+
+    }
+
+    protected void ddlCurrentLocation_SelectedIndexChanged(object sender, EventArgs e)
+    {
+       
+        string countrycode = ddlCurrentLocation.SelectedValue.ToString();
+        string Query = "SELECT EmbassyId,(CountryName + ' ' + city)AS Embassy,note,FlagEmbassyAvail   FROM EmbassyRegistration where CountryCode='" + countrycode + "'";
+
+        DataTable dt = new DataTable() ;
+        dt = ObjGeneral.FetchData(Query);
+
+       if(dt.Rows.Count > 0 )
+       {
+        string flagEmbassyAvail = dt.Rows[0]["FlagEmbassyAvail"].ToString();
+        Trace.Warn("flagEmbassyAvail :: " + flagEmbassyAvail);
+
+        if (ddlVISAType.SelectedItem.Text == "STR")
+        {
+            if (flagEmbassyAvail == "Y")
+            {
+                hldEmbassy.Visible = true;
+                ObjGeneral.Fill_DDL(ddlEmbassyPref, Query, "Embassy", "EmbassyId");
+                trNote.Attributes.Add("style", "display:none");
+
+            }
+            else
+            {
+                trNote.Attributes.Add("style", "display: ");
+                txtNote.Text = dt.Rows[0]["Note"].ToString();
+                hldEmbassy.Visible = false;
+            }
+        }
+
+        
+       }     
+        generateuploader();
+
+    }
+    
+    protected void ddlEntryType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string visatypecode = ddlVISAType.SelectedValue.ToString();
+        string countrycode = ddlNationality.SelectedValue.ToString();
+        string entrytypecode = ddlEntryType.SelectedValue.ToString();
+        string QueryPeriodType = string.Empty;
+        if (objectSessionHolderPersistingData.User_Type == "AP")
+        {
+            QueryPeriodType = "select distinct(case when PeriodType='Y' then 'Year' when  PeriodType='M' then 'Month' when PeriodType='D' then 'Day' end)as PeriodName, PeriodType from CountryVisaMaster where VisaTypeCode ='" + visatypecode + "' and EntryType = '" + entrytypecode + "' and CountryCode = '" + countrycode + "' and STATUS ='A' and VisaTypeForApplicant = 1";
+        }
+        else 
+        { 
+            QueryPeriodType = "select distinct(case when PeriodType='Y' then 'Year' when  PeriodType='M' then 'Month' when PeriodType='D' then 'Day' end)as PeriodName, PeriodType from CountryVisaMaster where VisaTypeCode ='" + visatypecode + "' and EntryType = '" + entrytypecode + "' and CountryCode = '" + countrycode + "' and STATUS ='A'";
+        }
+
+        ObjGeneral.Fill_DDL(ddlPeriodType, QueryPeriodType, "PeriodName", "PeriodType");
+
+        //----------------by chitresh------------------
+        generateuploader();
+    }
+
+    protected void ddlPeriod_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string visatypecode = ddlVISAType.SelectedValue.ToString();
+        string countrycode = ddlNationality.SelectedValue.ToString();
+        string entrytypecode = ddlEntryType.SelectedValue.ToString();
+        string periodtype = ddlPeriodType.SelectedValue.ToString();
+        string QueryDuration = string.Empty;
+        if (objectSessionHolderPersistingData.User_Type == "AP")
+        {
+            QueryDuration = "select Period from CountryVisaMaster where VisaTypeCode = '" + visatypecode + "' and EntryType = '" + entrytypecode + "' and CountryCode ='" + countrycode + "' and PeriodType ='" + periodtype + "' and STATUS ='A' and VisaTypeForApplicant = 1";
+        }
+        else
+        {
+            QueryDuration = "select Period from CountryVisaMaster where VisaTypeCode = '" + visatypecode + "' and EntryType = '" + entrytypecode + "' and CountryCode ='" + countrycode + "' and PeriodType ='" + periodtype + "' and STATUS ='A'";
+        }
+
+        ObjGeneral.Fill_DDL(ddlPeriod, QueryDuration, "Period", "Period");
+        //----------------by chitresh------------------
+        generateuploader();
+    }
+
+    protected void ddlDuration_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string visatypecode = ddlVISAType.SelectedValue.ToString();
+        string countrycode = ddlNationality.SelectedValue.ToString();
+        string entrytypecode = ddlEntryType.SelectedValue.ToString();
+        string periodtype = ddlPeriodType.SelectedValue.ToString();
+        string period = ddlPeriod.SelectedValue.ToString();
+        string QueryRate = "select Rate, RateCurrencyCode from CountryVisaMaster where VisaTypeCode = '" + visatypecode + "' and EntryType = '" + entrytypecode + "' and CountryCode ='" + countrycode + "' and PeriodType ='" + periodtype + "' and Period = '" + period + "' and STATUS ='A'";
+        DataTable dt = new DataTable();
+        dt = ObjGeneral.FetchData(QueryRate);
+
+        /*-- For EAC Countries --*/
+        string flagEACValue = strEACFlagFun();
+        if (flagEACValue != null && flagEACValue == "Y")
+        {
+            txtRate.Text = "0.00";
+            lblRateCurrency.Text = dt.Rows[0]["RateCurrencyCode"].ToString();
+        }
+        else
+        {
+
+            if (dt.Rows.Count > 0)
+            {
+                txtRate.Text = dt.Rows[0]["Rate"].ToString();
+                lblRateCurrency.Text = dt.Rows[0]["RateCurrencyCode"].ToString();
+            }
+        }
+        //----------------by chitresh------------------
+        generateuploader();
+    }
+
+    protected void GetApplicantDetail()
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = null;
+        dt = new DataTable();
+        Trace.Warn("GetApplicantDetail called");  
+        Trace.Warn("objectSessionHolderPersistingData.User_ID :: " + objectSessionHolderPersistingData.User_ID);  
+        string Getdetailquery = " select PassportNo,Photo,Nationality,PrimaryEmail,AlternateEmail,FirstName,MiddleName,LastName,DateOfBirth,PlaceOfBirth," +
+                                " Sex,MaritalStatus,FatherName,MotherName,CurrentAddress,PermanentAddress,PassportType,DateOfIssue,DateOfExpiry," +
+                                " PlaceOfIssue,IssuingAuthority,MobileNumber,LandlinePhone,ColorEye,IndentityMark,Height,ColorHair,InMilitary,FromDate," +
+                                " ToDate,EmpName,EmpPhoneNo,EmpLivedFrom,Address1,Address2,EmpCity,EmpState,EmpPostCode,IntedAddress1,IntedAddress2," +
+                                " IntedCity,IntedState,IntedDistrict,IntedPostcode,ApplyCountryYears,FlagSeriousDisease,FlagCrimeRecord,FlagDrugReport," +
+                                " FlagDeported,FlagFraudRecord,lv.CityName1,lv.CountryCode1,lv.DepartureDate1,lv.CityName2,lv.CountryCode2,lv.DepartureDate2 " +
+                                " ,lv.CityName3,lv.CountryCode3,lv.DepartureDate3,ll.LastLivedCityName1,ll.LastLivedCountryCode1,ll.LastLivedDepartureDate1 " +
+                                " ,ll.LastLivedCityName2,ll.LastLivedCountryCode2,ll.LastLivedDepartureDate2,ll.LastLivedCityName3,ll.LastLivedCountryCode3,ll.LastLivedDepartureDate3 " +
+                                " ,ar.OtherName,ar.FatherLastName,ar.FatherDateOfBirth,ar.FatherAddress,ar.FatherNationality" + 
+                                " ,ar.MotherLastName,ar.MotherDateOfBirth,ar.MotherAddress,ar.MotherNationality " +
+                                " from ApplicantRegistrationMaster AS ar " +
+                                " LEFT JOIN LastCountryVisitDetail AS lv ON lv.UserId = ar.UserId " +
+                                " LEFT JOIN LastLivedCountryDetail AS ll ON ll.UserId = ar.UserId " +                               
+                                " where ar.UserId='" + objectSessionHolderPersistingData.User_ID + "' ";
+        Trace.Warn("Getdetailquery :" + Getdetailquery);                                  
+        dt = ObjGeneral.FetchData(Getdetailquery);
+        Trace.Warn("dt.Rows.Count :" + dt.Rows.Count);
+       
+        if (dt.Rows.Count > 0)
+        {
+            string ImgName = dt.Rows[0]["Photo"].ToString() == "" ? "default_logo.gif" : dt.Rows[0]["Photo"].ToString();
+            ImgPhoto.ImageUrl = "~/Images/Logo/" + ImgName+"?refreshTime=" + Server.UrlEncode(DateTime.Now.TimeOfDay.ToString());;
+            if (dt.Rows[0]["Photo"].ToString() == "")
+            { ViewState.Remove("imagepath"); }
+            else
+            {
+                ViewState["imagepath"] = ImgName;
+            }
+            TxtPassportNumber.Text = dt.Rows[0]["PassportNo"].ToString().Trim();
+            
+            TxtPassportNumber.ReadOnly = dt.Rows[0]["PassportNo"].ToString().Trim() == "" ? false : true;
+            ddlNationality.SelectedValue = ddlNationality.Items.FindByValue(dt.Rows[0]["Nationality"].ToString().Trim()) == null ? "0" : dt.Rows[0]["Nationality"].ToString().Trim(); //dt.Rows[0]["Nationality"].ToString().Trim();
+
+            FillDropDowns();
+            //ddlNationality.Enabled = dt.Rows[0]["Nationality"].ToString().Trim() == null ? false : true;
+            txtPrimaryEmail.Text = dt.Rows[0]["PrimaryEmail"].ToString().Trim();
+            //txtPrimaryEmail.ReadOnly = dt.Rows[0]["PrimaryEmail"].ToString().Trim() == "" ? false : true;
+            txtAlternatEmail.Text = dt.Rows[0]["AlternateEmail"].ToString().Trim();
+            txtFirstName.Text = dt.Rows[0]["FirstName"].ToString().Trim();
+            //txtFirstName.ReadOnly = dt.Rows[0]["FirstName"].ToString().Trim() == "" ? false : true;
+            txtMiddlename.Text = dt.Rows[0]["MiddleName"].ToString().Trim();
+            //if (txtMiddlename.Text != "")
+            //{
+            //    txtMiddlename.ReadOnly = true;
+            //}
+            //else
+            //{
+            //    txtMiddlename.ReadOnly = false;
+            //}
+
+            txtLastName.Text = dt.Rows[0]["LastName"].ToString().Trim();
+            //txtLastName.ReadOnly = dt.Rows[0]["LastName"].ToString().Trim() == "" ? false : true;
+            txtDOB.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfBirth"]).ToString();
+            //if (txtDOB.Value != "")
+            //{
+            //    DOB.Visible = false;
+            //}
+            //else
+            //{
+            //    DOB.Visible = true;
+            //}
+            txtplaceofbirth.Text = dt.Rows[0]["PlaceOfBirth"].ToString();
+            //txtplaceofbirth.ReadOnly = dt.Rows[0]["PlaceOfBirth"].ToString() == "" ? false : true;
+            ddlSex.SelectedValue = dt.Rows[0]["Sex"].ToString().Trim();
+            //ddlSex.Enabled = dt.Rows[0]["Sex"].ToString().Trim() == "" ? true : false;
+            ddlMS.SelectedValue = dt.Rows[0]["MaritalStatus"].ToString().Trim();
+            //ddlMS.Enabled = dt.Rows[0]["MaritalStatus"].ToString() == "" ? true : false;
+            txtFatherName.Text = dt.Rows[0]["FatherName"].ToString().Trim();
+            //txtFatherName.ReadOnly = dt.Rows[0]["FatherName"].ToString() == "" ? false : true;
+            txtMotherName.Text = dt.Rows[0]["MotherName"].ToString().Trim();
+            //txtMotherName.ReadOnly = dt.Rows[0]["MotherName"].ToString() == "" ? false : true;
+            txtcurrentAdds.Text = dt.Rows[0]["CurrentAddress"].ToString().Trim();
+            txtPermanentAdds.Text = dt.Rows[0]["PermanentAddress"].ToString().Trim();
+            TxtPassportType.Text = dt.Rows[0]["PassportType"].ToString().Trim();
+            //TxtPassportType.ReadOnly = dt.Rows[0]["PassportType"].ToString() == "" ? false : true;
+            TxtDOI.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfIssue"]).ToString();
+            //if (TxtDOI.Value != "")
+            //{
+            //    DOI.Visible = false;
+            //}
+            //else
+            //{
+            //    DOI.Visible = true;
+            //}
+            TxtDOE.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfExpiry"]).ToString();
+            //if (TxtDOE.Value != "")
+            //{
+            //    DOE.Visible = false;
+            //}
+            //else
+            //{
+            //    DOE.Visible = true;
+            //}
+            
+            TxtPlaceofIssue.Text = dt.Rows[0]["PlaceOfIssue"].ToString().Trim();
+            //TxtPlaceofIssue.ReadOnly = dt.Rows[0]["PlaceOfIssue"].ToString() == "" ? false : true;
+            TxtIssuingAuthority.Text = dt.Rows[0]["IssuingAuthority"].ToString().Trim();
+            //TxtIssuingAuthority.ReadOnly = dt.Rows[0]["IssuingAuthority"].ToString() == "" ? false : true;
+            TxtMobileNumber.Text = dt.Rows[0]["MobileNumber"].ToString().Trim();
+            TxtLandLineNumber.Text = dt.Rows[0]["LandlinePhone"].ToString().Trim();
+            ddlHairColor.SelectedValue = dt.Rows[0]["ColorHair"].ToString().Trim();
+            ddlEyeColor.SelectedValue = dt.Rows[0]["ColorEye"].ToString().Trim();
+            txtMark.Text = dt.Rows[0]["IndentityMark"].ToString().Trim();
+            txtHeights.Text = dt.Rows[0]["Height"].ToString().Trim();
+            //Millitery service details
+            txtFromDate.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["FromDate"]).ToString();
+            txtToDate.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["ToDate"]).ToString();
+            txtInMilitary.Text = dt.Rows[0]["InMilitary"].ToString().Trim();
+            
+            //EMPLOYEMENT details
+            txtEmpName.Text = dt.Rows[0]["EmpName"].ToString().Trim();
+            txtEmpPhoneNo.Text = dt.Rows[0]["EmpPhoneNo"].ToString().Trim();
+            txtEmpLivedFrom.Text = dt.Rows[0]["EmpLivedFrom"].ToString().Trim();
+            txtEmpAddr1.Text = dt.Rows[0]["Address1"].ToString().Trim();
+            txtEmpAddr2.Text = dt.Rows[0]["Address2"].ToString().Trim();
+            txtEmpCity.Text = dt.Rows[0]["EmpCity"].ToString().Trim();
+            txtEmpState.Text = dt.Rows[0]["EmpState"].ToString().Trim();
+            txtEmpPostCode.Text = dt.Rows[0]["EmpPostCode"].ToString().Trim();
+            
+            //Intended Address In Nigeria
+            txtBurundiAddress.Text = dt.Rows[0]["IntedAddress1"].ToString().Trim();
+            txtIntedAddress2.Text = dt.Rows[0]["IntedAddress2"].ToString().Trim();
+            txtIntedCity.Text = dt.Rows[0]["IntedCity"].ToString().Trim();
+            txtIntedState.Text = dt.Rows[0]["IntedState"].ToString().Trim();
+            txtIntedDistrict.Text = dt.Rows[0]["IntedDistrict"].ToString().Trim();
+            txtIntedPostcode.Text = dt.Rows[0]["IntedPostcode"].ToString().Trim();
+            
+            //Travel History
+            txtApplyCountryYears.Text = dt.Rows[0]["ApplyCountryYears"].ToString().Trim();
+            ddlSeriousDisease.SelectedValue = dt.Rows[0]["FlagSeriousDisease"].ToString().Trim();
+            
+            //ddlCrimeRecord.SelectedValue = dt.Rows[0]["FlagCrimeRecord"].ToString().Trim();
+            //ddlDrugReport.SelectedValue = dt.Rows[0]["FlagDrugReport"].ToString().Trim();
+            //ddlDeported.SelectedValue = dt.Rows[0]["FlagDeported"].ToString().Trim();
+            //ddlFraudRecord.SelectedValue = dt.Rows[0]["FlagFraudRecord"].ToString().Trim();
+
+           //list of the countries you have visited
+            ddlLastVisitCountry1.SelectedValue = dt.Rows[0]["CountryCode1"].ToString().Trim();
+            txtLastVisitCity1.Text = dt.Rows[0]["CityName1"].ToString().Trim();
+            txtLastVisitDeptDate1.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DepartureDate1"]).ToString();
+            ddlLastVisitCountry2.SelectedValue = dt.Rows[0]["CountryCode2"].ToString().Trim();
+            txtLastVisitCity2.Text = dt.Rows[0]["CityName2"].ToString().Trim();
+            txtLastVisitDeptDate2.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DepartureDate2"]).ToString();
+            ddlLastVisitCountry3.SelectedValue = dt.Rows[0]["CountryCode3"].ToString().Trim();
+            txtLastVisitCity3.Text = dt.Rows[0]["CityName3"].ToString().Trim();
+            txtLastVisitDeptDate3.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DepartureDate3"]).ToString();
+
+            //list of the countries you have lived
+            ddlLastLivedCountry1.SelectedValue = dt.Rows[0]["LastLivedCountryCode1"].ToString().Trim();
+            txtLastLivedCityName1.Text = dt.Rows[0]["LastLivedCityName1"].ToString().Trim();
+            txtLastLivedDepartureDate1.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["LastLivedDepartureDate1"]).ToString(); 
+            ddlLastLivedCountry2.SelectedValue = dt.Rows[0]["LastLivedCountryCode2"].ToString().Trim();
+            txtLastLivedCityName2.Text = dt.Rows[0]["LastLivedCityName2"].ToString().Trim();
+            txtLastLivedDepartureDate2.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["LastLivedDepartureDate2"]).ToString(); 
+            ddlLastLivedCountry3.SelectedValue = dt.Rows[0]["LastLivedCountryCode3"].ToString().Trim();
+            txtLastLivedCityName3.Text = dt.Rows[0]["LastLivedCityName3"].ToString().Trim();
+            txtLastLivedDepartureDate3.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["LastLivedDepartureDate3"]).ToString(); 
+
+            //txtOtherName.Text = dt.Rows[0]["LastLivedCityName2"].ToString().Trim();
+
+            txtFatherLastName.Text = dt.Rows[0]["FatherLastName"].ToString().Trim();
+            txtFatherDateOfBirth.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["FatherDateOfBirth"]).ToString();
+            txtFatherAddress.Text = dt.Rows[0]["FatherAddress"].ToString().Trim();
+            txtFatherNationality.Text = dt.Rows[0]["FatherNationality"].ToString().Trim();
+
+            txtMotherLastName.Text = dt.Rows[0]["MotherLastName"].ToString().Trim();
+            txtMotherDateOfBirth.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["MotherDateOfBirth"]).ToString();
+            txtMotherAddress.Text = dt.Rows[0]["MotherAddress"].ToString().Trim();
+            txtMotherNationality.Text = dt.Rows[0]["MotherNationality"].ToString().Trim();
+                       
+        }
+        else
+        {
+            ImgPhoto.ImageUrl = string.Empty;
+            ViewState.Remove("imagepath");
+            TxtPassportNumber.Text = string.Empty;
+            TxtPassportNumber.ReadOnly = false;
+            ddlNationality.SelectedIndex = 0;
+            ddlNationality.Enabled = true;
+            txtPrimaryEmail.Text = string.Empty;
+            txtPrimaryEmail.ReadOnly = false;
+            txtAlternatEmail.Text = string.Empty;           
+            txtFirstName.Text = string.Empty;
+            txtFirstName.ReadOnly = false;
+            txtMiddlename.Text = string.Empty;
+            txtMiddlename.ReadOnly = false;
+            txtLastName.Text = string.Empty;
+            txtLastName.ReadOnly = false;
+            txtDOB.Value = string.Empty;
+            txtplaceofbirth.Text = string.Empty;
+            txtplaceofbirth.ReadOnly = false;
+            ddlSex.SelectedIndex = 0;
+            ddlSex.Enabled = true;
+            ddlMS.SelectedIndex = 0;
+            ddlMS.Enabled = true;
+            txtFatherName.Text = string.Empty;
+            txtFatherName.ReadOnly = false;
+            txtMotherName.Text = string.Empty;
+            txtMotherName.ReadOnly = false;
+            txtcurrentAdds.Text = string.Empty;
+            txtPermanentAdds.Text = string.Empty;
+            TxtPassportType.Text = string.Empty;
+            TxtPassportType.ReadOnly = false;
+            TxtDOI.Value = string.Empty;
+            TxtDOE.Value = string.Empty;
+            TxtPlaceofIssue.Text = string.Empty;
+            TxtPlaceofIssue.ReadOnly = false;
+            TxtIssuingAuthority.Text = string.Empty;
+            TxtIssuingAuthority.ReadOnly = false;
+            TxtMobileNumber.Text = string.Empty;
+            TxtLandLineNumber.Text = string.Empty;
+
+
+        }
+    }
+
+    protected void GetAgentDetail()
+    {
+        ObjGeneral = new BaseLayer.General_function();
+        DataTable dt = null;
+        dt = new DataTable();
+        string Getdetailquery = "select Photo,PassportNumber,Nationality,EmailID,AternativeEmailId,FirstName,MiddleName,LastName,convert(varchar(12),DateOfBirth,113)as DateOfBirth,PlaceOfBirth,Sex,MaritalStatus,FatherName,MotherName,CurrentAddress,PermanentAddress,PassportType,convert(varchar(12),DateOfIssue,113) DateOfIssue,convert(varchar(12),DateOfExpiry,113) DateOfExpiry,PlaceOfIssue,IssuingAuthority,MobileNumber,LandlinePhone,BorderEntryPoint,BorderExitPoint,convert(varchar(12),ArrivalDate,113) ArrivalDate,convert(varchar(12),DepartureDate,113) DepartureDate,VisaValidFor,VisaTypeCode,EntryType, DurationType,Duration,Rate,RateCurrency from VisaApplicationInfo V where PassportNumber='" + txtpassportsearch.Text + "' and Nationality='" + ddlNationalitySearch.SelectedValue + "' and AppliedByUserId = '" + objectSessionHolderPersistingData.User_ID.ToString() + "'";
+        dt = ObjGeneral.FetchData(Getdetailquery);
+        if (dt.Rows.Count > 0)
+        {
+            ImgPhoto.ImageUrl = "~/Images/Logo/" + dt.Rows[0]["Photo"].ToString().Trim() + "?refreshTime=" + Server.UrlEncode(DateTime.Now.TimeOfDay.ToString()); 
+            ViewState["imagepath"] = dt.Rows[0]["Photo"].ToString().Trim(); 
+            TxtPassportNumber.Text = dt.Rows[0]["PassportNumber"].ToString().Trim();
+            TxtPassportNumber.ReadOnly = dt.Rows[0]["PassportNumber"].ToString() == "" ? false : true;
+            ddlNationality.SelectedValue = ddlNationality.Items.FindByValue(dt.Rows[0]["Nationality"].ToString().Trim()) == null ? "0" : dt.Rows[0]["Nationality"].ToString().Trim();
+            ddlNationality.Enabled = dt.Rows[0]["Nationality"].ToString().Trim() == null ? false : true;
+            txtPrimaryEmail.Text = dt.Rows[0]["EmailID"].ToString().Trim();
+            //txtPrimaryEmail.ReadOnly = dt.Rows[0]["EmailID"].ToString() == "" ? false : true;
+            txtAlternatEmail.Text = dt.Rows[0]["AternativeEmailId"].ToString().Trim();
+
+            txtFirstName.Text = dt.Rows[0]["FirstName"].ToString().Trim();
+            txtFirstName.ReadOnly = dt.Rows[0]["FirstName"].ToString() == "" ? false : true;
+            txtMiddlename.Text = dt.Rows[0]["MiddleName"].ToString().Trim();
+            txtMiddlename.ReadOnly = dt.Rows[0]["MiddleName"].ToString() == "" ? false : true;
+            txtLastName.Text = dt.Rows[0]["LastName"].ToString().Trim();
+            txtLastName.ReadOnly = dt.Rows[0]["LastName"].ToString() == "" ? false : true;
+            txtDOB.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfBirth"]).ToString();
+            txtplaceofbirth.Text = dt.Rows[0]["PlaceOfBIrth"].ToString().Trim();
+            ddlEntryPoint.SelectedValue = dt.Rows[0]["BorderEntryPoint"].ToString().Trim();
+            ddlExitPoint.SelectedValue = dt.Rows[0]["BorderExitPoint"].ToString().Trim();
+            txtArrivalDate.Value = dt.Rows[0]["ArrivalDate"].ToString();
+            txtDepartureDate.Value = dt.Rows[0]["DepartureDate"].ToString();
+            ddlCountry.SelectedValue = ddlCountry.Items.FindByValue(dt.Rows[0]["VisaValidFor"].ToString().Trim()) == null ? "0" : dt.Rows[0]["VisaValidFor"].ToString().Trim();            
+            ddlVISAType.SelectedValue = ddlVISAType.Items.FindByValue(dt.Rows[0]["VisaTypeCode"].ToString().Trim()) == null ? "0" : dt.Rows[0]["VisaTypeCode"].ToString().Trim();
+            ddlVISAType_SelectedIndexChanged(new object(), new EventArgs()); 
+            ddlEntryType.SelectedValue = ddlEntryType.Items.FindByValue(dt.Rows[0]["EntryType"].ToString().Trim()) == null ? "0" : dt.Rows[0]["EntryType"].ToString().Trim();
+            ddlEntryType_SelectedIndexChanged(new object(),new EventArgs());
+            ddlPeriodType.SelectedValue = ddlPeriodType.Items.FindByValue(dt.Rows[0]["DurationType"].ToString().Trim()) == null ? "0" : dt.Rows[0]["DurationType"].ToString().Trim();
+            ddlPeriod_SelectedIndexChanged(new object(),new EventArgs());
+            ddlPeriod.SelectedValue = ddlPeriod.Items.FindByValue(dt.Rows[0]["Duration"].ToString().Trim()) == null ? "0" : dt.Rows[0]["Duration"].ToString().Trim(); 
+            ddlDuration_SelectedIndexChanged(new object(),new EventArgs());  
+            txtRate.Text = dt.Rows[0]["Rate"].ToString();
+            lblRateCurrency.Text = dt.Rows[0]["RateCurrency"].ToString();
+
+            
+            if (txtDOB.Value != "")
+            {
+                DOB.Visible = false;
+            }
+            else
+            {
+                DOB.Visible = true;
+            }
+            ddlSex.SelectedValue = dt.Rows[0]["Sex"].ToString();
+            ddlSex.Enabled = dt.Rows[0]["Sex"].ToString() == null ? true : false;
+            ddlMS.SelectedValue = ddlMS.Items.FindByValue(dt.Rows[0]["MaritalStatus"].ToString().Trim()) == null ? "0" : dt.Rows[0]["MaritalStatus"].ToString().Trim();
+            ddlMS.Enabled = dt.Rows[0]["MaritalStatus"].ToString() == null ? true : false;
+            txtFatherName.Text = dt.Rows[0]["FatherName"].ToString().Trim();
+            txtFatherName.ReadOnly = dt.Rows[0]["FatherName"].ToString() == "" ? false : true;
+            txtMotherName.Text = dt.Rows[0]["MotherName"].ToString().Trim();
+            txtMotherName.ReadOnly = dt.Rows[0]["MotherName"].ToString() == "" ? false : true;
+            txtcurrentAdds.Text = dt.Rows[0]["CurrentAddress"].ToString().Trim();
+            txtPermanentAdds.Text = dt.Rows[0]["PermanentAddress"].ToString().Trim();
+            TxtPassportType.Text = dt.Rows[0]["PassportType"].ToString().Trim();
+            TxtPassportType.ReadOnly = dt.Rows[0]["PassportType"].ToString() == "" ? false : true;
+            TxtDOI.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfIssue"]).ToString();
+            if (TxtDOI.Value != "")
+            {
+                DOI.Visible = false;
+            }
+            else
+            {
+                DOI.Visible = true;
+            }
+            TxtDOE.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfExpiry"]).ToString();
+            if (TxtDOE.Value != "")
+            {
+                DOE.Visible = false;
+            }
+            else
+            {
+                DOE.Visible = true;
+            }
+            TxtPlaceofIssue.Text = dt.Rows[0]["PlaceOfIssue"].ToString().Trim();
+            TxtPlaceofIssue.ReadOnly = dt.Rows[0]["PlaceOfIssue"].ToString() == "" ? false : true;
+            TxtIssuingAuthority.Text = dt.Rows[0]["IssuingAuthority"].ToString().Trim();
+            TxtIssuingAuthority.ReadOnly = dt.Rows[0]["IssuingAuthority"].ToString().Trim() == "" ? false : true;
+            TxtMobileNumber.Text = dt.Rows[0]["MobileNumber"].ToString().Trim();
+            TxtLandLineNumber.Text = dt.Rows[0]["LandlinePhone"].ToString().Trim();
+        }
+        else
+        {
+            TxtPassportNumber.Text = string.Empty;
+            TxtPassportNumber.ReadOnly = false;
+            ddlNationality.SelectedIndex = 0;
+            ddlNationality.Enabled = true;
+            txtPrimaryEmail.Text = string.Empty;
+            txtPrimaryEmail.ReadOnly = false;
+            txtAlternatEmail.Text = string.Empty;
+            txtFirstName.Text = string.Empty;
+            txtFirstName.ReadOnly = false;
+            txtMiddlename.Text = string.Empty;
+            txtMiddlename.ReadOnly = false;
+            txtLastName.Text = string.Empty;
+            txtLastName.ReadOnly = false;
+            txtDOB.Value = string.Empty;
+            //txtplaceofbirth.Text = string.Empty;
+            //txtplaceofbirth.Text = false;
+            ddlSex.SelectedIndex = 0;
+            ddlSex.Enabled = true;
+            ddlMS.SelectedIndex = 0;
+            ddlMS.Enabled = true;
+            txtFatherName.Text = string.Empty;
+            txtFatherName.ReadOnly = false;
+            txtMotherName.Text = string.Empty;
+            txtMotherName.ReadOnly = false;
+            txtcurrentAdds.Text = string.Empty;
+            txtPermanentAdds.Text = string.Empty;
+            TxtPassportType.Text = string.Empty;
+            TxtPassportType.ReadOnly = false;
+            TxtDOI.Value = string.Empty;
+            TxtDOE.Value = string.Empty;
+            TxtPlaceofIssue.Text = string.Empty;
+            TxtPlaceofIssue.ReadOnly = false;
+            TxtIssuingAuthority.Text = string.Empty;
+            TxtIssuingAuthority.ReadOnly = false;
+            TxtMobileNumber.Text = string.Empty;
+            TxtLandLineNumber.Text = string.Empty;
+            ImgPhoto.ImageUrl = "~/Images/Logo/default_logo.gif?refreshTime=" + Server.UrlEncode(DateTime.Now.TimeOfDay.ToString());
+            txtplaceofbirth.Text = string.Empty;
+            txtplaceofbirth.ReadOnly = false;
+            ddlEntryPoint.SelectedIndex = 0;
+            ddlEntryPoint.Enabled = true;
+            ddlExitPoint.SelectedIndex = 0;
+            ddlExitPoint.Enabled = false;
+            txtArrivalDate.Value = string.Empty;
+            txtDepartureDate.Value = string.Empty;
+            ddlCountry.SelectedIndex = 0;
+            ddlCountry.Enabled = false;
+            ddlVISAType.SelectedIndex = 0;
+            ddlVISAType.Enabled = false;
+            ddlEntryType.SelectedIndex = 0;
+            ddlEntryType.Enabled = false;
+            ddlPeriodType.SelectedIndex = 0;
+            ddlPeriodType.Enabled = false;
+            ddlPeriod.SelectedIndex = 0;
+            ddlPeriod.Enabled = false;
+            txtRate.Text = string.Empty;
+            txtRate.ReadOnly = false;
+
+   
+        }
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+       GetAgentDetail();
+    }
+
+    private void FillFields4Update(string ApplicationId)
+    {
+        BusinessEntityLayer.BalVisaApplicationSubmit ObjBalVisa;
+        DataTable dt ;
+        //try { 
+             ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+             dt = new DataTable();
+       
+             dt = ObjBalVisa.GetVisaApplicationInfo4Update(ApplicationId);
+
+             if (dt.Rows.Count > 0)
+             {
+                 ImgPhoto.ImageUrl = "~/Images/Logo/" + dt.Rows[0]["Photo"].ToString().Trim() + "?refreshTime=" + Server.UrlEncode(DateTime.Now.TimeOfDay.ToString()); 
+                 ViewState["imagepath"] = dt.Rows[0]["Photo"].ToString().Trim();
+                 TxtPassportNumber.Text = dt.Rows[0]["PassportNumber"].ToString().Trim();
+                 TxtPassportNumber.ReadOnly = dt.Rows[0]["PassportNumber"].ToString() == "" ? false : true;
+                 ddlNationality.SelectedValue = ddlNationality.Items.FindByValue(dt.Rows[0]["Nationality"].ToString().Trim()) == null ? "0" : dt.Rows[0]["Nationality"].ToString().Trim();
+                 //ddlNationality.Enabled = dt.Rows[0]["Nationality"].ToString().Trim() == null ? false : true;
+                 txtPrimaryEmail.Text = dt.Rows[0]["EmailID"].ToString().Trim();
+                 //txtPrimaryEmail.ReadOnly = dt.Rows[0]["EmailID"].ToString() == "" ? false : true;
+                 txtAlternatEmail.Text = dt.Rows[0]["AternativeEmailId"].ToString().Trim();
+
+                 txtFirstName.Text = dt.Rows[0]["FirstName"].ToString().Trim();
+                 //txtFirstName.ReadOnly = dt.Rows[0]["FirstName"].ToString() == "" ? false : true;
+                 txtMiddlename.Text = dt.Rows[0]["MiddleName"].ToString().Trim();
+                 //txtMiddlename.ReadOnly = dt.Rows[0]["MiddleName"].ToString() == "" ? false : true;
+                 txtLastName.Text = dt.Rows[0]["LastName"].ToString().Trim();
+                 //txtLastName.ReadOnly = dt.Rows[0]["LastName"].ToString() == "" ? false : true;
+                 txtDOB.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfBirth"]).ToString();
+                 txtplaceofbirth.Text = dt.Rows[0]["PlaceOfBIrth"].ToString().Trim();
+
+                 ddlCountry.SelectedValue = ddlCountry.Items.FindByValue(dt.Rows[0]["VisaValidFor"].ToString().Trim()) == null ? "0" : dt.Rows[0]["VisaValidFor"].ToString().Trim();
+                 //ddlCountry_SelectedIndexChanged(new object(), new EventArgs());
+                 Trace.Warn("dt.Rows[0][VisaTypeCode].ToString().Trim()" + dt.Rows[0]["VisaTypeCode"].ToString().Trim());
+                 FillDropDowns();
+                
+
+                 ddlEntryPoint.SelectedValue = dt.Rows[0]["BorderEntryPoint"].ToString().Trim();
+                 
+                 ddlExitPoint.SelectedValue = dt.Rows[0]["BorderExitPoint"].ToString().Trim();
+                 txtArrivalDate.Value = dt.Rows[0]["ArrivalDate"].ToString();
+                 txtDepartureDate.Value = dt.Rows[0]["DepartureDate"].ToString();
+                 
+                 ddlVISAType.SelectedValue = ddlVISAType.Items.FindByValue(dt.Rows[0]["VisaTypeCode"].ToString().Trim()) == null ? "0" : dt.Rows[0]["VisaTypeCode"].ToString().Trim();
+                 ddlVISAType_SelectedIndexChanged(new object(), new EventArgs());
+                 ddlEntryType.SelectedValue = ddlEntryType.Items.FindByValue(dt.Rows[0]["EntryType"].ToString().Trim()) == null ? "0" : dt.Rows[0]["EntryType"].ToString().Trim();
+                 ddlEntryType_SelectedIndexChanged(new object(), new EventArgs());
+                 ddlPeriodType.SelectedValue = ddlPeriodType.Items.FindByValue(dt.Rows[0]["DurationType"].ToString().Trim()) == null ? "0" : dt.Rows[0]["DurationType"].ToString().Trim();
+                 ddlPeriod_SelectedIndexChanged(new object(), new EventArgs());
+                 ddlPeriod.SelectedValue = ddlPeriod.Items.FindByValue(dt.Rows[0]["Duration"].ToString().Trim()) == null ? "0" : dt.Rows[0]["Duration"].ToString().Trim();
+                 ddlDuration_SelectedIndexChanged(new object(), new EventArgs());
+                 txtRate.Text = dt.Rows[0]["Rate"].ToString();
+                 lblRateCurrency.Text = dt.Rows[0]["RateCurrency"].ToString();
+                 txtSpousename.Text = dt.Rows[0]["SpouseName"].ToString();
+                 txtBurundiAddress.Text = dt.Rows[0]["AddressInTravellingCountry"].ToString();
+                 txtPSB.Text = dt.Rows[0]["PurposeOfStayinTravellingCountry"].ToString();
+                 chkcommunity.Checked = (dt.Rows[0]["TravelDocumentApplicantYN"].ToString() == "1") ? true : false;
+
+                 //if (txtDOB.Value != "")
+                 //{
+                 //    DOB.Visible = false;
+                 //}
+                 //else
+                 //{
+                 //    DOB.Visible = true;
+                 //}
+                 Trace.Warn("dt.Rows[0][Sex].ToString().Trim()" + dt.Rows[0]["Sex1"].ToString().Trim());  
+                 ddlSex.SelectedValue = dt.Rows[0]["Sex1"].ToString().Trim() ;
+                 //ddlSex.Enabled = dt.Rows[0]["Sex"].ToString() == null ? true : false;
+                 ddlMS.SelectedValue = ddlMS.Items.FindByValue(dt.Rows[0]["MaritalStatus"].ToString().Trim()) == null ? "0" : dt.Rows[0]["MaritalStatus"].ToString().Trim();
+                 //ddlMS.Enabled = dt.Rows[0]["MaritalStatus"].ToString() == null ? true : false;
+                 txtFatherName.Text = dt.Rows[0]["FatherName"].ToString().Trim();
+                 //txtFatherName.ReadOnly = dt.Rows[0]["FatherName"].ToString() == "" ? false : true;
+                 txtMotherName.Text = dt.Rows[0]["MotherName"].ToString().Trim();
+                 //txtMotherName.ReadOnly = dt.Rows[0]["MotherName"].ToString() == "" ? false : true;
+                 txtcurrentAdds.Text = dt.Rows[0]["CurrentAddress"].ToString().Trim();
+                 txtPermanentAdds.Text = dt.Rows[0]["PermanentAddress"].ToString().Trim();
+                 TxtPassportType.Text = dt.Rows[0]["PassportType"].ToString().Trim();
+                 //TxtPassportType.ReadOnly = dt.Rows[0]["PassportType"].ToString() == "" ? false : true;
+                 TxtDOI.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfIssue"]).ToString();
+                 txtPO.Text = Convert.ToString(dt.Rows[0]["ApplicantStatus"]).Trim();
+                 //if (TxtDOI.Value != "")
+                 //{
+                 //    DOI.Visible = false;
+                 //}
+                 //else
+                 //{
+                 //    DOI.Visible = true;
+                 //}
+                 TxtDOE.Value = string.Format("{0:dd-MMM-yyyy}", dt.Rows[0]["DateOfExpiry"]).ToString();
+                 //if (TxtDOE.Value != "")
+                 //{
+                 //    DOE.Visible = false;
+                 //}
+                 //else
+                 //{
+                 //    DOE.Visible = true;
+                 //}
+                 TxtPlaceofIssue.Text = dt.Rows[0]["PlaceOfIssue"].ToString().Trim();
+                 //TxtPlaceofIssue.ReadOnly = dt.Rows[0]["PlaceOfIssue"].ToString() == "" ? false : true;
+                 TxtIssuingAuthority.Text = dt.Rows[0]["IssuingAuthority"].ToString().Trim();
+                 //TxtIssuingAuthority.ReadOnly = dt.Rows[0]["IssuingAuthority"].ToString().Trim() == "" ? false : true;
+                 TxtMobileNumber.Text = dt.Rows[0]["MobileNumber"].ToString().Trim();
+                 TxtLandLineNumber.Text = dt.Rows[0]["LandlinePhone"].ToString().Trim();
+
+                 rbl5.SelectedValue = dt.Rows[0]["SeveralJourneyYN1"].ToString().Trim();
+                 rbl6.SelectedValue = dt.Rows[0]["HasReturnTicketYN1"].ToString().Trim();
+                 rblEmplSp.SelectedValue = Convert.ToString(dt.Rows[0]["flagEmployement"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagEmployement"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlEmpl.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     Trace.Warn("inside ELSE flagEmployement");
+                     pnlEmpl.Attributes.Add("style", "display:none");
+                 }
+
+                 txtEmployerName.Text= Convert.ToString(dt.Rows[0]["EmployerName"]).Trim() ;
+                 txtJobDesc.Text = Convert.ToString(dt.Rows[0]["JobDesc"]).Trim();
+                 txtOcuPossition.Text = Convert.ToString(dt.Rows[0]["OcuPossition"]).Trim();
+
+                 txtMoney.Text = Convert.ToString(dt.Rows[0]["MoneyForTravellUSD"]).Trim();
+                 ddlModeOfTravel.SelectedValue = Convert.ToString(dt.Rows[0]["ModeOfTravel"]).Trim();
+
+
+                 ddlPrevApplied.SelectedValue = Convert.ToString(dt.Rows[0]["flagPrevApplied1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagPrevApplied1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trPrevApplied.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trPrevApplied.Attributes.Add("style", "display:none");
+                 }
+
+
+                 ddlPrevVisit.SelectedValue = Convert.ToString(dt.Rows[0]["flagPrevVisit1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagPrevVisit1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trVisit.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trVisit.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlVisaGranted.SelectedValue = Convert.ToString(dt.Rows[0]["flagVisaGranted1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagVisaGranted1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlVisaRejected.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlVisaRejected.Attributes.Add("style", "display:none");
+                 }
+
+                 txtPrevAppliedVisaPlace.Text = Convert.ToString(dt.Rows[0]["PrevAppliedVisaPlace"]).Trim();
+                 txtPrevVisitReason.Text = Convert.ToString(dt.Rows[0]["PrevVisitReason"]).Trim();
+                 txtPrevVisaRejReason.Text = Convert.ToString(dt.Rows[0]["PrevVisaRejReason"]).Trim();
+
+                 rblDisplayVisit.SelectedValue = Convert.ToString(dt.Rows[0]["flagLastVisit"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagLastVisit"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlPrevVisit1.Attributes.Add("style", "display: ");
+                     pnlPrevVisit2.Attributes.Add("style", "display: ");
+                     pnlPrevVisit3.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlPrevVisit1.Attributes.Add("style", "display:none");
+                     pnlPrevVisit2.Attributes.Add("style", "display:none");
+                     pnlPrevVisit3.Attributes.Add("style", "display:none");
+                 }
+
+                 txtPreVisit1FromDate.Value = Convert.ToString(dt.Rows[0]["PreVisit1FromDate"]).Trim();
+                 txtPreVisit1ToDate.Value = Convert.ToString(dt.Rows[0]["PreVisit1ToDate"]).Trim();
+                 txtPreVisit1Addr1.Text = Convert.ToString(dt.Rows[0]["PreVisit1Addr1"]).Trim();
+                 txtPreVisit1Addr2.Text = Convert.ToString(dt.Rows[0]["PreVisit1Addr2"]).Trim();
+                 txtPreVisit1City.Text = Convert.ToString(dt.Rows[0]["PreVisit1City"]).Trim();
+                 txtPreVisit1State.Text = Convert.ToString(dt.Rows[0]["PreVisit1State1"]).Trim();
+                 txtPreVisit1District.Text = Convert.ToString(dt.Rows[0]["PreVisit1District"]).Trim();
+                 txtPreVisit1Postcode.Text = Convert.ToString(dt.Rows[0]["PreVisit1Postcode"]).Trim();
+
+                 txtPreVisit2FromDate.Value = Convert.ToString(dt.Rows[0]["PreVisit2FromDate"]).Trim();
+                 txtPreVisit2ToDate.Value = Convert.ToString(dt.Rows[0]["PreVisit2ToDate"]).Trim();
+                 txtPreVisit2Addr1.Text = Convert.ToString(dt.Rows[0]["PreVisit2Addr1"]).Trim();
+                 txtPreVisit2Addr2.Text = Convert.ToString(dt.Rows[0]["PreVisit2Addr2"]).Trim();
+                 txtPreVisit2City.Text = Convert.ToString(dt.Rows[0]["PreVisit2City"]).Trim();
+                 txtPreVisit2State.Text = Convert.ToString(dt.Rows[0]["PreVisit2State"]).Trim();
+                 txtPreVisit2District.Text = Convert.ToString(dt.Rows[0]["PreVisit2District"]).Trim();
+                 txtPreVisit2Postcode.Text = Convert.ToString(dt.Rows[0]["PreVisit2Postcode"]).Trim();
+
+                 txtPreVisit3FromDate.Value = Convert.ToString(dt.Rows[0]["PreVisit3FromDate"]).Trim();
+                 txtPreVisit3ToDate.Value = Convert.ToString(dt.Rows[0]["PreVisit3ToDate"]).Trim();
+                 txtPreVisit3Addr1.Text = Convert.ToString(dt.Rows[0]["PreVisit3Addr1"]).Trim();
+                 txtPreVisit3Addr2.Text = Convert.ToString(dt.Rows[0]["PreVisit3Addr2"]).Trim();
+                 txtPreVisit3City.Text = Convert.ToString(dt.Rows[0]["PreVisit3City"]).Trim();
+                 txtPreVisit3State.Text = Convert.ToString(dt.Rows[0]["PreVisit3State1"]).Trim();
+                 txtPreVisit3District.Text = Convert.ToString(dt.Rows[0]["PreVisit3District"]).Trim();
+                 txtPreVisit3Postcode.Text = Convert.ToString(dt.Rows[0]["PreVisit3Postcode"]).Trim();               
+
+                 ddlHairColor.SelectedValue = Convert.ToString(dt.Rows[0]["ColorHair"]).Trim();
+                 ddlEyeColor.SelectedValue = Convert.ToString(dt.Rows[0]["ColorEye"]).Trim();
+                 txtMark.Text = Convert.ToString(dt.Rows[0]["IndentityMark"]).Trim();
+                 txtHeights.Text = Convert.ToString(dt.Rows[0]["Height"]).Trim();
+
+                 rblInMillitary.SelectedValue = Convert.ToString(dt.Rows[0]["flagInMillitary"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagInMillitary"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlMillitery.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlMillitery.Attributes.Add("style", "display:none");
+                 }
+
+                 txtInMilitary.Text = Convert.ToString(dt.Rows[0]["InMilitary"]).Trim();
+                 txtFromDate.Value = Convert.ToString(dt.Rows[0]["FromDate"]).Trim();
+                 txtToDate.Value = Convert.ToString(dt.Rows[0]["ToDate"]).Trim();
+
+                 rblEmplDt.SelectedValue = Convert.ToString(dt.Rows[0]["flagEmplDt"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagEmplDt"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlEmplSp.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlEmplSp.Attributes.Add("style", "display:none");
+                 }
+
+                 txtEmpName.Text = Convert.ToString(dt.Rows[0]["EmpName"]).Trim();
+                 txtEmpPhoneNo.Text = Convert.ToString(dt.Rows[0]["EmpPhoneNo"]).Trim();
+                 txtEmpLivedFrom.Text = Convert.ToString(dt.Rows[0]["EmpLivedFrom"]).Trim();
+                 txtEmpAddr1.Text = Convert.ToString(dt.Rows[0]["empAddress1"]).Trim();
+                 txtEmpAddr2.Text = Convert.ToString(dt.Rows[0]["empAddress2"]).Trim();
+                 txtEmpCity.Text = Convert.ToString(dt.Rows[0]["EmpCity"]).Trim();
+                 txtEmpState.Text = Convert.ToString(dt.Rows[0]["EmpState"]).Trim();
+                 txtEmpPostCode.Text = Convert.ToString(dt.Rows[0]["EmpPostCode"]).Trim();
+
+                 txtBurundiAddress.Text = Convert.ToString(dt.Rows[0]["IntedAddress1"]).Trim();
+                 txtIntedAddress2.Text = Convert.ToString(dt.Rows[0]["IntedAddress2"]).Trim();
+                 txtIntedCity.Text = Convert.ToString(dt.Rows[0]["IntedCity"]).Trim();
+                 txtIntedState.Text = Convert.ToString(dt.Rows[0]["IntedState"]).Trim();
+                 txtIntedDistrict.Text = Convert.ToString(dt.Rows[0]["IntedDistrict"]).Trim();
+                 txtIntedPostcode.Text = Convert.ToString(dt.Rows[0]["IntedPostcode"]).Trim();
+
+                 txtApplyCountryYears.Text = Convert.ToString(dt.Rows[0]["ApplyCountryYears"]).Trim();
+
+                 ddlSeriousDisease.SelectedValue = Convert.ToString(dt.Rows[0]["FlagSeriousDisease1"]);
+
+                 if (Convert.ToString(dt.Rows[0]["FlagSeriousDisease1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trDisease.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trDisease.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlCrimeRecord.SelectedValue = Convert.ToString(dt.Rows[0]["FlagCrimeRecord1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["FlagCrimeRecord1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlCrimeRecord.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlCrimeRecord.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlDrugReport.SelectedValue = Convert.ToString(dt.Rows[0]["FlagDrugReport1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["FlagDrugReport1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trDrugReport.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trDrugReport.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlDeported.SelectedValue = Convert.ToString(dt.Rows[0]["FlagDeported1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["FlagDeported1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlDeported.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlDeported.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlFraudRecord.SelectedValue = Convert.ToString(dt.Rows[0]["FlagFraudRecord1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["FlagFraudRecord1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trFraudRecord.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trFraudRecord.Attributes.Add("style", "display:none");
+                 }
+
+                 //Last visited countries details
+                 rblLastVisitCountries.SelectedValue = Convert.ToString(dt.Rows[0]["flagLastVisitCountries"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagLastVisitCountries"]).Trim() == "Y")
+                 {
+                     pnlLastVisitCountries1.Attributes.Add("style", "display: ");
+                     pnlLastVisitCountries2.Attributes.Add("style", "display: ");
+                     pnlLastVisitCountries3.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlLastVisitCountries1.Attributes.Add("style", "display:none");
+                     pnlLastVisitCountries2.Attributes.Add("style", "display:none");
+                     pnlLastVisitCountries3.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlLastVisitCountry1.SelectedValue = Convert.ToString(dt.Rows[0]["CountryCode1"]).Trim();
+                 txtLastVisitCity1.Text = Convert.ToString(dt.Rows[0]["CityName1"]).Trim();
+                 txtLastVisitDeptDate1.Value = Convert.ToString(dt.Rows[0]["DepartureDate1"]).Trim();
+                 ddlLastVisitCountry2.SelectedValue = Convert.ToString(dt.Rows[0]["CountryCode2"]).Trim();
+                 txtLastVisitCity2.Text = Convert.ToString(dt.Rows[0]["CityName2"]).Trim();
+                 txtLastVisitDeptDate2.Value = Convert.ToString(dt.Rows[0]["DepartureDate2"]).Trim();
+                 ddlLastVisitCountry3.SelectedValue = Convert.ToString(dt.Rows[0]["CountryCode3"]).Trim();
+                 txtLastVisitCity3.Text = Convert.ToString(dt.Rows[0]["CityName3"]).Trim();
+                 txtLastVisitDeptDate3.Value = Convert.ToString(dt.Rows[0]["DepartureDate3"]).Trim();
+
+                 //Last Lived countries details
+                 rblLastLived.SelectedValue = Convert.ToString(dt.Rows[0]["flagLastLived"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagLastVisitCountries"]).Trim() == "Y")
+                 {
+                     pnlLastLived1.Attributes.Add("style", "display: ");
+                     pnlLastLived2.Attributes.Add("style", "display: ");
+                     pnlLastLived3.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlLastLived1.Attributes.Add("style", "display:none");
+                     pnlLastLived2.Attributes.Add("style", "display:none");
+                     pnlLastLived3.Attributes.Add("style", "display:none");
+                 }
+
+                 ddlLastLivedCountry1.SelectedValue = Convert.ToString(dt.Rows[0]["LastLivedCountryCode1"]).Trim();
+                 txtLastLivedCityName1.Text = Convert.ToString(dt.Rows[0]["LastLivedCityName1"]).Trim();
+                 txtLastLivedDepartureDate1.Value = Convert.ToString(dt.Rows[0]["LastLivedDepartureDate1"]).Trim();
+                 ddlLastLivedCountry2.SelectedValue = Convert.ToString(dt.Rows[0]["LastLivedCountryCode2"]).Trim();
+                 txtLastLivedCityName2.Text = Convert.ToString(dt.Rows[0]["LastLivedCityName2"]).Trim();
+                 txtLastLivedDepartureDate2.Value = Convert.ToString(dt.Rows[0]["LastLivedDepartureDate2"]).Trim();
+                 ddlLastVisitCountry3.SelectedValue = Convert.ToString(dt.Rows[0]["LastLivedCountryCode3"]).Trim();
+                 txtLastVisitCity3.Text = Convert.ToString(dt.Rows[0]["LastLivedCityName3"]).Trim();
+                 txtLastLivedDepartureDate3.Value = Convert.ToString(dt.Rows[0]["LastLivedDepartureDate3"]).Trim();
+
+                 chkFastTrack.Checked = (dt.Rows[0]["flagFastTrack1"].ToString() == "Y") ? true : false;
+
+                 txtOtherName.Text = Convert.ToString(dt.Rows[0]["OtherName"]).Trim();
+
+                 txtFatherLastName.Text = Convert.ToString(dt.Rows[0]["FatherLastName"]).Trim();
+                 txtFatherDateOfBirth.Value = Convert.ToString(dt.Rows[0]["FatherDateOfBirth"]).Trim();
+                 txtFatherAddress.Text = Convert.ToString(dt.Rows[0]["FatherAddress"]).Trim();
+                 txtFatherNationality.Text = Convert.ToString(dt.Rows[0]["FatherNationality"]).Trim();
+
+                 txtMotherLastName.Text = Convert.ToString(dt.Rows[0]["MotherLastName"]).Trim();
+                 txtMotherDateOfBirth.Value  = Convert.ToString(dt.Rows[0]["MotherDateOfBirth"]).Trim();
+                 txtMotherAddress.Text  = Convert.ToString(dt.Rows[0]["MotherAddress"]).Trim();
+                 txtMotherNationality.Text  = Convert.ToString(dt.Rows[0]["MotherNationality"]).Trim();
+
+                 txtOldPassport.Text  = Convert.ToString(dt.Rows[0]["oldPassportNumber"]).Trim();
+                 txtOldPaasportIssueDate.Value  = Convert.ToString(dt.Rows[0]["OldPaasportIssueDate"]).Trim();
+                 txtPlaceIssueOldPassport.Text  = Convert.ToString(dt.Rows[0]["PlaceIssueOldPassport"]).Trim();                
+                 txtAddress2.Text = Convert.ToString(dt.Rows[0]["Address2"]).Trim();
+                 txtCity.Text  = Convert.ToString(dt.Rows[0]["City"]).Trim();
+                 txtState.Text  = Convert.ToString(dt.Rows[0]["State"]).Trim();
+                 txtDistrict.Text  = Convert.ToString(dt.Rows[0]["District"]).Trim();
+                 txtPostcode.Text  = Convert.ToString(dt.Rows[0]["PostCode"]).Trim();
+                 ddlCurrentCountry.SelectedValue = Convert.ToString(dt.Rows[0]["CountryCode"]).Trim();
+                 txtLivedInCurrentAdd.Text  = Convert.ToString(dt.Rows[0]["LivedInCurrentAdd"]).Trim();
+
+                 txtPerAddres2.Text  = Convert.ToString(dt.Rows[0]["perAddress2"]).Trim();
+                 txtPerCity.Text  = Convert.ToString(dt.Rows[0]["perCity"]).Trim();
+                 txtPerState.Text  = Convert.ToString(dt.Rows[0]["perState"]).Trim();
+                 txtPerPostcode.Text  = Convert.ToString(dt.Rows[0]["perPostCode"]).Trim();
+                 txtPerDistrict.Text  = Convert.ToString(dt.Rows[0]["perDistrict"]).Trim();
+                 ddlPerCountry.SelectedValue = Convert.ToString(dt.Rows[0]["perCountryCode"]).Trim();
+
+                 ddlCurrentLocation.SelectedValue = Convert.ToString(dt.Rows[0]["currentCountryCode"]).Trim();
+
+                 string countrycode = ddlCurrentLocation.SelectedValue.ToString();
+                 string Query = "SELECT EmbassyId,(CountryName + ' ' + city)AS Embassy,note,FlagEmbassyAvail   FROM EmbassyRegistration where CountryCode='" + countrycode + "'";
+
+                 DataTable dt1 = new DataTable();
+                 dt1 = ObjGeneral.FetchData(Query);
+
+                 if (dt1.Rows.Count > 0)
+                 {
+                     string flagEmbassyAvail = dt1.Rows[0]["FlagEmbassyAvail"].ToString();
+                     Trace.Warn("flagEmbassyAvail :: " + flagEmbassyAvail);
+
+                     if (ddlVISAType.SelectedItem.Text == "STR")
+                     {
+                         if (flagEmbassyAvail == "Y")
+                         {
+                             hldEmbassy.Visible = true;
+                             ObjGeneral.Fill_DDL(ddlEmbassyPref, Query, "Embassy", "EmbassyId");
+                             ddlEmbassyPref.SelectedValue = Convert.ToString(dt.Rows[0]["EmbassyId"]).Trim();
+                             trNote.Attributes.Add("style", "display:none");
+
+                         }
+                         else
+                         {
+                             trNote.Attributes.Add("style", "display:");
+                             txtNote.Text = dt.Rows[0]["Note"].ToString();
+                             hldEmbassy.Visible = false;
+                         }
+                     }
+                 }     
+
+
+                 rblOtherNationality.SelectedValue = Convert.ToString(dt.Rows[0]["flagOtherNationality1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagOtherNationality1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trOtherNationality.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trOtherNationality.Attributes.Add("style", "display:none");
+                 }
+
+                 txtOtherNationality.Text  = Convert.ToString(dt.Rows[0]["OtherNationalityDetails"]).Trim();
+
+                 txtDateRejected.Value  = Convert.ToString(dt.Rows[0]["DateRejected"]).Trim();
+                 txtLastRejectedVisaType.Text  = Convert.ToString(dt.Rows[0]["LastRejectedVisaType"]).Trim();
+                 rblRejeAppeal.SelectedValue  = Convert.ToString(dt.Rows[0]["flagRejeAppeal"]).Trim();
+                 txtRejectedAppDiffer.Text  = Convert.ToString(dt.Rows[0]["RejectedAppDiffer"]).Trim();
+
+                 rblRefusedAnyCountry.SelectedValue  = Convert.ToString(dt.Rows[0]["flagRefusedAnyCountry1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagRefusedAnyCountry1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trRefusedAnyCountry.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trRefusedAnyCountry.Attributes.Add("style", "display:none");
+                 }
+
+                 txtRefusedAnyCountry.Text = Convert.ToString(dt.Rows[0]["RefusedAnyCountryDetails"]).Trim();
+
+                 rblRefuseEntryOnArrival.SelectedValue = Convert.ToString(dt.Rows[0]["flagRefuseEntryOnArrival1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagRefuseEntryOnArrival1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlRefusedOnArrival.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlRefusedOnArrival.Attributes.Add("style", "display:none");
+                 }
+
+
+                 txtRefusedVisaOnArrivalPlace.Text = Convert.ToString(dt.Rows[0]["RefusedVisaOnArrivalPlace"]).Trim();
+                 txtRefusedVisaOnArrivalDate.Value = Convert.ToString(dt.Rows[0]["RefusedVisaOnArrivalDate"]).Trim();
+                 rblRefusedVisArriAppeal.SelectedValue = Convert.ToString(dt.Rows[0]["flagRefusedVisArriAppeal"]).Trim();
+                 txtRefusedVisArriAppOutcome.Text = Convert.ToString(dt.Rows[0]["RefusedVisArriAppOutcome"]).Trim();
+                 txtRefusedVisaOnArrivalReason.Text = Convert.ToString(dt.Rows[0]["RefusedVisaOnArrivalReason"]).Trim();
+
+                 txtDisease.Text = Convert.ToString(dt.Rows[0]["Disease"]).Trim();
+
+                 txtCrimeRecord.Text = Convert.ToString(dt.Rows[0]["CrimeRecord"]).Trim();
+                 txtConvictionDate.Value = Convert.ToString(dt.Rows[0]["ConvictionDate"]).Trim();
+                 txtConvictedPlace.Text = Convert.ToString(dt.Rows[0]["ConvictedPlace"]).Trim();
+                 txtSentence.Text = Convert.ToString(dt.Rows[0]["Sentence"]).Trim();
+
+                 rblConvictionInOtherCountry.SelectedValue = Convert.ToString(dt.Rows[0]["flagConvictionInOtherCountry1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagConvictionInOtherCountry1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trConvictionInOtherCountry.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trConvictionInOtherCountry.Attributes.Add("style", "display:none");
+                 }
+
+                 txtConvictionInOtherCountry.Text = Convert.ToString(dt.Rows[0]["ConvictionInOtherCountry"]) .Trim();
+                 txtDrugReport.Text = Convert.ToString(dt.Rows[0]["DrugReport"]).Trim();
+
+                 txtDeportedNotice.Value = Convert.ToString(dt.Rows[0]["DeportedNoticeDate"]).Trim();
+
+                 Trace.Warn("dt.Rows[0][DeportedNoticeType]" +dt.Rows[0]["DeportedNoticeType"]);
+
+                 rblDeportedNotice.SelectedValue = Convert.ToString(dt.Rows[0]["DeportedNoticeType"]).Trim();
+                 txtDeportedLeave.Text = Convert.ToString(dt.Rows[0]["DeportedLeave"]).Trim();                                
+                 txtDeportedAppealeddetails.Text = Convert.ToString(dt.Rows[0]["DeportedAppealeddetails"]).Trim();
+
+                 rblDeportedOtherCountry.SelectedValue = Convert.ToString(dt.Rows[0]["flagDeportedOtherCountry1"]).Trim();
+                 if (Convert.ToString(dt.Rows[0]["flagConvictionInOtherCountry1"]).Trim() == "Y")
+                 {
+                     Trace.Warn("inside if ");
+                     trDeportedOtherCountry.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     trDeportedOtherCountry.Attributes.Add("style", "display:none");
+                 }
+
+                 txtDeportedOtherCountry.Text = Convert.ToString(dt.Rows[0]["DeportedOtherCountry"]).Trim();
+
+                 txtFraudRecord.Text = Convert.ToString(dt.Rows[0]["FraudRecord"]).Trim();
+
+                 Trace.Warn("dt.Rows[0][flagFreshPassport]" + dt.Rows[0]["flagFreshPassport1"]);
+                 rblFreshPaasport.SelectedValue = Convert.ToString(dt.Rows[0]["flagFreshPassport1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagFreshPassport1"]).Trim() == "N")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlOldPassport.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlOldPassport.Attributes.Add("style", "display:none");  
+                 }
+
+                 Trace.Warn("dt.Rows[0][flagCuurContactDetails1]" + dt.Rows[0]["flagCuurContactDetails1"]);
+                 rblContactDetails.SelectedValue = Convert.ToString(dt.Rows[0]["flagCuurContactDetails1"]).Trim();
+
+                 if (Convert.ToString(dt.Rows[0]["flagCuurContactDetails1"]).Trim() == "N")
+                 {
+                     Trace.Warn("inside if ");
+                     pnlPermaneneAddress.Attributes.Add("style", "display: ");
+                 }
+                 else
+                 {
+                     pnlPermaneneAddress.Attributes.Add("style", "display:none");
+                 }
+                
+             }
+
+        //}
+        //catch(Exception ex)
+        //{
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = ex.Message.ToString();
+        //}
+        
+    }
+
+    protected void BtnUpdate_Click(object sender, EventArgs e)
+    {
+        BusinessEntityLayer.BalVisaApplicationSubmit ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+        DataTable dt = new DataTable();
+        int iUptStatus = 0;
+        string strScript = string.Empty;
+        //string strtype = "";
+        int iApplicationId = Convert.ToInt32(ViewState["ApplicationID"]);
+        ObjBalVisa.EntryType = (ddlEntryPoint.SelectedValue.ToString());
+
+        //try
+        //{
+            if (ViewState["imagepath"] != null)
+            {
+                int AppliedBy = Convert.ToInt32(objectSessionHolderPersistingData.User_ID.ToString());
+                string queryappliedby = "select (case when UserType ='AP' then '0' when UserType = 'AG' then '1' end) as UserType from UserMaster where UserID = '" + AppliedBy + "'";
+                DataTable dt1 = null;
+                dt1 = ObjGeneral.FetchData(queryappliedby);
+                ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+
+                ObjBalVisa.ratecurrency = lblRateCurrency.Text;
+                ObjBalVisa.logobrowse = ViewState["imagepath"].ToString();
+                ObjBalVisa.PassportNo = this.TxtPassportNumber.Text;
+                ObjBalVisa.Nationality = this.ddlNationality.SelectedValue;
+                ObjBalVisa.PassportType = this.TxtPassportType.Text;
+                ObjBalVisa.Doissue = this.TxtDOI.Value;
+                ObjBalVisa.DoExp = this.TxtDOE.Value;
+                ObjBalVisa.Poissue = this.TxtPlaceofIssue.Text;
+                ObjBalVisa.issuingauthority = this.TxtIssuingAuthority.Text;
+                ObjBalVisa.fname = this.txtFirstName.Text;
+                ObjBalVisa.mname = this.txtMiddlename.Text;
+                ObjBalVisa.lname = this.txtLastName.Text;
+                ObjBalVisa.sex = this.ddlSex.SelectedValue;
+                Trace.Warn("txtDOB.Value" + txtDOB.Value);  
+                ObjBalVisa.dob = this.txtDOB.Value;
+                ObjBalVisa.pob = this.txtplaceofbirth.Text;
+                ObjBalVisa.maritalstatus = this.ddlMS.SelectedValue;
+                ObjBalVisa.fathername = this.txtFatherName.Text;
+                ObjBalVisa.mothername = this.txtMotherName.Text;
+                ObjBalVisa.spousename = this.txtSpousename.Text;
+                ObjBalVisa.currentaddress = this.txtcurrentAdds.Text;
+                ObjBalVisa.permanentaddress = this.txtPermanentAdds.Text;
+                ObjBalVisa.mobilenumber = this.TxtMobileNumber.Text;
+                ObjBalVisa.landlinenumber = this.TxtLandLineNumber.Text;
+                ObjBalVisa.primaryemail = this.txtPrimaryEmail.Text;
+                ObjBalVisa.alternateemail = this.txtAlternatEmail.Text;
+                ObjBalVisa.presentoccupation = this.txtPO.Text;
+                ObjBalVisa.country = this.ddlCountry.SelectedValue;
+                ObjBalVisa.VisaType = this.ddlVISAType.SelectedValue;
+                ObjBalVisa.EntryType = this.ddlEntryType.SelectedValue;
+                ObjBalVisa.periodtype = this.ddlPeriodType.SelectedValue;
+                ObjBalVisa.Duration = this.ddlPeriod.SelectedValue;
+                ObjBalVisa.rate = Convert.ToDecimal(this.txtRate.Text);
+                ObjBalVisa.ratecurrency = this.lblRateCurrency.Text;
+                ObjBalVisa.ArivalDate = this.txtArrivalDate.Value;
+                ObjBalVisa.DepDate = this.txtDepartureDate.Value;
+                ObjBalVisa.burundiaddress = this.txtBurundiAddress.Text;
+                ObjBalVisa.psb = this.txtPSB.Text;
+                ObjBalVisa.severaljourney = Convert.ToInt32(this.rbl5.SelectedValue.ToString());
+                ObjBalVisa.returnticket = Convert.ToInt32(this.rbl6.SelectedValue.ToString());
+                ObjBalVisa.EntryPoint = this.ddlEntryPoint.SelectedValue;
+                ObjBalVisa.ExitPoint = this.ddlExitPoint.SelectedValue;
+                ObjBalVisa.AppliedBy = Convert.ToInt32(dt1.Rows[0]["UserType"].ToString());
+                ObjBalVisa.AppliedByUserId = AppliedBy;
+                ObjBalVisa.CreatedBy = AppliedBy;
+                ObjBalVisa.Status = (chkcommunity.Checked == true) ? 1 : 0;
+                ObjBalVisa.ApplicationID = iApplicationId;
+
+                ObjBalVisa.EmployerName = txtEmployerName.Text.ToString();
+                ObjBalVisa.JobDesc = txtJobDesc.Text.ToString();
+                ObjBalVisa.OcuPossition = txtOcuPossition.Text.ToString();
+
+                ObjBalVisa.MoneyForTravellUSD = txtMoney.Text.ToString();
+                ObjBalVisa.ModeOfTravel = ddlModeOfTravel.SelectedValue.ToString();
+                ObjBalVisa.IntededDuration = "3";
+
+                ObjBalVisa.flagPrevApplied = ddlPrevApplied.Text.ToString();
+                ObjBalVisa.flagPrevVisit = ddlPrevVisit.Text.ToString();
+                ObjBalVisa.flagVisaGranted = ddlVisaGranted.Text.ToString();
+                ObjBalVisa.PrevAppliedVisaPlace = txtPrevAppliedVisaPlace.Text.ToString();
+                ObjBalVisa.PrevVisitReason = txtPrevVisitReason.Text.ToString();
+                ObjBalVisa.PrevVisaRejReason = txtPrevVisaRejReason.Text.ToString();
+
+                ObjBalVisa.PreVisit1FromDate = txtPreVisit1FromDate.Value.ToString();
+                ObjBalVisa.PreVisit1ToDate = txtPreVisit1ToDate.Value.ToString();
+                ObjBalVisa.PreVisit1Addr1 = txtPreVisit1Addr1.Text.ToString();
+                ObjBalVisa.PreVisit1Addr2 = txtPreVisit1Addr2.Text.ToString();
+                ObjBalVisa.PreVisit1City = txtPreVisit1City.Text.ToString();
+                ObjBalVisa.PreVisit1State = txtPreVisit1State.Text.ToString();
+                ObjBalVisa.PreVisit1District = txtPreVisit1District.Text.ToString();
+                ObjBalVisa.PreVisit1Postcode = txtPreVisit1Postcode.Text.ToString();
+
+                ObjBalVisa.PreVisit2FromDate = txtPreVisit2FromDate.Value.ToString();
+                ObjBalVisa.PreVisit2ToDate = txtPreVisit2ToDate.Value.ToString();
+                ObjBalVisa.PreVisit2Addr1 = txtPreVisit2Addr1.Text.ToString();
+                ObjBalVisa.PreVisit2Addr2 = txtPreVisit2Addr2.Text.ToString();
+                ObjBalVisa.PreVisit2City = txtPreVisit2City.Text.ToString();
+                ObjBalVisa.PreVisit2State = txtPreVisit2State.Text.ToString();
+                ObjBalVisa.PreVisit2District = txtPreVisit2District.Text.ToString();
+                ObjBalVisa.PreVisit2Postcode = txtPreVisit2Postcode.Text.ToString();
+
+                ObjBalVisa.PreVisit3FromDate = txtPreVisit3FromDate.Value.ToString();
+                ObjBalVisa.PreVisit3ToDate = txtPreVisit3ToDate.Value.ToString();
+                ObjBalVisa.PreVisit3Addr1 = txtPreVisit3Addr1.Text.ToString();
+                ObjBalVisa.PreVisit3Addr2 = txtPreVisit3Addr2.Text.ToString();
+                ObjBalVisa.PreVisit3City = txtPreVisit3City.Text.ToString();
+                ObjBalVisa.PreVisit3State = txtPreVisit3State.Text.ToString();
+                ObjBalVisa.PreVisit3District = txtPreVisit3District.Text.ToString();
+                ObjBalVisa.PreVisit3Postcode = txtPreVisit3Postcode.Text.ToString();
+
+                ObjBalVisa.ColorHair = ddlHairColor.SelectedValue.ToString();
+                ObjBalVisa.ColorEye = ddlEyeColor.SelectedValue.ToString();
+                ObjBalVisa.IndentityMark = txtMark.Text.ToString();
+                ObjBalVisa.Height = txtHeights.Text.ToString();
+
+                ObjBalVisa.InMilitary = txtInMilitary.Text.ToString();
+                ObjBalVisa.FromDate = txtFromDate.Value.Trim().ToString();
+                ObjBalVisa.ToDate = txtToDate.Value.Trim().ToString();
+
+                ObjBalVisa.EmpName = txtEmpName.Text.Trim().ToString();
+                ObjBalVisa.EmpPhoneNo = txtEmpPhoneNo.Text.Trim().ToString();
+                ObjBalVisa.EmpLivedFrom = txtEmpLivedFrom.Text.Trim().ToString();
+                ObjBalVisa.Address1 = txtEmpAddr1.Text.Trim().ToString();
+                ObjBalVisa.Address2 = txtEmpAddr2.Text.Trim().ToString();
+                ObjBalVisa.EmpCity = txtEmpCity.Text.Trim().ToString();
+                ObjBalVisa.EmpState = txtEmpState.Text.Trim().ToString();
+                ObjBalVisa.EmpPostCode = txtEmpPostCode.Text.Trim().ToString();
+
+                ObjBalVisa.IntedAddress1 = txtBurundiAddress.Text.Trim().ToString();
+                ObjBalVisa.IntedAddress2 = txtIntedAddress2.Text.Trim().ToString();
+                ObjBalVisa.IntedCity = txtIntedCity.Text.Trim().ToString();
+                ObjBalVisa.IntedState = txtIntedState.Text.Trim().ToString();
+                ObjBalVisa.IntedDistrict = txtIntedDistrict.Text.Trim().ToString();
+                ObjBalVisa.IntedPostcode = txtIntedPostcode.Text.Trim().ToString();
+
+                ObjBalVisa.ApplyCountryYears = txtApplyCountryYears.Text.Trim().ToString();
+                ObjBalVisa.FlagSeriousDisease = ddlSeriousDisease.SelectedValue.ToString();
+                ObjBalVisa.FlagCrimeRecord = ddlCrimeRecord.SelectedValue.ToString();
+                ObjBalVisa.FlagDrugReport = ddlDrugReport.SelectedValue.ToString();
+                ObjBalVisa.FlagDeported = ddlDeported.SelectedValue.ToString();
+                ObjBalVisa.FlagFraudRecord = ddlFraudRecord.SelectedValue.ToString();
+
+                //Last visited countries details
+                ObjBalVisa.CountryCode1 = ddlLastVisitCountry1.SelectedValue.ToString();
+                ObjBalVisa.CityName1 = txtLastVisitCity1.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate1 = txtLastVisitDeptDate1.Value.Trim().ToString();
+                ObjBalVisa.CountryCode2 = ddlLastVisitCountry2.SelectedValue.ToString();
+                ObjBalVisa.CityName2 = txtLastVisitCity2.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate2 = txtLastVisitDeptDate2.Value.Trim().ToString();
+                ObjBalVisa.CountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                ObjBalVisa.CityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate3 = txtLastVisitDeptDate3.Value.Trim().ToString();
+
+                //Last Lived countries details
+                ObjBalVisa.LastLivedCountryCode1 = ddlLastLivedCountry1.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName1 = txtLastLivedCityName1.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate1 = txtLastLivedDepartureDate1.Value.Trim().ToString();
+                ObjBalVisa.LastLivedCountryCode2 = ddlLastLivedCountry2.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName2 = txtLastLivedCityName2.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate2 = txtLastLivedDepartureDate2.Value.Trim().ToString();
+                ObjBalVisa.LastLivedCountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate3 = txtLastLivedDepartureDate3.Value.Trim().ToString();
+
+                ObjBalVisa.flagFastTrack = (chkFastTrack.Checked == true) ? "Y" : "N";
+
+                ObjBalVisa.OtherName = txtOtherName.Text.Trim().ToString();
+
+                ObjBalVisa.FatherLastName = txtFatherLastName.Text.Trim().ToString();
+                ObjBalVisa.FatherDateOfBirth = txtFatherDateOfBirth.Value.Trim().ToString();
+                ObjBalVisa.FatherAddress = txtFatherAddress.Text.Trim().ToString();
+                ObjBalVisa.FatherNationality = txtFatherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.MotherLastName = txtMotherLastName.Text.Trim().ToString();
+                ObjBalVisa.MotherDateOfBirth = txtMotherDateOfBirth.Value.Trim().ToString();
+                ObjBalVisa.MotherAddress = txtMotherAddress.Text.Trim().ToString();
+                ObjBalVisa.MotherNationality = txtMotherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.OldPassport = txtOldPassport.Text.Trim().ToString();
+                ObjBalVisa.OldPaasportIssueDate = txtOldPaasportIssueDate.Value.Trim().ToString();
+                ObjBalVisa.PlaceIssueOldPassport = txtPlaceIssueOldPassport.Text.Trim().ToString();
+
+                ObjBalVisa.currAddress2 = txtAddress2.Text.Trim().ToString();
+                ObjBalVisa.City = txtCity.Text.Trim().ToString();
+                ObjBalVisa.State = txtState.Text.Trim().ToString();
+                ObjBalVisa.District = txtDistrict.Text.Trim().ToString();
+                ObjBalVisa.Postcode = txtPostcode.Text.Trim().ToString();
+                ObjBalVisa.CurrentCountry = ddlCurrentCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.LivedInCurrentAdd = txtLivedInCurrentAdd.Text.Trim().ToString();
+
+                ObjBalVisa.PerAddres2 = txtPerAddres2.Text.Trim().ToString();
+                ObjBalVisa.PerCity = txtPerCity.Text.Trim().ToString();
+                ObjBalVisa.PerState = txtPerState.Text.Trim().ToString();
+                ObjBalVisa.PerPostcode = txtPerPostcode.Text.Trim().ToString();
+                ObjBalVisa.PerDistrict = txtPerDistrict.Text.Trim().ToString();
+                ObjBalVisa.PerCountry = ddlPerCountry.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.CurrentLocation = ddlCurrentLocation.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.flagOtherNationality = rblOtherNationality.SelectedValue.Trim().ToString();
+                ObjBalVisa.OtherNationality = txtOtherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.DateRejected = txtDateRejected.Value.Trim().ToString();
+                ObjBalVisa.LastRejectedVisaType = txtLastRejectedVisaType.Text.Trim().ToString();
+                ObjBalVisa.flagRejeAppeal = rblRejeAppeal.SelectedValue.Trim().ToString();
+                ObjBalVisa.RejectedAppDiffer = txtRejectedAppDiffer.Text.Trim().ToString();
+
+                ObjBalVisa.flagRefusedAnyCountry = rblRefusedAnyCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedAnyCountry = txtRefusedAnyCountry.Text.Trim().ToString();
+
+                ObjBalVisa.flagRefuseEntryOnArrival = rblRefuseEntryOnArrival.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalPlace = txtRefusedVisaOnArrivalPlace.Text.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalDate = txtRefusedVisaOnArrivalDate.Value.Trim().ToString();
+                ObjBalVisa.flagRefusedVisArriAppeal = rblRefusedVisArriAppeal.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedVisArriAppOutcome = txtRefusedVisArriAppOutcome.Text.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalReason = txtRefusedVisaOnArrivalReason.Text.Trim().ToString();
+
+                ObjBalVisa.Disease = txtDisease.Text.Trim().ToString();
+
+                ObjBalVisa.CrimeRecord = txtCrimeRecord.Text.Trim().ToString();
+                ObjBalVisa.ConvictionDate = txtConvictionDate.Value.Trim().ToString();
+                ObjBalVisa.ConvictedPlace = txtConvictedPlace.Text.Trim().ToString();
+                ObjBalVisa.Sentence = txtSentence.Text.Trim().ToString();
+
+                ObjBalVisa.flagConvictionInOtherCountry = rblConvictionInOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.ConvictionInOtherCountry = txtConvictionInOtherCountry.Text.Trim().ToString();
+                ObjBalVisa.DrugReport = txtDrugReport.Text.Trim().ToString();
+
+                Trace.Warn("txtDeportedNotice.Value.Trim().ToString()" + txtDeportedNotice.Value.Trim().ToString());
+                ObjBalVisa.DeportedNoticeDate = txtDeportedNotice.Value.Trim().ToString();
+                ObjBalVisa.DeportedNoticeType = rblDeportedNotice.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.DeportedLeave = txtDeportedLeave.Text.Trim().ToString();
+                ObjBalVisa.DeportedAppealeddetails = txtDeportedAppealeddetails.Text.Trim().ToString();
+
+                ObjBalVisa.flagDeportedOtherCountry = rblDeportedOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.DeportedOtherCountry = txtDeportedOtherCountry.Text.Trim().ToString();
+
+                ObjBalVisa.FraudRecord = txtFraudRecord.Text.Trim().ToString();
+                ObjBalVisa.flagComplete = "Y";
+                ObjBalVisa.flagFreshPassport = rblFreshPaasport.SelectedValue.Trim();
+                ObjBalVisa.flagCuurContactDetails = rblContactDetails.SelectedValue.Trim();
+                ObjBalVisa.EmbassyId = ddlEmbassyPref.SelectedValue;
+                ObjBalVisa.flagInMillitary = rblInMillitary.SelectedValue;
+                ObjBalVisa.flagEmployement = rblEmplSp.SelectedValue;
+                ObjBalVisa.flagEmplDt = rblEmplDt.SelectedValue;
+                ObjBalVisa.flagLastVisit = rblDisplayVisit.SelectedValue;
+                ObjBalVisa.flagLastVisitCountries = rblLastVisitCountries.SelectedValue;
+                ObjBalVisa.flagLastLived = rblLastLived.SelectedValue;
+                
+                iUptStatus = ObjBalVisa.UpdateVisaApplication();
+
+                if (iUptStatus == 1)
+                {   
+                   // this.ClientScript.RegisterClientScriptBlock(this.GetType(), "VisaApp", "<script>window.open('FrmVisaApplicationSubmit.aspx?id=" + iApplicationId.ToString() + "','_blank','menubar=no,status=yes,Width=1000,Height=600,top=50,left=50');</script>");
+                    Response.Redirect("../User/Default.aspx?AppID=" + iApplicationId);
+                    LabelMessage.Text = "Visa Application Information Updated Successfully";
+
+
+                }
+                else
+                {
+                    LabelMessage.CssClass = "errormsg";                    
+                    LabelMessage.Text = "Visa Application can not be modified. Please check the inputs and retry!";
+
+                }
+            }
+            else
+            {
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = "Please Browse the photo and upload";
+            }
+
+        //}
+        //catch (Exception ex)
+        //{
+        //    //throw (ex);
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = ex.Message.ToString();
+
+        //}
+
+    }
+
+    protected void btnSaveUpdate_Click(object sender, EventArgs e)
+    {
+        BusinessEntityLayer.BalVisaApplicationSubmit ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+        DataTable dt = new DataTable();
+        int iUptStatus = 0;
+        string strScript = string.Empty;
+        //string strtype = "";
+        int iApplicationId = Convert.ToInt32(ViewState["ApplicationID"]);
+        ObjBalVisa.EntryType = (ddlEntryPoint.SelectedValue.ToString());
+
+        //try
+        //{
+            
+                int AppliedBy = Convert.ToInt32(objectSessionHolderPersistingData.User_ID.ToString());
+                string queryappliedby = "select (case when UserType ='AP' then '0' when UserType = 'AG' then '1' end) as UserType from UserMaster where UserID = '" + AppliedBy + "'";
+                DataTable dt1 = null;
+                dt1 = ObjGeneral.FetchData(queryappliedby);
+                ObjBalVisa = new BusinessEntityLayer.BalVisaApplicationSubmit();
+
+                ObjBalVisa.ratecurrency = lblRateCurrency.Text;
+                ObjBalVisa.logobrowse = ViewState["imagepath"].ToString();
+                ObjBalVisa.PassportNo = this.TxtPassportNumber.Text;
+                ObjBalVisa.Nationality = this.ddlNationality.SelectedValue;
+                ObjBalVisa.PassportType = this.TxtPassportType.Text;
+                ObjBalVisa.Doissue = this.TxtDOI.Value;
+                ObjBalVisa.DoExp = this.TxtDOE.Value;
+                ObjBalVisa.Poissue = this.TxtPlaceofIssue.Text;
+                ObjBalVisa.issuingauthority = this.TxtIssuingAuthority.Text;
+                ObjBalVisa.fname = this.txtFirstName.Text;
+                ObjBalVisa.mname = this.txtMiddlename.Text;
+                ObjBalVisa.lname = this.txtLastName.Text;
+                ObjBalVisa.sex = this.ddlSex.SelectedValue;
+                ObjBalVisa.dob = this.txtDOB.Value;
+                ObjBalVisa.pob = this.txtplaceofbirth.Text;
+                ObjBalVisa.maritalstatus = this.ddlMS.SelectedValue;
+                ObjBalVisa.fathername = this.txtFatherName.Text;
+                ObjBalVisa.mothername = this.txtMotherName.Text;
+                ObjBalVisa.spousename = this.txtSpousename.Text;
+                ObjBalVisa.currentaddress = this.txtcurrentAdds.Text;
+                ObjBalVisa.permanentaddress = this.txtPermanentAdds.Text;
+                ObjBalVisa.mobilenumber = this.TxtMobileNumber.Text;
+                ObjBalVisa.landlinenumber = this.TxtLandLineNumber.Text;
+                ObjBalVisa.primaryemail = this.txtPrimaryEmail.Text;
+                ObjBalVisa.alternateemail = this.txtAlternatEmail.Text;
+                ObjBalVisa.presentoccupation = this.txtPO.Text;
+                ObjBalVisa.country = this.ddlCountry.SelectedValue;
+                ObjBalVisa.VisaType = this.ddlVISAType.SelectedValue;
+                ObjBalVisa.EntryType = this.ddlEntryType.SelectedValue;
+                ObjBalVisa.periodtype = this.ddlPeriodType.SelectedValue;
+                ObjBalVisa.Duration = this.ddlPeriod.SelectedValue;
+                ObjBalVisa.rate = Convert.ToDecimal(this.txtRate.Text);
+                ObjBalVisa.ratecurrency = this.lblRateCurrency.Text;
+                ObjBalVisa.ArivalDate = this.txtArrivalDate.Value;
+                ObjBalVisa.DepDate = this.txtDepartureDate.Value;
+                ObjBalVisa.burundiaddress = this.txtBurundiAddress.Text;
+                ObjBalVisa.psb = this.txtPSB.Text;
+                ObjBalVisa.severaljourney = Convert.ToInt32(this.rbl5.SelectedValue.ToString());
+                ObjBalVisa.returnticket = Convert.ToInt32(this.rbl6.SelectedValue.ToString());
+                ObjBalVisa.EntryPoint = this.ddlEntryPoint.SelectedValue;
+                ObjBalVisa.ExitPoint = this.ddlExitPoint.SelectedValue;
+                ObjBalVisa.AppliedBy = Convert.ToInt32(dt1.Rows[0]["UserType"].ToString());
+                ObjBalVisa.AppliedByUserId = AppliedBy;
+                ObjBalVisa.CreatedBy = AppliedBy;
+                ObjBalVisa.Status = (chkcommunity.Checked == true) ? 1 : 0;
+                ObjBalVisa.ApplicationID = iApplicationId;
+
+                ObjBalVisa.EmployerName = txtEmployerName.Text.ToString();
+                ObjBalVisa.JobDesc = txtJobDesc.Text.ToString();
+                ObjBalVisa.OcuPossition = txtOcuPossition.Text.ToString();
+
+                ObjBalVisa.MoneyForTravellUSD = txtMoney.Text.ToString();
+                ObjBalVisa.ModeOfTravel = ddlModeOfTravel.SelectedValue.ToString();
+                ObjBalVisa.IntededDuration = "3";
+
+                ObjBalVisa.flagPrevApplied = ddlPrevApplied.Text.ToString();
+                ObjBalVisa.flagPrevVisit = ddlPrevVisit.Text.ToString();
+                ObjBalVisa.flagVisaGranted = ddlVisaGranted.Text.ToString();
+                ObjBalVisa.PrevAppliedVisaPlace = txtPrevAppliedVisaPlace.Text.ToString();
+                ObjBalVisa.PrevVisitReason = txtPrevVisitReason.Text.ToString();
+                ObjBalVisa.PrevVisaRejReason = txtPrevVisaRejReason.Text.ToString();
+
+                ObjBalVisa.PreVisit1FromDate = txtPreVisit1FromDate.Value.ToString();
+                ObjBalVisa.PreVisit1ToDate = txtPreVisit1ToDate.Value.ToString();
+                ObjBalVisa.PreVisit1Addr1 = txtPreVisit1Addr1.Text.ToString();
+                ObjBalVisa.PreVisit1Addr2 = txtPreVisit1Addr2.Text.ToString();
+                ObjBalVisa.PreVisit1City = txtPreVisit1City.Text.ToString();
+                ObjBalVisa.PreVisit1State = txtPreVisit1State.Text.ToString();
+                ObjBalVisa.PreVisit1District = txtPreVisit1District.Text.ToString();
+                ObjBalVisa.PreVisit1Postcode = txtPreVisit1Postcode.Text.ToString();
+
+                ObjBalVisa.PreVisit2FromDate = txtPreVisit2FromDate.Value.ToString();
+                ObjBalVisa.PreVisit2ToDate = txtPreVisit2ToDate.Value.ToString();
+                ObjBalVisa.PreVisit2Addr1 = txtPreVisit2Addr1.Text.ToString();
+                ObjBalVisa.PreVisit2Addr2 = txtPreVisit2Addr2.Text.ToString();
+                ObjBalVisa.PreVisit2City = txtPreVisit2City.Text.ToString();
+                ObjBalVisa.PreVisit2State = txtPreVisit2State.Text.ToString();
+                ObjBalVisa.PreVisit2District = txtPreVisit2District.Text.ToString();
+                ObjBalVisa.PreVisit2Postcode = txtPreVisit2Postcode.Text.ToString();
+
+                ObjBalVisa.PreVisit3FromDate = txtPreVisit3FromDate.Value.ToString();
+                ObjBalVisa.PreVisit3ToDate = txtPreVisit3ToDate.Value.ToString();
+                ObjBalVisa.PreVisit3Addr1 = txtPreVisit3Addr1.Text.ToString();
+                ObjBalVisa.PreVisit3Addr2 = txtPreVisit3Addr2.Text.ToString();
+                ObjBalVisa.PreVisit3City = txtPreVisit3City.Text.ToString();
+                ObjBalVisa.PreVisit3State = txtPreVisit3State.Text.ToString();
+                ObjBalVisa.PreVisit3District = txtPreVisit3District.Text.ToString();
+                ObjBalVisa.PreVisit3Postcode = txtPreVisit3Postcode.Text.ToString();
+
+                ObjBalVisa.ColorHair = ddlHairColor.SelectedValue.ToString();
+                ObjBalVisa.ColorEye = ddlEyeColor.SelectedValue.ToString();
+                ObjBalVisa.IndentityMark = txtMark.Text.ToString();
+                ObjBalVisa.Height = txtHeights.Text.ToString();
+
+                ObjBalVisa.InMilitary = txtInMilitary.Text.ToString();
+                ObjBalVisa.FromDate = txtFromDate.Value.Trim().ToString();
+                ObjBalVisa.ToDate = txtToDate.Value.Trim().ToString();
+
+                ObjBalVisa.EmpName = txtEmpName.Text.Trim().ToString();
+                ObjBalVisa.EmpPhoneNo = txtEmpPhoneNo.Text.Trim().ToString();
+                ObjBalVisa.EmpLivedFrom = txtEmpLivedFrom.Text.Trim().ToString();
+                ObjBalVisa.Address1 = txtEmpAddr1.Text.Trim().ToString();
+                ObjBalVisa.Address2 = txtEmpAddr2.Text.Trim().ToString();
+                ObjBalVisa.EmpCity = txtEmpCity.Text.Trim().ToString();
+                ObjBalVisa.EmpState = txtEmpState.Text.Trim().ToString();
+                ObjBalVisa.EmpPostCode = txtEmpPostCode.Text.Trim().ToString();
+
+                ObjBalVisa.IntedAddress1 = txtBurundiAddress.Text.Trim().ToString();
+                ObjBalVisa.IntedAddress2 = txtIntedAddress2.Text.Trim().ToString();
+                ObjBalVisa.IntedCity = txtIntedCity.Text.Trim().ToString();
+                ObjBalVisa.IntedState = txtIntedState.Text.Trim().ToString();
+                ObjBalVisa.IntedDistrict = txtIntedDistrict.Text.Trim().ToString();
+                ObjBalVisa.IntedPostcode = txtIntedPostcode.Text.Trim().ToString();
+
+                ObjBalVisa.ApplyCountryYears = txtApplyCountryYears.Text.Trim().ToString();
+                ObjBalVisa.FlagSeriousDisease = ddlSeriousDisease.SelectedValue.ToString();
+                ObjBalVisa.FlagCrimeRecord = ddlCrimeRecord.SelectedValue.ToString();
+                ObjBalVisa.FlagDrugReport = ddlDrugReport.SelectedValue.ToString();
+                ObjBalVisa.FlagDeported = ddlDeported.SelectedValue.ToString();
+                ObjBalVisa.FlagFraudRecord = ddlFraudRecord.SelectedValue.ToString();
+
+                //Last visited countries details
+                ObjBalVisa.CountryCode1 = ddlLastVisitCountry1.SelectedValue.ToString();
+                ObjBalVisa.CityName1 = txtLastVisitCity1.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate1 = txtLastVisitDeptDate1.Value.Trim().ToString();
+                ObjBalVisa.CountryCode2 = ddlLastVisitCountry2.SelectedValue.ToString();
+                ObjBalVisa.CityName2 = txtLastVisitCity2.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate2 = txtLastVisitDeptDate2.Value.Trim().ToString();
+                ObjBalVisa.CountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                ObjBalVisa.CityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                ObjBalVisa.DepartureDate3 = txtLastVisitDeptDate3.Value.Trim().ToString();
+
+                //Last Lived countries details
+                ObjBalVisa.LastLivedCountryCode1 = ddlLastLivedCountry1.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName1 = txtLastLivedCityName1.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate1 = txtLastLivedDepartureDate1.Value.Trim().ToString();
+                ObjBalVisa.LastLivedCountryCode2 = ddlLastLivedCountry2.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName2 = txtLastLivedCityName2.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate2 = txtLastLivedDepartureDate2.Value.Trim().ToString();
+                ObjBalVisa.LastLivedCountryCode3 = ddlLastVisitCountry3.SelectedValue.ToString();
+                ObjBalVisa.LastLivedCityName3 = txtLastVisitCity3.Text.Trim().ToString();
+                ObjBalVisa.LastLivedDepartureDate3 = txtLastLivedDepartureDate3.Value.Trim().ToString();
+
+                ObjBalVisa.flagFastTrack = (chkFastTrack.Checked == true) ? "Y" : "N";
+
+                ObjBalVisa.OtherName = txtOtherName.Text.Trim().ToString();
+
+                ObjBalVisa.FatherLastName = txtFatherLastName.Text.Trim().ToString();
+                ObjBalVisa.FatherDateOfBirth = txtFatherDateOfBirth.Value.Trim().ToString();
+                ObjBalVisa.FatherAddress = txtFatherAddress.Text.Trim().ToString();
+                ObjBalVisa.FatherNationality = txtFatherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.MotherLastName = txtMotherLastName.Text.Trim().ToString();
+                ObjBalVisa.MotherDateOfBirth = txtMotherDateOfBirth.Value.Trim().ToString();
+                ObjBalVisa.MotherAddress = txtMotherAddress.Text.Trim().ToString();
+                ObjBalVisa.MotherNationality = txtMotherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.OldPassport = txtOldPassport.Text.Trim().ToString();
+                ObjBalVisa.OldPaasportIssueDate = txtOldPaasportIssueDate.Value.Trim().ToString();
+                ObjBalVisa.PlaceIssueOldPassport = txtPlaceIssueOldPassport.Text.Trim().ToString();
+
+                ObjBalVisa.currAddress2 = txtAddress2.Text.Trim().ToString();
+                ObjBalVisa.City = txtCity.Text.Trim().ToString();
+                ObjBalVisa.State = txtState.Text.Trim().ToString();
+                ObjBalVisa.District = txtDistrict.Text.Trim().ToString();
+                ObjBalVisa.Postcode = txtPostcode.Text.Trim().ToString();
+                ObjBalVisa.CurrentCountry = ddlCurrentCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.LivedInCurrentAdd = txtLivedInCurrentAdd.Text.Trim().ToString();
+
+                ObjBalVisa.PerAddres2 = txtPerAddres2.Text.Trim().ToString();
+                ObjBalVisa.PerCity = txtPerCity.Text.Trim().ToString();
+                ObjBalVisa.PerState = txtPerState.Text.Trim().ToString();
+                ObjBalVisa.PerPostcode = txtPerPostcode.Text.Trim().ToString();
+                ObjBalVisa.PerDistrict = txtPerDistrict.Text.Trim().ToString();
+                ObjBalVisa.PerCountry = ddlPerCountry.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.CurrentLocation = ddlCurrentLocation.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.flagOtherNationality = rblOtherNationality.SelectedValue.Trim().ToString();
+                ObjBalVisa.OtherNationality = txtOtherNationality.Text.Trim().ToString();
+
+                ObjBalVisa.DateRejected = txtDateRejected.Value.Trim().ToString();
+                ObjBalVisa.LastRejectedVisaType = txtLastRejectedVisaType.Text.Trim().ToString();
+                ObjBalVisa.flagRejeAppeal = rblRejeAppeal.SelectedValue.Trim().ToString();
+                ObjBalVisa.RejectedAppDiffer = txtRejectedAppDiffer.Text.Trim().ToString();
+
+                ObjBalVisa.flagRefusedAnyCountry = rblRefusedAnyCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedAnyCountry = txtRefusedAnyCountry.Text.Trim().ToString();
+
+                ObjBalVisa.flagRefuseEntryOnArrival = rblRefuseEntryOnArrival.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalPlace = txtRefusedVisaOnArrivalPlace.Text.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalDate = txtRefusedVisaOnArrivalDate.Value.Trim().ToString();
+                ObjBalVisa.flagRefusedVisArriAppeal = rblRefusedVisArriAppeal.SelectedValue.Trim().ToString();
+                ObjBalVisa.RefusedVisArriAppOutcome = txtRefusedVisArriAppOutcome.Text.Trim().ToString();
+                ObjBalVisa.RefusedVisaOnArrivalReason = txtRefusedVisaOnArrivalReason.Text.Trim().ToString();
+
+                ObjBalVisa.Disease = txtDisease.Text.Trim().ToString();
+
+                ObjBalVisa.CrimeRecord = txtCrimeRecord.Text.Trim().ToString();
+                ObjBalVisa.ConvictionDate = txtConvictionDate.Value.Trim().ToString();
+                ObjBalVisa.ConvictedPlace = txtConvictedPlace.Text.Trim().ToString();
+                ObjBalVisa.Sentence = txtSentence.Text.Trim().ToString();
+
+                ObjBalVisa.flagConvictionInOtherCountry = rblConvictionInOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.ConvictionInOtherCountry = txtConvictionInOtherCountry.Text.Trim().ToString();
+                ObjBalVisa.DrugReport = txtDrugReport.Text.Trim().ToString();
+
+                ObjBalVisa.DeportedNoticeDate = txtDeportedNotice.Value.Trim().ToString();
+                ObjBalVisa.DeportedNoticeType = rblDeportedNotice.SelectedValue.Trim().ToString();
+
+                ObjBalVisa.DeportedLeave = txtDeportedLeave.Text.Trim().ToString();
+                ObjBalVisa.DeportedAppealeddetails = txtDeportedAppealeddetails.Text.Trim().ToString();
+
+                ObjBalVisa.flagDeportedOtherCountry = rblDeportedOtherCountry.SelectedValue.Trim().ToString();
+                ObjBalVisa.DeportedOtherCountry = txtDeportedOtherCountry.Text.Trim().ToString();
+
+                ObjBalVisa.FraudRecord = txtFraudRecord.Text.Trim().ToString();
+                ObjBalVisa.flagComplete = "N";
+                ObjBalVisa.flagFreshPassport = rblFreshPaasport.SelectedValue.Trim();
+                ObjBalVisa.flagCuurContactDetails = rblContactDetails.SelectedValue.Trim();
+                ObjBalVisa.EmbassyId = ddlEmbassyPref.SelectedValue;
+                ObjBalVisa.flagInMillitary = rblInMillitary.SelectedValue;
+                ObjBalVisa.flagEmployement = rblEmplSp.SelectedValue;
+                ObjBalVisa.flagEmplDt = rblEmplDt.SelectedValue;
+                ObjBalVisa.flagLastVisit = rblDisplayVisit.SelectedValue;
+                ObjBalVisa.flagLastVisitCountries = rblLastVisitCountries.SelectedValue;
+                ObjBalVisa.flagLastLived = rblLastLived.SelectedValue;
+
+                iUptStatus = ObjBalVisa.UpdateVisaApplication();
+
+                if (iUptStatus == 1)
+                {
+                    //this.ClientScript.RegisterClientScriptBlock(this.GetType(), "VisaApp", "<script>window.open('FrmVisaApplicationSubmit.aspx?id=" + iApplicationId.ToString() + "','_blank','menubar=no,status=yes,Width=1000,Height=600,top=50,left=50');</script>");
+                    Response.Redirect("../User/Default.aspx?AppID=" + iApplicationId);
+                    LabelMessage.Text = "Visa Application Information Updated Successfully";
+
+
+                }
+                else
+                {
+                    LabelMessage.CssClass = "errormsg";
+                    LabelMessage.Text = "Visa Application can not be modified. Please check the inputs and retry!";
+
+                }
+          
+
+        //}
+        //catch (Exception ex)
+        //{
+        //    //throw (ex);
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = ex.Message.ToString();
+
+        //}
+
+    }
+
+    protected void btnUploadPhoto_Click(object sender, EventArgs e)
+    {
+
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        ObjGeneral = new BaseLayer.General_function();
+
+        //FOR PHOTO PART       
+        string FileName = null;
+        string FileNameWithoutExt = null;
+        double FileSize;
+        string LogoFileExtension = "";
+        int ImgHeight = 0;
+        int Imgwidth = 0;
+
+        string LogoPath = Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["LogoPath"].ToString());
+        //FOR PHOTO PART
+
+        if (TxtPassportNumber.Text.ToString() == string.Empty || ddlNationality.SelectedValue.ToString() == string.Empty)
+        {
+            //    LabelMessage.CssClass = "errormsg";
+            //    LabelMessage.Text = "Please enter passport number and nationality before browsing and uploading photo";
+            Response.Write("<script>alert('Please enter passport number and nationality before browsing and uploading photo')</script>");
+            return;
+        }
+        //checking for Photo??
+        if (logobrowse.HasFile)
+        {
+            HttpPostedFile myfile = null;
+            int ExtCheck = 0;
+            myfile = logobrowse.PostedFile;
+
+            LogoFileExtension = Path.GetExtension(myfile.FileName);
+
+            FileName = Path.GetFileName(myfile.FileName);
+
+
+            FileNameWithoutExt = Path.GetFileNameWithoutExtension(myfile.FileName);
+            FileSize = myfile.ContentLength; // in bytes
+            string ValidLogoExt = System.Configuration.ConfigurationManager.AppSettings["ValidlogoExtensions"].ToString();
+            double Maxsize = Convert.ToDouble(System.Configuration.ConfigurationManager.AppSettings["MaxLogoSize"]);
+            double MaxLogoHeight = Convert.ToDouble(System.Configuration.ConfigurationManager.AppSettings["MaxLogoHeight"]);
+            double MaxLogoWidth = Convert.ToDouble(System.Configuration.ConfigurationManager.AppSettings["MaxLogoWidth"]);
+            ExtCheck = ValidLogoExt.IndexOf(LogoFileExtension);
+
+            System.Drawing.Image UploadLogo = null;
+            UploadLogo = System.Drawing.Image.FromStream(logobrowse.PostedFile.InputStream);
+            ImgHeight = UploadLogo.Height;
+            Imgwidth = UploadLogo.Width;
+            // if any condition fails then set flag=false;
+
+            if (!(ExtCheck == -1))
+            {
+                if (FileSize <= Maxsize)
+                {
+                    if ((ImgHeight <= MaxLogoHeight) && (Imgwidth <= MaxLogoWidth))
+                    {
+
+                        string LogoName = null;
+
+                        LogoName = TxtPassportNumber.Text.ToString() + ddlNationality.SelectedValue.ToString() + LogoFileExtension;
+                        LogoPath1 = LogoPath + LogoName;
+
+                        if (File.Exists(LogoPath1))
+                        {
+                            File.Delete(LogoPath1);
+
+                        }
+                        //upload the photo into the server            
+                        logobrowse.SaveAs(LogoPath1);
+
+                        //compressImage(LogoPath1);
+                        //ImgPhoto.ImageUrl = LogoPath1;
+
+
+
+                        ViewState["imagepath"] = LogoName;
+                        //LabelMessage.CssClass = "successmsg";
+                        //LabelMessage.Text = "";
+
+                        //Fixed the Size of the Image
+                        int fixWidth = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["FixLogoWidth"]);
+                        int fixHeight = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["FixLogoHeight"]);
+
+                        if ((ImgHeight >= fixHeight) && (Imgwidth >= fixWidth))
+                            compressImage(LogoPath1, fixWidth, fixHeight);
+
+                        ImgPhoto.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["LogoUrl"].ToString() + LogoName.ToString();
+                        logobrowse.Visible = false;
+                        btnUploadPhoto.Visible = false;
+                        btnUploadCancel.Visible = true;
+
+                    }
+                    else
+                    {
+                        //message 
+
+                        //LabelMessage.CssClass = "errormsg";
+                        //LabelMessage.Text = "Dimension of the photo is always within (210 * 210)";
+                        Response.Write("<script>alert('Dimension of the photo is always within (210 * 210)')</script>");
+                        return;
+
+                    }
+                }
+                else
+                {
+
+
+                    Response.Write("<script>alert('Please Upload photo within 240kb')</script>");
+                    //messageflag = false;
+                    //LabelMessage.CssClass = "errormsg";
+                    //LabelMessage.Text = "Please Upload photo within 250kb";
+                    return;
+
+                }
+
+            }
+            else
+            {
+                //message
+                Response.Write("<script>alert('Invalid extension of the photo,Please check the extension of photo(.jpg,.jpeg,.gif)!!')</script>");
+
+                //LabelMessage.CssClass = "errormsg";
+                //LabelMessage.Text = "Invalid extension of the photo,Please check the extension of photo(.jpg,.jpeg,.gif)!!";
+                return;
+
+            }
+
+        }
+        else
+        {
+            if (ImgPhoto.ImageUrl != "")
+            {
+                string[] LogofileName = ImgPhoto.ImageUrl.Split('\\');
+                if (LogofileName.Length <= 1) { LogofileName = ImgPhoto.ImageUrl.Split('/'); }
+                //ObjBalPhoto.Photo = LogofileName[LogofileName.Length - 1].ToString();
+            }
+            else
+            {
+                Response.Write("<script>alert('Please upload photo')</script>");
+                //ObjBalPhoto.Photo = string.Empty;
+                //LabelMessage.CssClass = "errormsg";
+                //LabelMessage.Text = "Please upload photo";
+                return;
+
+            }
+        }
+
+
+    }
+
+    #region Compress Original Image
+
+    public void compressImage(string path, int width, int height)
+    {
+
+
+        //create a image object containing a verticel photograph
+        System.Drawing.Image imgPhotoVert = System.Drawing.Image.FromFile(path);
+        System.Drawing.Image imgPhoto = null;
+
+        imgPhoto = FixedSize(imgPhotoVert, width, height);
+        imgPhotoVert.Dispose();
+        File.Delete(path);
+        imgPhoto.Save(path);
+
+        imgPhoto.Dispose();
+
+    }
+
+    #endregion
+
+    #region Dwaw Image
+    [STAThread]
+    static System.Drawing.Image FixedSize(System.Drawing.Image imgPhoto, int Width, int Height)
+    {
+        int sourceWidth = imgPhoto.Width;
+        int sourceHeight = imgPhoto.Height;
+        int sourceX = 0;
+        int sourceY = 0;
+        int destX = 0;
+        int destY = 0;
+        float nPercent = 0;
+        float nPercentW = 0;
+        float nPercentH = 0;
+
+        nPercentW = ((float)Width / (float)sourceWidth);
+        nPercentH = ((float)Height / (float)sourceHeight);
+
+        //if we have to pad the height pad both the top and the bottom
+        //with the difference between the scaled height and the desired height
+        if (nPercentH < nPercentW)
+        {
+            nPercent = nPercentH;
+            destX = (int)((Width - (sourceWidth * nPercent)) / 2);
+        }
+        else
+        {
+            nPercent = nPercentW;
+            destY = (int)((Height - (sourceHeight * nPercent)) / 2);
+        }
+
+        int destWidth = (int)(sourceWidth * nPercent);
+        int destHeight = (int)(sourceHeight * nPercent);
+
+        Bitmap bmPhoto = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
+        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
+
+        Graphics grPhoto = Graphics.FromImage(bmPhoto);
+        grPhoto.Clear(Color.Gray);
+        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+        grPhoto.DrawImage(imgPhoto,
+            new Rectangle(destX, destY, destWidth, destHeight),
+            new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+            GraphicsUnit.Pixel);
+
+        grPhoto.Dispose();
+        return bmPhoto;
+    }
+
+    #endregion
+
+    protected void btnUploadCancel_Click(object sender, EventArgs e)
+    {
+
+        ImgPhoto.ImageUrl = null;
+        logobrowse.Visible = true;
+        btnUploadPhoto.Visible = true;
+        btnUploadCancel.Visible = false;
+        
+    }
+
+    public string strEACFlagFun()
+    {
+        /*-- For EAC Countries --*/
+        string strNationality = ddlNationality.SelectedItem.Text.ToString();
+        string EACFlagQuery = "select EACFlag  from CountryMaster where CountryName = '" + strNationality + "' ";
+        DataTable dtEACflaf = new DataTable();
+        dtEACflaf = ObjGeneral.FetchData(EACFlagQuery);
+        if (dtEACflaf.Rows.Count > 0)
+        {
+            return dtEACflaf.Rows[0]["EACFlag"].ToString();
+        }
+        else { return null; }
+    }
+
+    protected void ddlNationality_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillDropDowns();
+        string nationCountryEACFlag = strEACFlagFun();
+        if (nationCountryEACFlag != null && nationCountryEACFlag == "Y") { chkcommunity.Checked = true; chkcommunity.Enabled = false; }
+        else { chkcommunity.Checked = false; chkcommunity.Enabled = true; }
+
+    }
+}

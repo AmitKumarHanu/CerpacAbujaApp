@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Net.Mail;
+using System.Configuration;
+
+
+public partial class FrmHomePage : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+       
+    }
+    protected void Submit_qry_Click(object sender, EventArgs e)
+    {
+        
+    }
+
+
+protected void  Submit_qury_Click(object sender, EventArgs e)
+{
+    if (txtName.Text != "" && txtEmail.Text != "" && txtQuery.Text != "" && queryfor.SelectedIndex == 0)
+    {
+        string connectionstring = System.Configuration.ConfigurationManager.ConnectionStrings["connectionstring"].ConnectionString;
+        SqlConnection con = new SqlConnection(connectionstring);
+        con.Open();
+        SqlCommand cmd = new SqlCommand("Insert into QuickContacts(PersonName,EmailId,QueryDesc) values ('" + txtName.Text + "','" + txtEmail.Text + "','" + txtQuery.Text + "')", con);
+        cmd.ExecuteNonQuery();
+        con.Close();
+        Response.Write("<script>alert('Your Query has been submitted sucessfully and you will be contacted shortly through your Email Id. Thanks ! !OVPS Team')</script>");
+        SendMail();
+        txtEmail.Text = "";
+        txtQuery.Text = "";
+        txtName.Text = "";
+    }
+    else
+    {
+        Response.Write("<script>alert('You have not filled all the fields.Please Fill them inorder to get support.Thanks')</script>");      
+    }
+}
+private void SendMail()
+{
+    string sthtml = "";
+
+    sthtml = sthtml + "<table border='0'>";
+    sthtml = sthtml + "<tr><td>Dear " + txtName.Text + ",</td><tr>";
+    sthtml = sthtml + "<tr><td> </td><tr>";
+    sthtml = sthtml + "<tr><td> </td><tr>";
+    sthtml = sthtml + "<tr><td>Thank you for using our online Visa Application facility. Your query has been submitted successfully and You will be contacted shortly </td><tr>";
+    //sthtml = sthtml + "<tr><td>Your LoginID =" + txtuserLoginId.Text + "</td><tr>";
+    //sthtml = sthtml + "<tr><td>Password =" + txtPassword.Text + "</td><tr>";
+    //sthtml = sthtml + "<tr><td>Unique Code =" + random + "</td><tr>";
+   // sthtml = sthtml + "<tr><td>Please Click On the given Link to verify your loginID </td><tr>";
+    //sthtml = sthtml + "<tr><td><h4><a href=" + str + ">Click me to Verify Your login </a> </h4> </td><tr>";
+    sthtml = sthtml + "<tr><td> </td><tr>";
+    sthtml = sthtml + "<tr><td> </td><tr>";
+    sthtml = sthtml + "<tr><td>Thank you<br> OVPS Team</td><tr>";
+
+    sthtml = sthtml + "</table>";
+
+    MailMessage mail = new MailMessage();
+   // MailAddress From = new System.Net.Mail.MailAddress(System.Configuration.ConfigurationSettings.AppSettings["Email.Sender"]);
+  //  string smtpHost = System.Configuration.ConfigurationSettings.AppSettings["Email.Smtp"].ToString();
+    MailAddress From = new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Email.Sender"]);
+    string smtpHost = ConfigurationManager.AppSettings["SmtpServer"];
+  int Port = Convert.ToInt32(ConfigurationManager.AppSettings["SmtpPort"]);
+         DeliveryMethod = SmtpDeliveryMethod.Network;
+         EnableSsl = bool.Parse(ConfigurationManager.AppSettings["EnableSsl"]);
+  // mail.To = txtEmail.Text.ToString();
+    mail.To.Add(new MailAddress(txtEmail.Text.ToString()));
+    mail.From = From;
+    mail.Subject = "OVPS Query";
+    mail.BodyEncoding = System.Text.Encoding.UTF8;
+    mail.IsBodyHtml = true;
+    mail.Body = "<html><body>"+sthtml+"</body></html>";
+    //label.Text = "Please Wait...";
+   // SmtpMail.SmtpServer = "contecglobal.com";
+   // SmtpMail.Send(mail);
+    //label.Text = "Your Enquiry Has Been Submitted, We will Get Back to you sooner.";
+    SmtpClient smtp = new SmtpClient(smtpHost);
+    smtp.Send(mail);
+    mail.Dispose();
+}
+
+public SmtpDeliveryMethod DeliveryMethod { get; set; }
+
+public bool EnableSsl { get; set; }
+}

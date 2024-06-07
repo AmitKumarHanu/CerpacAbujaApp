@@ -1,0 +1,217 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Xml;
+
+public partial class Admin_FrmVisaStatus : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    #endregion
+    BusinessEntityLayer.BalVisaStatus ObjBalVisaStatus = null;
+    BaseLayer.General_function ObjGenBal = null;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+        ObjBalVisaStatus = new BusinessEntityLayer.BalVisaStatus();
+        ObjGenBal = new BaseLayer.General_function();
+        
+        LabelMessage.CssClass = "";
+        LabelMessage.Text = "";
+        ////////////////////////////////////////////////////////
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.Cache.SetExpires(DateTime.Now.AddDays(-1));
+        Response.Cache.SetNoStore();       
+
+        if (!IsPostBack)
+        {
+            if (string.IsNullOrEmpty(Request.QueryString["msg"]) == false && Convert.ToString(Request.QueryString["AppID"]) != "")
+            {
+                string strMsg = Convert.ToString(Request.QueryString["msg"]);
+                if (strMsg == "Y")
+                {
+                    lblmessage.Visible = true;
+                    lblmessage.CssClass = "errormsg";
+                    lblmessage.Text = "You have an application either incomplete or underprocess, so you can not apply for new visa ";       
+                }
+            }
+            BindGrid();
+        }
+    }
+
+    protected void BindGrid()
+    {
+        DataTable dt = new DataTable();
+        //try
+        //{
+            objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+            string AppliedByUserId = null;
+            AppliedByUserId = objectSessionHolderPersistingData.User_ID.ToString();
+
+            dt = ObjBalVisaStatus.GetApplicantVisaStatus(AppliedByUserId);
+                        
+            GridViewApplicant.DataSource = dt;
+            GridViewApplicant.DataBind();
+                     
+        //}
+        //catch (Exception ex)
+        //{
+        //    Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        //    LabelMessage.CssClass = "errormsg";
+        //    LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString();
+
+        //}
+        //finally
+        //{
+        //    ObjBalVisaStatus = null;
+        //    dt = null;
+        //}
+    }
+
+    protected void GridViewApplicant_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        string keyvalue;
+        GridViewApplicant.EditIndex = e.NewEditIndex;
+        keyvalue = GridViewApplicant.DataKeys[e.NewEditIndex].Value.ToString();
+
+        //Label lblstatusL1 = (Label)GridViewApplicant.Rows[GridViewApplicant.EditIndex].FindControl("LblApproverL1");
+        //string statusL1 = lblstatusL1.Text;
+        //if (statusL1 == "" || statusL1 == "UNDERPROCESS" || statusL1 == "Pending" || statusL1 == null)
+        //{
+
+
+            Response.Redirect("FrmVisaApplication.aspx?ApplicationId=" + keyvalue);
+
+
+        //}
+    }
+
+    protected void GridViewApplicant_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        Trace.Warn("delete called : ");  
+        string keyvalue;
+        string Message = string.Empty;
+        keyvalue = GridViewApplicant.DataKeys[e.RowIndex].Value.ToString().Trim();
+        Label labelVisaApplicantName = (Label)GridViewApplicant.Rows[e.RowIndex].FindControl("lblApplicantName");
+
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+
+        try
+        {
+
+            int StatusId = ObjBalVisaStatus.DeleteDataRow(keyvalue);
+            //BindGrid();
+
+            Message = getXmlMessage((Int32)ENUMFORMCODE.CurrencyMaster.GetHashCode(), StatusId, "delete");
+            if (StatusId == 1)
+            {
+                ObjGenBal.audittype = ENUMAUDITTYPE.VisaApplicationDeleted.GetHashCode().ToString();
+                ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                ObjGenBal.auditdetail = "Visa Application '" + labelVisaApplicantName.Text + "(ID:" + keyvalue + ")' Deleted";
+                ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                ObjGenBal.AuditInsert();
+                LabelMessage.CssClass = "successmsg";
+                LabelMessage.Text = Message;// "Record Successfully Deleted";
+
+                BindGrid();
+
+            }
+            else
+            {
+                Message = getXmlMessage((Int32)ENUMFORMCODE.CurrencyMaster.GetHashCode(), 0, "delete");
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = Message;// "Record can not be Deleted! Please try again";
+
+            }
+
+            Response.Redirect("../Admin/FrmVisaStatus.aspx");  
+
+        }
+        catch (Exception ex)
+        {
+            //lblmsg.CssClass = "errormsg";
+            //lblmsg.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString(); ;
+        }
+        finally
+        {
+            ObjBalVisaStatus = null;
+        }
+
+    }
+
+    protected void GridViewApplicant_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            Trace.Warn("e.Row.Cells[0].Text  " + DataBinder.Eval(e.Row.DataItem, "PaymentMadeYN"));
+            Trace.Warn("e.Row.Cells[1].Text  " + DataBinder.Eval(e.Row.DataItem, "flagComplete"));
+
+            string strflagComplete = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "flagComplete"));
+            string strPaymentMadeYN = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PaymentMadeYN"));
+            string strAppID = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "ApplicationId"));
+
+            ImageButton btnUpdate = (ImageButton)e.Row.FindControl("btnUpdate");
+           btnUpdate.ToolTip = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "editmessage"));
+
+           ImageButton btnDelete = (ImageButton)e.Row.FindControl("btnDelete");
+           btnDelete.ToolTip = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "deletemessage"));
+            
+           if (strflagComplete == "Y" && strPaymentMadeYN == "1")
+            {
+                Trace.Warn("INSIDE IF ");
+
+                btnUpdate.Enabled = false;
+                btnDelete.Enabled = false;              
+            }              
+          
+            ImageButton BtnPreviewRecord = (ImageButton)e.Row.FindControl("btnViewApplication");
+            BtnPreviewRecord.Attributes.Add("onclick", "window.open('viewforcheckstatus.aspx?AppID=" + strAppID + "', 'newwindow','toolbar=yes,location=no,menubar=no,width=770,height=650,resizable=no,scrollbars=yes,top=50,left=250');");           
+            
+        }
+    }
+
+    public string getXmlMessage(int FormID, int ErrorID, string Mode)
+    {
+        string errormessage = string.Empty;
+        string XMLPath = Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["XMLPath"].ToString()) + "Error.xml";
+        XmlDocument xd = new XmlDocument();
+
+        //xd.Load(@"D:\Projects\OVPS\OVPS\Error.xml");
+        xd.Load(XMLPath);
+        XmlNodeList FormList = xd.SelectNodes("/RootMessage/form");
+        foreach (XmlNode FormNode in FormList)
+        {
+            if (Convert.ToInt32(FormNode.Attributes["id"].Value) == FormID)
+            {
+                foreach (XmlNode Errornode in FormNode.ChildNodes)
+                {
+                    if (Convert.ToInt32(Errornode.Attributes["id"].Value) == ErrorID && Errornode.Attributes["mode"].Value == Mode)
+                    {
+                        errormessage = Errornode.InnerText;
+                        return errormessage;
+                    }
+                }
+            }
+        }
+        errormessage = FormList[0].ParentNode.ChildNodes[0].InnerText;
+        return errormessage;
+    }       
+
+}
+
+

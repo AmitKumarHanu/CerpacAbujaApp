@@ -1,0 +1,118 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="~/MasterPage-Jan-16/RegistrationMasterPage.master.cs" Inherits="MasterPage_RegistrationMasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Online Visa Processing System</title>
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+    <link href="../App_theme/css/style.css" rel="stylesheet" type="text/css" />
+       
+    <asp:ContentPlaceHolder id="head" runat="server">
+    
+    <script language="javascript" type="text/javascript">
+        window.history.forward(1);
+       // window.history.back(1);
+        if(window.history.length >0)
+        {
+            window.history.go(4);
+        }
+
+        function DisplayPaperVisa(AppID) {         
+        window.open('FrmPrintPaperVisa.aspx?ApplicationId=' + AppID,'PaperVisa','menubar=no,status=yes,Width=1000,Height=768,top=50,left=5');
+        }
+    </script>
+
+    <link href="../App_theme/css/StyleSheet_Sugar.css" rel="stylesheet" type="text/css" />
+ 
+
+    
+    <script language="javascript" type="text/javascript" src="../JS/datetimepicker.js"></script>
+    <script language="javascript" type="text/javascript" src="../JS/checkFileExt.js"></script>
+    <script language="javascript" type="text/javascript" src="../JS/validation.js"></script>
+    <script language="javascript" type="text/javascript">   
+    </script>
+
+    </asp:ContentPlaceHolder>
+</head>
+
+<body>
+ <form id="theForm" runat="server">
+  <div class="wraper_app">
+ <div class="header_app">	
+		<div class="flag_app"></div>
+		<div class="hdtxt_app"><img src="../images/hdtxt_app.png" alt="hdtxt_app"/></div>
+		<div class="hdline_app"><img src="../images/hdline_app.png" alt="hdline_app"/></div>
+		
+	<div class="hdtext2_app">
+          
+          <div style="text-align:justify">
+		  <asp:Label ID="LabelSysDate" Font-Size="Smaller" runat="Server" CssClass="lbl"></asp:Label>
+		  </div>
+	</div>
+		<div class="hdlogo_app">
+			<img src="../images/logo_app.png" alt="logo_app"/>
+		</div>		
+	</div> 
+<table width="100%">
+<tr>
+<td>
+    <div style='left: 600px; position: absolute; top: 65px;'>
+        <asp:Label ID="lblmsg" runat="server"></asp:Label>
+      </div> 
+      
+      <table width="100%" cellpadding="0" cellspacing="0">  
+      <!--Header Part Start -->   
+         <tr>
+            <td colspan="3" >         
+             <table width="100%" cellpadding="0" cellspacing="0">
+                 <tr>
+                    <td class="contlft_part4_app" style="width:25%; min-height:350px" valign="top">
+                    <!--  Google Translator start-->
+                        <div id="google_translate_element" style="width: 90%; margin-top:70px; " ></div>
+                         <script type="text/javascript">function googleTranslateElementInit() {
+                                        new google.translate.TranslateElement({
+                                            pageLanguage: 'en', includedLanguages: 'fr,de,hi,ja,es,sv,th'
+                                        }, 'google_translate_element');
+                                    }                                    
+                         </script>
+                    <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+                        type="text/javascript"></script>                
+                    <asp:HyperLink ID="hypHome" runat="Server" Visible="false" Font-Names="Arial" Font-Size="12px" ForeColor="#FFFFFF" HorizontalPadding="5px"></asp:HyperLink>
+                     </td>                
+                 <td class="bgcolour" valign="top">
+                      <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"> </asp:ContentPlaceHolder>
+                </td>                
+               </tr>
+               
+                 <tr>
+                    <td style="width:25%">
+                       <span style="font-size:10px"> Powered By Contec Global </span>
+                    </td>
+                    <td class="t11"> 
+                       <div style="float: left; padding-left: 5px; font-size:10px;">
+                                Best Viewed On 1024 X 768 Resolution</div>
+                        <br />
+                        <asp:Label ID="LabelCompanyAddress" runat="server" CssClass="lbl"></asp:Label>
+                    </td>
+            </tr>
+             </table>        
+           </td>
+        </tr>      
+         <tr>
+         <%-- <td colspan="3" class="bcolour">
+            <table width="100%" cellpadding="0" cellspacing="0">
+                
+            </table>
+          </td>  --%>
+         </tr>    
+       </table>      
+      </td>
+      </tr>
+     </table>
+    </div>
+  </form>   
+ </body>
+</html>

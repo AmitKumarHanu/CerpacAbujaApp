@@ -1,0 +1,923 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+ <link href="../App_theme/css/StyleSheet_Sugar.css" rel="stylesheet" type="text/css" />
+ <style type="text/css">
+ input
+{
+
+}
+
+.submit input
+{
+color: #000;
+background: #ffa20f;
+border: 2px outset #d7b9c9
+} 
+ </style>
+</head>
+
+<body>
+
+    <table width="100%" cellspacing="2" cellpadding="7" border="0" class="BackGround2">
+                <tbody><tr>
+                  <td align="center" class="style1" colspan="6">
+                  </td>
+                </tr>
+                    <tr>
+                    <td colspan="2"></td>
+                        <td align="left" class="t11">User Login ID :</td>
+                        <td align="left" colspan="3" class="t11"><input type="text" onkeyup="checkzero(this); AlfaNumeric(this);" onblur="checkTextuserloginidMaxMinLength(this);" class="textbox2" id="ctl00_ContentPlaceHolder1_txtuserLoginId" maxlength="20" name="ctl00$ContentPlaceHolder1$txtuserLoginId">
+                            <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvuserlogin"></span>
+                        </td>
+                            </tr>
+                    <tr>
+                        <td align="center" style="height: 15px;" colspan="6">
+                        </td>
+                    </tr>
+                     
+                    <tr class="b11" id="ctl00_ContentPlaceHolder1_tr7">
+	<td align="left" class="style3">
+                            Passport Number :
+                        </td>
+	<td align="left" style="width: 23%;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtPassportNumber" maxlength="10" name="ctl00$ContentPlaceHolder1$TxtPassportNumber">
+                            <span class="star">
+                            *
+                            </span>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvpassportno"></span>
+                        </td>
+	<td align="left" style="width: 12%;">
+                            Nationality :
+                        </td>
+	<td align="left" style="width: 20%;">
+                                <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlNationality" name="ctl00$ContentPlaceHolder1$ddlNationality">
+		<option value="0">--Select--</option>
+
+	</select>
+                                <span class="star">*</span><br>
+                         <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvnationality"></span>
+                        </td>
+	<td align="left" style="width: 15%;">Passport Type :
+                        </td>
+	<td align="left" style="width: 40%;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtPassportType" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtPassportType">
+                          <span class="star">*</span>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvpassporttype"></span>
+                        </td>
+</tr>
+
+                       
+                     <tr class="b11">
+                        <td align="left" class="style3">
+                            Date of Issue :
+                        </td>
+                        <td align="left">
+                            <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtDOI" name="ctl00$ContentPlaceHolder1$TxtDOI">
+                            <span class="star">*</span>
+                            <a id="ctl00_ContentPlaceHolder1_DOI" href="javascript:NewCal('TxtDOI','DDMMMYYYY')">
+                                <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>                            
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvDOI"></span>
+                        </td>
+                        <td align="left" style="width: 150px;">Date of Expiry :
+                        </td>
+                        <td align="left">
+                            <input type="text" readonly="readonly" style="border-width: 1px; width: 131px;" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtDOE" name="ctl00$ContentPlaceHolder1$TxtDOE">
+                             <span class="star">*</span>
+                            <a id="ctl00_ContentPlaceHolder1_DOE" href="javascript:NewCal('TxtDOE','DDMMMYYYY')">
+                                <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>                                
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvDOE"></span>
+                            
+                        </td>
+                         <td align="left" style="width: 150px;">Place of Issue :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtPlaceofIssue" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtPlaceofIssue">
+                            <span class="star">*</span>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvplaceofissue"></span>
+                        </td>
+                    </tr>
+                  
+                    <tr class="b11">
+                     <td align="left" class="style3">Issuing Authority :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtIssuingAuthority" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtIssuingAuthority">
+                           <span class="star">*</span>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvissuingauthority"></span>
+                        </td>
+                        <td align="left" style="width: 150px;">
+                            Password :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="password" onkeyup="checkonlySpace(this); AlfaNumeric(this);" class="textbox2" id="ctl00_ContentPlaceHolder1_txtPassword" maxlength="20" name="ctl00$ContentPlaceHolder1$txtPassword">
+                            <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvpassword"></span>
+                        </td>
+                        <td align="left" style="width: 150px;">
+                            Confirm  Password :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="password" onkeyup="checkonlySpace(this); AlfaNumeric(this);" class="textbox2" id="ctl00_ContentPlaceHolder1_txtConfPassword" maxlength="20" name="ctl00$ContentPlaceHolder1$txtConfPassword">
+                            <span class="star">*</span>
+                             <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvconpass"></span>
+                            <span style="color:#9EC550;font-size:Smaller;display:none;" id="ctl00_ContentPlaceHolder1_Cmppassword"></span>
+                            
+                        </td>
+                    </tr>                  
+                    <tr class="b11">
+                        <td align="left" class="style4">
+                            Primary Email :
+                        </td>
+                        <td align="left" class="b11">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtPrimaryEmail" maxlength="50" name="ctl00$ContentPlaceHolder1$txtPrimaryEmail">
+                            <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvprimaryemail"></span>
+                                <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rgeprimaryemail"></span>
+                            
+                        </td>
+                        <td align="left" class="b11">
+                            Alternate Email :
+                        </td>
+                        <td align="left" class="b11">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtAlternatEmail" maxlength="50" name="ctl00$ContentPlaceHolder1$txtAlternatEmail"><br>
+                          
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rgealternateemail"></span>
+                                   
+                        </td>
+                         <td align="left" style="width: 150px;">Mobile Number :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="text" onkeyup="NumNSign(this);" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtMobileNumber" maxlength="15" name="ctl00$ContentPlaceHolder1$TxtMobileNumber">
+                                <span class="star">*</span>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvmobileno"></span>
+                            
+                        </td>
+                       
+                    </tr>
+                  
+                    
+                    <tr style="height:5%" class="b11">
+                     <td align="left" class="style3">LandLine Number :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="text" onkeyup="NumNSign(this);" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtLandLineNumber" maxlength="15" name="ctl00$ContentPlaceHolder1$TxtLandLineNumber">
+                         <span class="star">*</span>
+                                
+                        </td>
+                        <td align="left" class="b11" style="width: 150px;">
+                            SecretQuestion :
+                        </td>
+                        <td align="left" class="b11" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtSecretQuestion" maxlength="100" name="ctl00$ContentPlaceHolder1$TxtSecretQuestion">
+                           
+                        </td>
+                        <td align="left" class="b11" style="width: 150px;">
+                            SecretQueAnswer:
+                        </td>
+                        <td align="left" class="b11" style="width: 190px;">
+                            <input type="password" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtSecretQueAnswer" maxlength="50" name="ctl00$ContentPlaceHolder1$TxtSecretQueAnswer">                          
+                        </td>
+                    </tr>
+                    <tr class="b11">
+                        <td align="left" class="style4">
+                            First Name :
+                        </td>
+                        <td align="left" class="b11" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtFirstName" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtFirstName">
+                            <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvfirstname"></span>
+                        </td>
+                        <td align="left" style="width: 150px;">
+                            Middle Name:
+                        </td>
+                        <td align="left" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtMiddleName" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtMiddleName">
+                            
+                        </td>
+                        <td align="left" class="b11">
+                            Last Name :
+                        </td>
+                        <td align="left" class="b11">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_TxtLastName" maxlength="30" name="ctl00$ContentPlaceHolder1$TxtLastName">
+                            <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvlastname"></span>
+                        </td>
+                    </tr>                   
+                    
+                    <tr class="b11">
+                     <td align="left" class="style4">
+                            Sex :</td>
+                        <td align="left" class="b11">
+                           
+                                <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlsex" name="ctl00$ContentPlaceHolder1$ddlsex">
+	<option value="0">--Select--</option>
+	<option value="M">Male</option>
+	<option value="F">Female</option>
+
+</select>
+                            <span class="star">*</span><br>
+                            <span style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_rfvsex"></span>
+                        </td>
+                        <td align="left" class="b11">
+                            Date of Birth :
+                        </td>
+                        <td align="left" class="b11">
+                            <input type="text" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtDOB" name="ctl00$ContentPlaceHolder1$txtDOB">
+                             <span class="star">*</span>                      
+                            <a id="ctl00_ContentPlaceHolder1_DOB" href="javascript:NewCal('txtDOB','DDMMMYYYY')">
+                          <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a>                           
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvdob"></span>
+                        </td>
+                        <td align="left" class="b11">
+                            Place of Birth :
+                        </td>
+                        <td align="left" class="b11">
+                             <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtplaceofbirth" maxlength="30" name="ctl00$ContentPlaceHolder1$txtplaceofbirth">
+                                <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvplaceofbirth"></span>
+                        </td>
+                    </tr>
+                  
+                    <tr cssclass="textbox" class="b11" id="ctl00_ContentPlaceHolder1_tr2">
+	<td align="left" class="style3">
+                            Marital Status :
+                        </td>
+	<td align="left" style="width: 190px;">
+                             <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlMS" name="ctl00$ContentPlaceHolder1$ddlMS">
+		<option value="0">--Select--</option>
+		<option value="Married">Married</option>
+		<option value="Single">Single</option>
+		<option value="Divorcee">Divorcee</option>
+		<option value="Seperated">Seperated</option>
+		<option value="Widow">Widow</option>
+
+	</select>
+                   <span class="star">*</span>
+                     <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvmaritalstatus"></span>      
+                        </td>
+	<td align="left" style="width: 150px;">
+                            Father's Name :
+                        </td>
+	<td align="left" style="width: 190px;">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtFatherName" maxlength="30" name="ctl00$ContentPlaceHolder1$txtFatherName">
+                                <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvfathername"></span>
+                        </td>
+	<td align="left" class="b11">
+                            Mother's Name :
+                        </td>
+	<td align="left" class="t11">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtMotherName" maxlength="30" name="ctl00$ContentPlaceHolder1$txtMotherName">
+                                <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvmothername"></span>
+                        </td>
+</tr>
+
+                    
+                      <tr cssclass="textbox" class="b11">
+                        <td align="left" class="style3">
+                            Color Of Hair : 
+                        </td>
+                        <td align="left" style="width: 190px;">
+                             <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlHairColor" name="ctl00$ContentPlaceHolder1$ddlHairColor">
+	<option value="0">--Select--</option>
+	<option value="Black">Black</option>
+	<option value="Brown">Brown</option>
+	<option value="Gray">Gray</option>
+	<option value="White">White</option>
+	<option value="Red">Red</option>
+
+</select>
+                    <span class="star">*</span><br>
+                     <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvHairColor"></span>      
+                        </td>
+                       <td align="left" style="width: 150px;">
+                            Color Of Eyes :
+                        </td>
+                        <td align="left" style="width: 190px;">
+                             <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlEyeColor" name="ctl00$ContentPlaceHolder1$ddlEyeColor">
+	<option value="0">--Select--</option>
+	<option value="Black">Black</option>
+	<option value="Brown">Brown</option>
+	<option value="Blue">Blue</option>
+	<option value="Gray">Gray</option>
+	<option value="Green">Green</option>
+
+</select>
+                    <span class="star">*</span><br>
+                     <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvEyeColor"></span>      
+                        </td>
+                        <td align="left" class="b11">
+                             Identification Marks :
+                        </td>
+                        <td align="left" class="t11">
+                            <input type="text" style="width:188px;" class="textbox2" id="ctl00_ContentPlaceHolder1_txtMark" maxlength="30" name="ctl00$ContentPlaceHolder1$txtMark">
+                                 <span style="color: #9EC550; text-align: center; font-size: medium;">*</span><br>
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_RequiredFieldValidator3"></span>
+                        </td>
+                    </tr>
+                                
+                         <tr cssclass="textbox" class="b11" id="ctl00_ContentPlaceHolder1_tr1">
+	<td align="left" class="style4">
+                             Height(in cm) :
+                        </td>
+	<td align="left" class="t11">
+                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtHeights" maxlength="30" name="ctl00$ContentPlaceHolder1$txtHeights">
+                                <span class="star">*</span>
+                            <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_RequiredFieldValidator6"></span>
+                        </td>
+</tr>
+
+                    
+                    <tr class="b11" id="ctl00_ContentPlaceHolder1_tr3">
+	<td align="left" class="style3">Current Address :
+                        </td>
+	<td align="left" colspan="2">                            
+                          <textarea style="height:40px;width:95%;" onkeypress="return textboxMultilineMaxNumber(this,200)" class="MultiLine_Textbox" id="ctl00_ContentPlaceHolder1_txtcurrentadd" cols="20" rows="2" name="ctl00$ContentPlaceHolder1$txtcurrentadd"></textarea>
+                                <span class="star">*</span><br>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvcurrentadd"></span>
+                                   </td>
+	<td align="left">Permanent Address : </td>
+	<td align="left" colspan="2">
+                            
+                                 <textarea style="height:40px;width:95%;" onkeypress="return textboxMultilineMaxNumber(this,200)" class="MultiLine_Textbox" id="ctl00_ContentPlaceHolder1_txtPermanetadd" cols="20" rows="2" name="ctl00$ContentPlaceHolder1$txtPermanetadd"></textarea>
+                                  <span class="star">*</span><br>
+                                <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvpermanentaddress"></span>
+                                </td>
+</tr>
+
+                   <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        If you have served in militery, please state
+                                    </td>
+                                </tr>
+                                   <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        From Date :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px;
+                                            width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtFromDate" name="ctl00$ContentPlaceHolder1$txtFromDate">
+                                        <a id="ctl00_ContentPlaceHolder1_FromDate" href="javascript:NewCal('txtFromDate','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        To Date :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" readonly="readonly" style="border-width: 1px; width: 131px;" class="textbox2" id="ctl00_ContentPlaceHolder1_txtToDate" name="ctl00$ContentPlaceHolder1$txtToDate">
+                                        <a id="ctl00_ContentPlaceHolder1_ToDate" href="javascript:NewCal('txtToDate','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        In :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtInMilitary" maxlength="30" name="ctl00$ContentPlaceHolder1$txtInMilitary">
+                                    </td>
+                                </tr>
+                  
+                    <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Give particulars of the employement of parents/spouse in Nigeria(If Applicable)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Name Of Employer:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpName" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpName">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        Phone Number Of Employer:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpPhoneNo" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpPhoneNo">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        How long your parents/spouse been in Nigeria(In Months):
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpLivedFrom" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpLivedFrom">
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address1:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpAddr1" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpAddr1">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                       Address2:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpAddr2" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpAddr2">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        City:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpCity" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpCity">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        State:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpState" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpState">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        Country:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" disabled="disabled" id="ctl00_ContentPlaceHolder1_ddlEmpCountry" name="ctl00$ContentPlaceHolder1$ddlEmpCountry">
+	<option value="234" selected="selected">Nigeria</option>
+
+</select>
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        Postcode:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtEmpPostCode" maxlength="30" name="ctl00$ContentPlaceHolder1$txtEmpPostCode">
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Intended Address In Nigeria
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address1:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededAddress1" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededAddress1">
+                                        <span class="star">*</span>
+                                        <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvIntededAddress1"></span>
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        Address2:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededAddress2" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededAddress2">
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        City:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededCity" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededCity">
+                                        <span class="star">*</span>
+                                        <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvIntededCity"></span>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        State:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededState" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededState">
+                                        <span class="star">*</span>
+                                        <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvIntededState"></span>
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        Country:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" disabled="disabled" id="ctl00_ContentPlaceHolder1_ddlIntededCountry" name="ctl00$ContentPlaceHolder1$ddlIntededCountry">
+	<option value="234" selected="selected">Nigeria</option>
+
+</select>
+                                    </td>
+                                    <td align="left" style="width: 150px;">
+                                        District:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededDistrict" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededDistrict">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" style="width: 150px;">
+                                        Postcode:
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededPostcode" maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededPostcode">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Travel History
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="2" class="style3">
+                                        How long have you lived in the country from where you are applying for visa(In Years)
+                                        ?
+                                    </td>
+                                    <td align="left" class="t11">
+                                    <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtApplyCountryYears" maxlength="30" name="ctl00$ContentPlaceHolder1$txtApplyCountryYears">                                      
+                                             <span class="star">*</span>
+                                        <span style="color:#9EC550;display:none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvApplyCountryYears"></span>
+                                    </td>
+                                    <td align="left" colspan="2" style="width: 150px;">
+                                        Have you ever been infected by any contagious disease(e.g Turbeculosis) or suffered
+                                        serious mental illness ?
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlSeriousDisease" name="ctl00$ContentPlaceHolder1$ddlSeriousDisease">
+	<option value="N">No</option>
+	<option value="Y">Yes</option>
+
+</select>
+                                          <span class="star">*</span>                                      
+                                    </td>
+                                    </tr>
+                                     <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                     <tr class="b11">
+                                    <td align="left" colspan="2" style="width: 150px;">
+                                        Have you ever been arrested or convicated for an offence(even though subject to
+                                        pardon)?
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown4" id="ctl00_ContentPlaceHolder1_ddlCrimeRecord" name="ctl00$ContentPlaceHolder1$ddlCrimeRecord">
+	<option value="N">No</option>
+	<option value="Y">Yes</option>
+
+</select>
+                                        <span class="star">*</span>
+                                    </td>                             
+                                    <td align="left" colspan="2" class="style3">
+                                        Have you ever been involved in narcotic activity?
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlDrugReport" name="ctl00$ContentPlaceHolder1$ddlDrugReport">
+	<option value="N">No</option>
+	<option value="Y">Yes</option>
+
+</select>
+                                        <span class="star">*</span>
+                                    </td>
+                                    </tr>
+                                     <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                     <tr class="b11">
+                                    <td align="left" colspan="2" style="width: 150px;">
+                                        Have you ever been deported?
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlDeported" name="ctl00$ContentPlaceHolder1$ddlDeported">
+	<option value="N">No</option>
+	<option value="Y">Yes</option>
+
+</select>
+                                        <span class="star">*</span>
+                                    </td>
+                                    <td align="left" colspan="2" style="width: 150px;">
+                                        Have you sought to obtain visa by mis-represantation or fraud?
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown4" id="ctl00_ContentPlaceHolder1_ddlFraudRecord" name="ctl00$ContentPlaceHolder1$ddlFraudRecord">
+	<option value="N">No</option>
+	<option value="Y">Yes</option>
+
+</select>
+                                        <span class="star">*</span>
+                                    </td>
+                                </tr>
+                                  <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                        
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Give a list of the countries you have visited in the last twelve(12) months :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period1 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastVisitCountry1" name="ctl00$ContentPlaceHolder1$ddlLastVisitCountry1">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitCity1" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastVisitCity1">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitDeptDate1" name="ctl00$ContentPlaceHolder1$txtLastVisitDeptDate1">
+                                        <a id="ctl00_ContentPlaceHolder1_LastVisitDeptDate1" href="javascript:NewCal('txtLastVisitDeptDate1','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period2 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastVisitCountry2" name="ctl00$ContentPlaceHolder1$ddlLastVisitCountry2">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitCity2" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastVisitCity2">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitDeptDate2" name="ctl00$ContentPlaceHolder1$txtLastVisitDeptDate2">
+                                        <a id="ctl00_ContentPlaceHolder1_LastVisitDeptDate2" href="javascript:NewCal('txtLastVisitDeptDate2','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period3 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                       Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastVisitCountry3" name="ctl00$ContentPlaceHolder1$ddlLastVisitCountry3">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitCity3" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastVisitCity3">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastVisitDeptDate3" name="ctl00$ContentPlaceHolder1$txtLastVisitDeptDate3">
+                                        <a id="ctl00_ContentPlaceHolder1_LastVisitDeptDate3" href="javascript:NewCal('txtLastVisitDeptDate3','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" style="height: 2px;" colspan="6">
+                                        </td>
+                                    </tr>
+                                
+                               
+                               <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                        
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Give a list of the countries you have lived for more then one year :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period1 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastLivedCountry1" name="ctl00$ContentPlaceHolder1$ddlLastLivedCountry1">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedCityName1" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastLivedCityName1">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedDepartureDate1" name="ctl00$ContentPlaceHolder1$txtLastLivedDepartureDate1">
+                                        <a id="ctl00_ContentPlaceHolder1_aLastLivedDepartureDate1" href="javascript:NewCal('txtLastLivedDepartureDate1','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period2 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastLivedCountry2" name="ctl00$ContentPlaceHolder1$ddlLastLivedCountry2">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedCityName2" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastLivedCityName2">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedDepartureDate2" name="ctl00$ContentPlaceHolder1$txtLastLivedDepartureDate2">
+                                        <a id="ctl00_ContentPlaceHolder1_aLastLivedDepartureDate2" href="javascript:NewCal('txtLastVisitDeptDate2','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" colspan="6">
+                                        Period3 :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 2px;" colspan="6">
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                       Country :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <select class="dropdown3" id="ctl00_ContentPlaceHolder1_ddlLastLivedCountry3" name="ctl00$ContentPlaceHolder1$ddlLastLivedCountry3">
+	<option value="0">--Select--</option>
+
+</select>
+                                    </td>
+                                    <td align="left" class="b11">
+                                        City :
+                                    </td>
+                                    <td align="left" class="t11">
+                                        <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedCityName3" maxlength="30" name="ctl00$ContentPlaceHolder1$txtLastLivedCityName3">
+                                    </td>
+                                    <td align="left" class="style3">
+                                        Date Of Departure :
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" style="border-width: 1px; width: 132px;" readonly="readonly" class="textbox2" id="ctl00_ContentPlaceHolder1_txtLastLivedDepartureDate3" name="ctl00$ContentPlaceHolder1$txtLastLivedDepartureDate3">
+                                        <a id="ctl00_ContentPlaceHolder1_aLastLivedDepartureDate3" href="javascript:NewCal('txtLastVisitDeptDate3','DDMMMYYYY')">
+                                            <img style="border: 0" src="../Images/cal.jpg" alt="Pick a date"></a><br>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" style="height: 2px;" colspan="6">
+                                        </td>
+                                    </tr>
+                                
+                               
+                    <tr>                    
+                        <td align="center" style="height: 2px;" colspan="6">
+                        </td>
+                    </tr>
+                    <tr align="left" class="t11">
+                                    <td style="height: 2px;" colspan="6">
+                                        <input type="checkbox" name="ctl00$ContentPlaceHolder1$chkAgree" id="ctl00_ContentPlaceHolder1_chkAgree"><label for="ctl00_ContentPlaceHolder1_chkAgree">  I understand that I will be require to comply with immegration/alien and other laws governing entry of immegrants into the country to which I now apply for Visa/Entry permit.</label>
+                                      
+                                    </td>
+                                </tr>
+                                 <tr>
+                                        <td align="center" style="height: 2px;" colspan="6">
+                                        </td>
+                                    </tr>
+                    <tr>
+                        <td align="center" style="height: 2px;" colspan="6">
+                        <input type="submit" class="subbtn1" id="ctl00_ContentPlaceHolder1_Submit" onclick="javascript:check();WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ContentPlaceHolder1$Submit&quot;, &quot;&quot;, true, &quot;a&quot;, &quot;&quot;, false, false))" value="Submit" name="ctl00$ContentPlaceHolder1$Submit">&nbsp;                                
+                            <input type="submit" class="subbtn1" id="ctl00_ContentPlaceHolder1_cancel" value="Cancel" name="ctl00$ContentPlaceHolder1$cancel">   
+                        </td>
+                    </tr>                                 
+                    <tr class="b11">
+						<td style="height: 10px" colspan="6">
+							<div style="color:#9EC550;display:none;" id="ctl00_ContentPlaceHolder1_vsapplicantregister">
+
+</div>
+						</td>
+					</tr>
+                    <tr>
+                        <td align="center" style="height: 2px;" colspan="6">
+                        </td>
+                    </tr>
+
+                                   
+                </tbody></table>
+
+</body>
+</html>

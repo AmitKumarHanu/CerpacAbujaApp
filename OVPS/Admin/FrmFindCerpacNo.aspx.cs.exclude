@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using DataAccessLayer;
+using System.Data;
+using System.Data.SqlClient;
+using DataAccessLayer;
+using System.Globalization;
+
+public partial class Admin_FrmFindCerpacNo : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BaseLayer.General_function objgenenral = null;
+    
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+           
+        }
+
+        DOI.HRef = "javascript:NewCal('" + txtDob.ClientID + "','DDMMMYYYY','','',53,1)";
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string queryforzonename = "select b.ZoneName from UserZoneRelation as a, Zonemaster as b where a.ZoneCode=b.ZoneCode and a.UserId=" + objectSessionHolderPersistingData.User_ID + "";
+        objgenenral = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        try
+        {
+            dt = objgenenral.FetchData(queryforzonename);
+            if (dt.Rows.Count > 0)
+            {
+                LabelMessage.Text = "Zone" + " " + dt.Rows[0]["ZoneName"].ToString();
+                LabelMessage.Visible = true;
+                LabelMessage.BorderStyle = BorderStyle.None;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            dt = null;
+            objgenenral = null;
+        }
+
+    }
+
+    public static string ConvertDate(string date, string pattern)
+    {
+
+        if (string.IsNullOrEmpty(date) == false && date != "")
+        {
+            DateTime date2;
+            if (DateTime.TryParseExact(date, pattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out date2))
+            {
+                return date2.ToString("MM/d/yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    protected void Go_Click(object sender, EventArgs e)
+    {
+        objgenenral = new BaseLayer.General_function();
+        DataTable dtcerp = new DataTable();
+        string query = "Select * from People where forename Like'" + txtfname.Text.ToString() + "%' and surname Like'" + txtlname.Text.ToString().Trim() + "' and convert(date,date_of_birth)='" + ConvertDate(txtDob.Text, "d-MM-yyyy") + "'";
+        try
+        {
+            dtcerp = objgenenral.FetchData(query);
+            if (dtcerp.Rows.Count > 0)
+            {
+                trcerpac.Style.Add("display", "");
+                txtcerpacno.Text = dtcerp.Rows[0]["cerpac_no"].ToString().Trim();
+                lblmsg.Visible = false;
+            }
+            else
+            {
+                lblmsg.Text = "Record Not found";
+                lblmsg.CssClass = "warning-box";
+                lblmsg.Visible = true;
+                trcerpac.Style.Add("display", "none");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            dtcerp = null;
+            objgenenral = null;
+        }
+    }
+    
+}

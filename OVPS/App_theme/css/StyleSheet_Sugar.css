@@ -1,0 +1,927 @@
+﻿*{
+    
+	padding:0px;
+	top:0px;
+	left:-3px;
+	margin-left: 0px;
+	
+	margin-bottom: 0px;	
+}
+body
+{	
+	font-family:Arial Black;
+	text-align:left;
+	padding-top:0px;
+	padding-left:0px;
+	padding-right:0px;
+	padding:0;
+	margin:0;	
+}
+#main
+{
+	margin-bottom:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+	width: 100%;
+	background-color:Transparent;
+}
+.Project_Text
+{
+	font-family:Palatino Linotype;
+	font-size:26px;
+	font-weight:bold;	
+	color:Navy;	
+}
+
+/*START Header small link have this class*/
+#smallwhitelink a
+{
+	color: #0000FF;
+	font-family:Arial Narrow;
+	font-weight:bold;
+	font-size:12px;	
+}
+#smallwhitelink a:hover
+{
+	color: #63659C;
+}
+#smallwhitelinkOnPage a
+{
+	color: #00CCFF;
+	font-size:11px;
+}
+#smallwhitelinkOnPage a:hover{color: #63659C;
+}
+
+/*START Login PAge Big link have this class*/
+#LoginLink a
+{
+	color: #CCCCFF;
+	font-size:12px;
+}
+#LoginLink a:hover
+{
+	font-size:12px;
+	text-decoration:underline;
+	color: #FFFFFF;
+}
+
+.t9
+{
+	font-size:9px;
+	font-family:Arial;
+}
+.r10 
+{
+    font-size:10px;
+    font-family :Arial;
+    color:#FF0000;
+    }
+.t10
+{
+	font-size:10px;
+	font-family:Arial;
+}
+.t11
+{
+	font-size:14px;
+	font-family:Arial;	
+	color:#4C554F;
+}
+.tHd
+{
+	font-size:16px;
+	font-family:Arial;
+	font-weight:bold;
+	color: #666699;
+}
+.tHd2
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color: #663366;
+}
+/*TextWithout */
+.t11WB
+{
+	font-size:11px;
+	font-family:Arial;
+	font-weight:normal;
+}
+
+.t12
+{
+	font-size:12px;
+	font-family:Arial;
+}
+.t13
+{
+	font-size:13px;
+	font-family:Arial;
+}
+.t14
+{
+	font-size:14px;
+	font-family:Arial;
+}
+.t15
+{
+	font-size:15px;
+	font-family:Arial;
+}
+.head5
+{
+    color:#494848;     
+     font-weight: bold;
+}
+/*START Bold Text have this class*/
+.b9
+{
+	font-size:9px;
+	font-family:Arial;
+	font-weight:bold;
+}
+#combox {
+background-color:#E0E0E0;
+border: 1px solid #AAA;
+border-bottom: 1px solid #888;
+border-radius: 3px;
+color: black;
+padding: 0px;
+min-height: 269px;
+box-shadow: 0px 2px 2px #AAA;
+}
+.b10
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b11 
+{
+	font-size:13px;
+	font-family:verdana;
+    font-weight :bold;
+	color:#000000 !important;
+	
+}
+.b77 
+{
+	font-size:15px;
+	font-family:verdana;
+    font-weight :bold;
+	color:#000099 !important;
+	
+}
+.b55 
+{
+	font-size:13px;
+    font-weight :bold;
+	font-family:'Arial';
+	color:#000000;
+	
+}
+.b99
+{
+	font-size:12px;
+	color:#000000;
+    
+    /*font-family:'Courier New';*/
+	
+}
+
+.b12
+{
+	font-size:14px;
+	font-family:Arial;
+	
+}
+.b13
+{
+	font-size:13px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b15
+{
+	font-size:15px;
+	font-family:Arial;
+	font-weight:bold;
+}/*START Bold Text have this class*/
+.w9
+{
+	font-size:9px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w10
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w11
+{
+	font-size:11px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w12
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w13
+{
+	font-size:13px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w15
+{
+	font-size:15px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+
+/*START Heading Text have this class*/
+.h14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.h16
+{
+	color:#000000;
+	font-size:16px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+/*START Login Page Text have this class*/
+.l18
+{
+	color:#FFFFFF;
+	font-size:18px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:underline;
+}
+.l22
+{
+	color:#FFFFFF;
+	font-size:22px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+
+/*START Page Name CSS Start Here  */
+.PageNameHeadingCSS
+{	
+   
+
+color: rgb(255, 255, 255);
+border-style: none;
+font-size: 14px;
+padding: 3px 0;
+font-family: Arial;
+font-weight: bold;
+text-decoration: none;
+background: #000099;
+border-radius: 25px;
+/*
+	color:#384467; 	
+	border-style:none;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+	background-image:url(../../Images/Content_New.gif);*/
+}	
+
+
+.PageNameHeadingCSS_2
+{
+	color:#384467; 	
+	border-style:none;
+	font-size:20px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+	
+}	
+/*End Page Name CSS End Here  */
+
+.master
+{
+	background-color:#336699;
+	/*background-image:url(../../images/contbg_app.png);*/
+	 
+}	
+
+.BackGround2
+{
+	background-position:center; 
+	background-image:url(../../images/contbg_app.png); background-repeat:no-repeat;
+	
+	margin-top:12px;
+	margin-left:10px;
+	 
+}	
+.error_msg
+{
+	width: 55%; 
+	font-family:Arial;
+	text-align: center; 
+	padding-left: 0px; 
+	padding-bottom: 0px; 
+	height: 15px;	
+	color:Red;
+	}
+
+/*START Error msg. have this class*/
+.errormsg
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+	border: 1px solid #fd0a0a;
+	background-color:#f69e9e;
+	width:600px;
+	
+	padding:2px 2px 2px 2px;
+	
+}
+
+/*START Success msg. have this class*/
+.successmsg
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;   
+	border: 1px solid #fd0a0a;
+	background-color:#f69e9e;
+	width:600px;
+	
+	padding:2px 2px 2px 2px;
+	 /*background-color:Green;*/
+	}
+/*START Controls CSS Start From Here Please Add here only */
+
+/* Textbox have this class*/
+.textbox
+{
+    border:#999999 solid 1px;
+	background-color:White;	
+	height:17px;
+	font-family:Arial;
+	font-size:11px;	
+	width:130px	
+}
+.textbox1
+{
+	background-color:#FFFF99;
+	border:#696969 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+	width:70px
+}
+
+.textbox3
+{
+	border:1px solid #cccccc;
+	background-color:#f1f1f1;
+	height:23px;	
+	width:100px
+}
+.textbox active
+{
+	border:#000000 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;
+	width:130px
+}
+
+/* Textbox Right Align have this class*/
+.textboxRA
+{
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;
+	width:130px;
+	}
+
+/* Textbox have this class*/
+.textbox-medium
+{
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+	width:93px
+}
+
+.MultiLine_Textbox
+{
+	color: Black;
+background: #F1F1F1;
+border: 1px solid #ccc;	
+	width:93px;
+	
+}
+.textbox-Big
+{
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+	width:93px
+}
+
+
+/* Textarea have this class*/
+.textarea
+{
+	border:#384467 1px solid;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+}
+
+/* Label have this class*/
+.lbl
+{
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:14px;	
+}
+
+/* DropDown have this class*/
+.dropdown
+{
+
+	background-color:White;
+	border-color:#384467;
+	border-style:solid;
+	border-width:1px;
+	height:20px;
+	color:#000000;	
+	font-family:Arial;
+	font-size:12px;
+	width:130px;
+}
+
+.dropdown1
+{
+
+	background-color:White;
+	border-color:#384467;
+	border-style:solid;
+	border-width:1px;
+	height:20px;
+	color:#000000;	
+	font-family:Arial;
+	font-size:12px;
+	width:120px;
+}
+.dropdown2
+{
+
+	background-color:White;
+	border-color:#384467;
+	border-style:solid;
+	border-width:1px;
+	height:20px;
+	color:#000000;	
+	font-family:Arial;
+	font-size:12px;
+	width:130px;
+}
+
+.dropdown3
+{
+
+color: Black ;
+background: #FFFFFF;
+border: 1px solid #ccc;
+	height:23px;	
+	width:120px;	
+}
+
+
+.dropdown4
+{
+color: Black ;
+background: #F1F1F1;
+border: 1px solid #ccc;
+	height:23px;	
+	width:120px;	
+	height:23px;	
+	width:100px;	
+}
+
+.textbox2
+{
+resize: none;
+color: Black;
+background: #FFFFFF;
+border: 1px solid #606060;
+font-size:12px;
+ -moz-border-radius: 3px;
+ border-radius: 3px;
+    padding:1px;
+    margin-top: 7px;
+}
+star
+{
+	color: #F00;
+}
+.submitbutton
+{
+		color: White;
+background: #25a34f;
+border: 2px outset #d7b9c9;
+}
+.prevbutton
+{
+	color: White;
+background: #25a34f;
+border: 2px outset #d7b9c9;
+}
+.nextbutton
+{
+    color: White;
+background: #3333FF;
+border: 2px outset #d7b9c9;
+}
+/* Radio Button have this class*/
+.radiobtn
+{
+	height:17px;
+	color:#000000;	
+}
+
+/* CheckBox Button have this class*/
+.chkbtn
+{
+	/*border:#384467 1px solid;*/
+	height:17px;
+	color:#000000;	
+}
+
+/* Button have this class*/
+.button {
+	
+	/*border:#6FB3EC 1px solid;*/
+	color:#25a34f;
+	font-weight:bold;
+	cursor:hand;
+	}
+.button1 {
+	/*background:url("../../Images/btn_bg.gif") repeat-x;*/	
+	color:#25a34f;
+	font-weight:bold;
+	cursor:hand;
+	height: 32px !important;
+}
+.button55 {
+	/*background:url("../../Images/btn_bg.gif") repeat-x;*/	
+	color:#25a34f;
+    background-color:#25a34f;
+	font-weight:bold;
+	cursor:hand;
+	height: 32px !important;
+}
+
+/*END Controls CSS End Here Please Add here only */
+
+/*START GRID CSS Start From Here Please Add here only */
+
+
+/*.GridBaseStyle { width: 100%; background-color: #fff; margin: 5px 0 10px 0; border: solid 1px #CCFF99; border-collapse:collapse; }
+    .GridBaseStyle td { padding: 2px; border: solid 1px #c1c1c1; color: #000000; font-size:13px;}
+    .GridBaseStyle th { padding: 4px 2px; color: #fff; background: #424242 url(../../Images/grd_head.png) repeat-x top; border-left: solid 1px #525252; font-size: 13px; }
+.GridBaseStyle .alt { background: #fcfcfc url(../../Images/grd_alt.png) repeat-x top; }
+.GridBaseStyle .pgr {background: #424242 url(../../Images/grd_pgr.png) repeat-x top; }
+    .GridBaseStyle .pgr table { margin: 5px 0; }
+    .GridBaseStyle .pgr td { border-width: 0; padding: 0 6px; border-left: solid 1px #666; font-weight: bold; color: #fff; line-height: 12px; }   
+    .GridBaseStyle .pgr a { color: #666; text-decoration: none; }
+    .GridBaseStyle .pgr a:hover { color: #000; text-decoration: none; }*/
+
+	.GridBaseStyle { margin: 5px 0 10px 0;   }
+    .GridBaseStyle td { padding: 1px; border: solid 1px #c1c1c1;  width: 60px; height: 31px; }
+    .GridBaseStyle th  
+    {border: 1px solid rgb(224, 224, 224);
+font-weight: bold;
+font-size: 14px;
+background: #e2e2e2 url('../../Images/boxheader.gif') repeat-x top;
+padding: 10px 15px;
+border-radius: 36px 0px 36px 0px;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-topright: 5px;
+-webkit-border-top-right-radius: 5px;
+text-shadow: 0px 1px 1px #fff;
+}
+        
+     
+.GridBaseStyle .alt { background: #fcfcfc url(../../Images/grd_alt.png) repeat-x top; }
+.GridBaseStyle .pgr {background: #424242 url(../../Images/grd_pgr.png) repeat-x top; }
+    .GridBaseStyle .pgr table { margin: 5px 0; }
+    .GridBaseStyle .pgr td { border-width: 0; padding: 0 6px; border-left: solid 2px #666; font-weight: bold; color: #fff; line-height: 12px; }   
+    .GridBaseStyle .pgr a { color: #666; text-decoration: none; }
+    .GridBaseStyle .pgr a:hover { color: #000; text-decoration: none; }
+	
+
+.Grid_Item
+{
+	font-family:Arial;
+	font-size:12px;
+	font-weight:normal;
+	color:#0E2E7D;
+	
+	text-align:left;
+}
+
+.Grid_Item_Alternaterow
+{
+	font-family:Arial;
+	font-size:12px;
+	font-weight:normal;
+	color:#0E2E7D;
+	background: #fcfcfc url(../../Images/grd_alt.png) repeat-x top;
+	text-align:left;
+}
+
+.Grid_Selected
+{
+	font-family:Arial;
+	font-size:12px;
+	font-weight:normal;
+	color:#0E2E7D;
+	background-color:#99CDFF;
+	text-align:left;
+}
+
+.Grid_Footer
+{
+	font-family:Arial;
+	font-size:11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #006599;
+	text-align:right;
+}
+
+/*END GRID CSS End Here */
+
+/*START Main Div CSS Start Here */
+
+#Div_ContentPlaceHolder
+{
+	width:100%;
+	min-width:98%;
+	height:300%;
+	/*background-color:#FFFFFF;*/	
+	float:left;
+	margin-bottom:0px;
+	margin-top:0px;
+	margin-left:auto;
+	margin-right:0px;	
+	overflow:auto;
+	text-align:center;
+	vertical-align:top;
+}
+.Div_ContentPlaceHolder
+{
+	background-color:#696969;
+	
+}
+
+/*END Main Div CSS End Here */
+
+/*START Main Footer CSS Start Here */
+#footer 
+{
+	clear: left; 
+	font-size: 10px; 
+	width: 98%; 
+	line-height: 20px; 
+	height: 20px; 
+	text-align: center;
+	background-color:#FFFFFF;
+}
+/*End Main Footer CSS End Here */
+
+#push 
+{
+	CLEAR: left; 
+	FONT-SIZE: 10px; 
+	WIDTH: 100%; 
+	LINE-HEIGHT: 20px; 
+	HEIGHT: 20px; 
+	TEXT-ALIGN: center;
+}
+
+.tbl3{
+	width:753px; 
+	background-color:#000000; 
+	height: 409px;
+}
+.listbox
+{
+	background-color:White;
+	
+}
+
+/*Page header here */
+.PageNameHeadingCSSHeader
+{
+	padding-top:5px;
+	padding-left:2px;
+	background-color:#C8D09A;
+	/*background-image:url(../../Images/Content_New.gif);*/
+	color:#384467; 	
+	border-style:none;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+	height:25px;
+	width:690px;
+	vertical-align:middle;
+	text-align:left;
+}
+
+/*Background colour in hole application          added by dilip */
+
+.bcolour
+{
+	
+	 /*background-image:url(../images/pic1_app.jpg");*/
+	
+}
+.bgcolour
+{
+	 background-image:url(../images/pic1_app.jpg");
+	/*background-color:#FFB6C1;*/
+	
+}
+
+.bgimmage
+{
+    background-image:url(../images/pic1_app.jpg");
+	/*background-color:#696969;*/
+
+	
+	
+}
+/* For Master Header*/
+
+.header
+{
+ width:100%;
+ background-color:#FFB6C1;	
+}
+.headerLeft
+{
+	width:25%;	
+    text-align:left;
+	margin:0;
+}
+.headerRight
+{
+	width:25%;
+	 text-align:right;
+	  vertical-align: top;
+    margin:0;	
+}
+.headerMiddle
+{
+	width:50%;
+	vertical-align: top;
+    margin:0;	
+}
+.headerMiddle p
+{
+	font-size:40px;
+    text-align:center;
+    vertical-align:top;
+    font-weight:bold;
+    margin:5px 0px 10px 0px;
+}
+
+.AspNet-TreeView {
+    width: 200px;
+    border-top: solid 1px #DDD;
+     color:#A0A0A0 !important;
+}
+ 
+.AspNet-TreeView ul {
+    list-style: none; 
+}
+ 
+.AspNet-TreeView-Leaf {
+    border-bottom: solid 1px #DDD;
+    background: url(../../images/structure/node-dot.gif) 8px 9px no-repeat;  
+     text-decoration:none;
+      color:#000000 !important;
+      
+   
+}
+
+.AspNet-TreeView-Leaf:hover {
+    border-bottom: solid 1px #DDD;
+    background: url(../../images/structure/node-dot.gif) 8px 9px no-repeat;  
+     text-decoration:none;
+      color:rgb(226, 26, 26) !important;
+      
+   
+}
+ 
+.AspNet-TreeView-Root {
+    border-bottom: solid 1px #DDD; 
+    background-color:#CCC;
+    color :#000000 !important;
+}
+ 
+.AspNet-TreeView-Root a {
+    display: block;
+    width: 170px;
+    color:#000000 !important;
+    margin-left: 20px;
+    padding: 5px 5px 5px 5px; 
+     text-decoration:none;
+}
+.AspNet-TreeView-Root a:hover {
+    display: block;
+    width: 170px;
+    margin-left: 20px;
+     color:#f1f1f1;
+    padding: 5px 5px 5px 5px; 
+    
+}
+ 
+.AspNet-TreeView-Selected {
+    background: #F6F6F6 url(../../images/structure/arrow-right.gif) 8px 9px no-repeat;
+}
+ 
+.AspNet-TreeView-Expand {
+    display: block;
+    float: left;
+    margin: 9px 0px 0px 8px;
+    padding: 6px 4px 5px 4px;
+    height: 0px !important;
+    background: url(../../images/structure/node-plus.gif) 0px 0px no-repeat;
+    cursor: pointer;
+}
+ 
+.AspNet-TreeView-Collapse {
+    display: block;
+    float: left;
+    margin: 9px 0px 0px 8px;
+    padding: 6px 4px 5px 4px;
+    height: 0px !important;
+    background: url(../../images/structure/node-minus.gif) 0px 0px no-repeat;
+    cursor: pointer;
+}
+
+
+.calexp {
+position:relative;
+}

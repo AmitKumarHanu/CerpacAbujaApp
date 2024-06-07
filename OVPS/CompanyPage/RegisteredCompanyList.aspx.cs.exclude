@@ -1,0 +1,142 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+public partial class CompanyPage_RegisteredCompanyList : System.Web.UI.Page
+{
+
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    #endregion
+
+    protected void Page_PreInit(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+        string companyid = objectSessionHolderPersistingData.CompanyId;
+        if (companyid == "0")
+
+            this.Page.MasterPageFile = "~/MasterPage/MasterPageCompany.master";
+        else
+            this.Page.MasterPageFile = "~/MasterPage/MasterPageUser.master";
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            BindGrid();
+
+        }
+
+    }
+
+    protected void BindGrid()
+    {
+       // int UserId = 3; //from current session
+        //int CompanyId=3;
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+        BusinessEntityLayer.BalCompanyDetails ObjBalCompanyDetails = null;
+         try
+        {    
+        ObjBalCompanyDetails = new BusinessEntityLayer.BalCompanyDetails();
+
+
+        ds = ObjBalCompanyDetails.GetCompanyList();
+
+        GridViewCompanyList.DataSource = ds;
+        GridViewCompanyList.DataBind();              
+              
+               
+          
+        }
+        catch (Exception ex)
+        {
+            Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString(); 
+            
+        }
+        finally
+        {
+            ObjBalCompanyDetails = null;
+            dt = null;
+        }
+    }     
+    
+    protected void GridViewCompanyList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+
+        if (e.CommandName.Equals("Edit"))
+        {
+            string flag = "y";
+            int index = Convert.ToInt32(e.CommandArgument);
+            int CompanyID = (int)GridViewCompanyList.DataKeys[index].Value;
+            int keyvalue = (int)GridViewCompanyList.DataKeys[index].Value;
+            //Label lblCompanyName = (Label)GridViewCompanyList.Rows[index].FindControl("lblCompanyName");
+            //string CompanyName = lblCompanyName.Text.ToString();
+            
+
+            
+            
+        }
+        else if (e.CommandName.Equals("Delete"))
+        {
+            //string ss = "";
+            int index = Convert.ToInt32(e.CommandArgument);
+            int keyvalue = (int)GridViewCompanyList.DataKeys[index].Value;
+            Label lblCompanyName = (Label)GridViewCompanyList.Rows[index].FindControl("lblCompanyName");
+            string CompanyName = lblCompanyName.Text.ToString();
+            BusinessEntityLayer.BalCompanyDetails ObjBalCompanyDetails = null;
+            ObjBalCompanyDetails = new BusinessEntityLayer.BalCompanyDetails();
+            int statusid = ObjBalCompanyDetails.DeleteDataRow(keyvalue);
+
+            if (statusid == 1)
+            {
+                BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+                ObjGenBal.audittype = ENUMAUDITTYPE.CompanyDeleted.GetHashCode().ToString();
+                ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                ObjGenBal.auditdetail = "Company '" + CompanyName + "(ID:" + keyvalue + ")' Deleted";
+                ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                ObjGenBal.AuditInsert();
+                Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+                LabelMessage.CssClass = "successmsg";
+                LabelMessage.Text = "Record Successfully deleted.";
+
+                //ss = GridViewCompanyList.Rows[index].Cells[5].Text; --for Bound field
+                            
+            }
+            
+        }
+        
+    }
+
+    protected void GridViewCompanyList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        BindGrid();
+    }
+
+    protected void GridViewCompanyList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        
+       GridViewCompanyList.PageIndex = e.NewPageIndex;
+        BindGrid();
+    }
+    protected void btnAdd_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("CompanyRegistration.aspx");
+    }
+}

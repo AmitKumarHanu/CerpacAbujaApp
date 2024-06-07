@@ -1,0 +1,2227 @@
+<%@ Page Language="C#" MasterPageFile="~/MasterPage/MasterPageUser.master" AutoEventWireup="true"
+    CodeFile="FrmVisaApplication.aspx.cs" Inherits="Admin_FrmApplicaintReg" Title="Visa Application Form"
+    EnableEventValidation="false" %>
+
+<%@ MasterType VirtualPath="~/MasterPage/MasterPageUser.master" %>
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+ <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../JS/jquery.inputfocus-0.9.min.js"></script>
+    <script type="text/javascript" src="../JS/jquery.main.js"></script>
+    <script language="javascript" type="text/javascript">
+
+        function AlfaNumeric(t) {
+            var cod = " ";
+            var v = cod
+            var w = "";
+            for (var i = 0; i < t.value.length; i++) {
+                x = t.value.charAt(i);
+                if (v.indexOf(x, 0) == -1)
+                    w += x;
+            }
+            t.value = w;
+        }
+
+
+        function OnlyAlfa1(t) {
+            var cod = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz";
+            var v = cod
+            var w = "";
+            for (var i = 0; i < t.value.length; i++) {
+                x = t.value.charAt(i);
+                if (v.indexOf(x, 0) != -1)
+                    w += x;
+            }
+            t.value = w;
+        }
+
+        function AlfaNum1(t) {
+            var cod = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var v = cod
+            var w = "";
+            for (var i = 0; i < t.value.length; i++) {
+                x = t.value.charAt(i);
+                if (v.indexOf(x, 0) != -1)
+                    w += x;
+            }
+            t.value = w;
+        }
+        function checkonlySpace(t) {
+            var val = t.value.replace(/^\s+|\s+$/, '');
+            // alert(t.value.length);
+            if (val.length == 0) {
+                t.value = '';
+                //t.focus();
+            }
+        }
+        function isValidDate(txtDateObj) {
+
+            var str = txtDateObj.value;
+            if (str != '') {
+
+                var arr = [];
+                arr['Jan'] = 0;
+                arr['Feb'] = 1;
+                arr['Mar'] = 2;
+                arr['Apr'] = 3;
+                arr['May'] = 4;
+                arr['Jun'] = 5;
+                arr['Jul'] = 6;
+                arr['Aug'] = 7;
+                arr['Sep'] = 8;
+                arr['Oct'] = 9;
+                arr['Nov'] = 10;
+                arr['Dec'] = 11;
+                var arrDate = str.split('-');
+                if (arrDate.length == 3 && str.length == 11) {
+                    var d = new Date(arrDate[2], arr[arrDate[1]], arrDate[0]);
+                    if (!isNaN(d) && d.getFullYear() == arrDate[2] && d.getMonth() == arr[arrDate[1]] && d.getDate() == arrDate[0]) {
+                        //alert("its valid");
+                        return true;
+                    }
+                }
+                alert(str + "  " + "Not a valid Date Formate \n\n Enter as 01-Jan-2011");
+                txtDateObj.value = '';
+                return false;
+            }
+        }
+        function ValidateVisaCountry() {
+            var Nationality = document.getElementById('<%=ddlNationality.ClientID%>').value;
+            var VisaAppliedFor = document.getElementById('<%=ddlCountry.ClientID%>').value;
+
+            if (Nationality == VisaAppliedFor) {
+                alert("Visa can not be apply for your own Country");
+                return false;
+            }
+            else
+                return true;
+        }
+
+        function NumNSign(t) {
+
+            var cod = "+-0123456789";
+            var v = cod
+            var w = "";
+            for (var i = 0; i < t.value.length; i++) {
+                x = t.value.charAt(i);
+                if (v.indexOf(x, 0) != -1)
+                    w += x;
+            }
+            t.value = w;
+        }
+
+        function datevalidate() {
+            var Fdate = document.getElementById('<%=txtArrivalDate.ClientID%>').value;
+            var Edate = document.getElementById('<%=txtDepartureDate.ClientID%>').value;
+            //         if (Fdate == "") {
+            //             alert("Arrival Date requierd.")
+            //             return false;
+            //          }
+
+            //         if (Edate == "") {
+            //             alert("Departure Date requierd.")
+            //             return false;
+            //         }
+
+            if (Date.parse(Fdate) > Date.parse(Edate)) {
+                alert("Arrival Date should be greater than or equal to Departure Date.")
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+    </script>
+    <script language="javascript" type="text/javascript" src="../JS/validation.js"></script>
+    <link rel="stylesheet" type="text/css" href="../JS/style.css" media="all" />
+    <%--<asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>--%>
+    <div id="Div_ContentPlaceHolder" align="center">
+        <table cellpadding="0" cellspacing="1" style="border: 1px solid #dddddd; width: 100%;">
+            <tr class="t11">
+                <td class="PageNameHeadingCSS_2" align="center">
+                    Visa Application Form
+                </td>
+            </tr>
+            <tr class="t11">
+                <td align="center" style="width: 100%">
+                    <table cellpadding="0" cellspacing="2" border="0" width="100%">
+                        <asp:Panel ID="panel1" runat="server">
+                            <tr class="t11" style="display: none">
+                                <td align="left">
+                                    Passport Number
+                                </td>
+                                <td align="left">
+                                    <asp:TextBox ID="txtpassportsearch" CssClass="textbox" Enabled="false" runat="server"
+                                        MaxLength="30" ValidationGroup="b"></asp:TextBox>
+                                    <span class="star">*</span>
+                                    <asp:RequiredFieldValidator ID="rfvPassportSearch" runat="server" ControlToValidate="txtpassportsearch"
+                                        Display="None" ErrorMessage="Please Enter Passport No." SetFocusOnError="True"
+                                        ValidationGroup="b"></asp:RequiredFieldValidator>
+                                </td>
+                                <td align="left">
+                                    Nationality
+                                </td>
+                                <td align="left">
+                                    <asp:DropDownList ID="ddlNationalitySearch" runat="server" CssClass="dropdown" ValidationGroup="b">
+                                        <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                    </asp:DropDownList>
+                                    <span class="star">*</span>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlNationalitySearch"
+                                        Display="None" ErrorMessage="Please Select Nationality" InitialValue="0" SetFocusOnError="True"
+                                        ValidationGroup="b"></asp:RequiredFieldValidator>
+                                </td>
+                            </tr>
+                            <tr class="t11">
+                                <td align="center" colspan="4" style="vertical-align: middle; text-align: center;">
+                                    <asp:Button ID="btnSearch" runat="server" Text="Get Detail" CssClass="button" OnClick="btnSearch_Click"
+                                        ValidationGroup="b" />
+                                </td>
+                            </tr>
+                        </asp:Panel>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="width: 100%">
+                    <table cellpadding="0" cellspacing="2" border="0" width="100%">
+                        <tr class="t11" align="center">
+                            <td align="left" style="width: 10%; vertical-align: middle; text-align: center; background-repeat: no-repeat;">
+                                <asp:Image runat="server" ID="ImgPhoto" ImageUrl="~/Images/Logo/default_logo.gif"
+                                    Width="150px" Height="150px" />
+                            </td>
+                            <td style="width: 30%" align="left">
+                                <asp:FileUpload ID="logobrowse" runat="server" CssClass="button1" BackColor="White"
+                                    ForeColor="Black" />
+                                <span class="star">*</span><br />
+                                <asp:Button ID="btnUploadPhoto" runat="server" CssClass="button1" ValidationGroup="c"
+                                    Text="Upload Photo" OnClick="btnUploadPhoto_Click" />
+                                <asp:Button ID="btnUploadCancel" runat="server" CssClass="button" Text="Cancel" OnClick="btnUploadCancel_Click" />
+                            </td>
+                            <td class="r10" align="left" style="width: 40%; color: #9EC550;">
+                                <%-- <ul>
+                                    <li>Fields marked with * are mandatory </li>
+                                    <%--<li>Image dimensions are 210 x 210 pixels. Width and height must be equal.</li>
+                                     <li>Size of photo: 2 x 2 inch</li>
+                                     <li>Maximum file size is 240 KB (240 kilobytes). </li>
+                                    <li>Application supports .jpg/.gif/.jpeg/.png/.JPG/.GIF/.PNG Image extension.</li>
+                                </ul>--%>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="width: 100%">
+                    <div id="container">
+                        <!-- #first_step -->
+                        <div id="first_step">
+                            <table width="730" cellspacing="3" cellpadding="5" border="0" class="BackGround2">
+                               
+                                <tr>
+                                    <td colspan="3" align="left" class="t11">
+                                        Personal Details
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                               
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 15%">Passport Number </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 20%">
+                                            <asp:TextBox ID="TxtPassportNumber" CssClass="textbox2 " runat="server" MaxLength="10"
+                                                ValidationGroup="a" Width="130px" Enabled="false"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvPassportNumber" runat="server" ErrorMessage="Please Enter Passport Number"
+                                                ControlToValidate="TxtPassportNumber" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 12%">Nationality </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 22%">
+                                            <asp:DropDownList ID="ddlNationality" runat="server" CssClass="dropdown3" ValidationGroup="a"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlNationality_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvNationality" runat="server" ErrorMessage="Please Enter Nationality"
+                                                ControlToValidate="ddlNationality" Display="None" ValidationGroup="a" InitialValue="0"
+                                                ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left">
+                                        <span style="width: 15%">Passport Type </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 18%">
+                                            <asp:TextBox ID="TxtPassportType" Enabled="false" CssClass="textbox2" runat="server"
+                                                MaxLength="30" ValidationGroup="a" Width="130px"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvPassportType" runat="server" ErrorMessage="Please Enter Passport Type"
+                                                ControlToValidate="TxtPassportType" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        Date of Issue
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2" id="TxtDOI" runat="server" validationgroup="a"
+                                            disabled="disabled" />
+                                        <span class="star">*</span> <a id="DOI" runat="server" href="javascript:NewCal('TxtDOI','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                        <asp:RequiredFieldValidator ID="rfvDOI" runat="server" ErrorMessage="Please Select Date Of Issue"
+                                            ControlToValidate="TxtDOI" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left" class="style3">
+                                        Date of Expiry
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2 " id="TxtDOE" runat="server" validationgroup="a"
+                                            disabled="disabled" />
+                                        <span class="star">*</span> <a id="DOE" runat="server" href="javascript:NewCal('TxtDOE','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                        <asp:RequiredFieldValidator ID="rfvDOE" runat="server" ErrorMessage="Please Select Date Of Expiry"
+                                            ControlToValidate="TxtDOE" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        <span style="height: 37px">Issuing Authority </span>
+                                    </td>
+                                    <td>
+                                        <span style="height: 37px">
+                                            <asp:TextBox ID="TxtIssuingAuthority" CssClass="textbox2" Enabled="false" runat="server"
+                                                MaxLength="30" Width="130px" ValidationGroup="a"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvIssuingAuthority" runat="server" ErrorMessage="Please Enter Issuing Authority"
+                                                ControlToValidate="TxtIssuingAuthority" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Place of Issue
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="TxtPlaceofIssue" Enabled="false" CssClass="textbox2" Width="130px"
+                                            runat="server" MaxLength="30" ValidationGroup=""></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPlaceOfIssue" runat="server" ErrorMessage="Please Enter Place Of Issue"
+                                            ControlToValidate="TxtPlaceofIssue" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        Primary Email
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPrimaryEmail" CssClass="textbox2" Enabled="false" runat="server"
+                                            MaxLength="50" Width="188px" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPrimaryEmail" runat="server" ErrorMessage="Please Enter Primary Email"
+                                            ControlToValidate="txtPrimaryEmail" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left" class="style3">
+                                        Alternate Email
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtAlternatEmail" Enabled="false" CssClass="textbox2" Width="130px"
+                                            runat="server" MaxLength="50" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        First Name
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtFirstName" Enabled="false" runat="server" CssClass="textbox2"
+                                            MaxLength="80" Width="130px" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvFirstName" runat="server" ErrorMessage="Please Enter First Name"
+                                            ControlToValidate="txtFirstName" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        Last Name
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtLastName" Enabled="false" runat="server" CssClass="textbox2"
+                                            MaxLength="80" Width="130px" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvLastName" runat="server" ErrorMessage="Please Enter Last Name"
+                                            ControlToValidate="txtLastName" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td class="style3">
+                                        Middle Name
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtMiddlename" Enabled="false" runat="server" Width="140px" CssClass="textbox2"
+                                            MaxLength="80"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Sex
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList runat="server" ID="ddlSex" CssClass="dropdown3" Enabled="false">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                            <asp:ListItem Value="M">Male</asp:ListItem>
+                                            <asp:ListItem Value="F">Female</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvSex" runat="server" ErrorMessage="Please Select Sex"
+                                            ControlToValidate="ddlSex" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Date of Birth
+                                    </td>
+                                    <td class="b11">
+                                        <input type="text" class="textbox2" id="txtDOB" style="border-width: 1px; width: 140px;"
+                                            runat="server" disabled="disabled" />
+                                        <span class="star">*</span> <a id="DOB" runat="server" href="javascript:NewCal('txtDOB','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                        <asp:RequiredFieldValidator ID="rfvDOB" runat="server" ErrorMessage="Please Select Date Of Birth"
+                                            ControlToValidate="txtDOB" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        Place of Birth
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtplaceofbirth" Width="130px" CssClass="textbox2" runat="server"
+                                            MaxLength="30" ValidationGroup="a" Enabled="false"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPlaceOfBirth" runat="server" ErrorMessage="Please Enter Place Of Birth"
+                                            ControlToValidate="txtplaceofbirth" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left">
+                                        Father's Name
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtFatherName" CssClass="textbox2" runat="server" MaxLength="30"
+                                            Width="130px" ValidationGroup="a" Enabled="false"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvFatherName" runat="server" ErrorMessage="Please Enter Father's Name"
+                                            ControlToValidate="txtFatherName" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        Mother's Name
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtMotherName" Enabled="false" CssClass="textbox2" runat="server"
+                                            MaxLength="30" Width="140px" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvMotherName" runat="server" ErrorMessage="Please Enter Mother's Name"
+                                            ControlToValidate="txtMotherName" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left" class="style3">
+                                        Spouse's Name
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtSpousename" Enabled="false" runat="server" CssClass="textbox2"
+                                            Width="130px" MaxLength="30" ValidationGroup="a"> </asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span class="style3">Color Of Hair </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 190px;">
+                                            <asp:DropDownList ID="ddlHairColor" runat="server" Enabled="false" CssClass="dropdown3"
+                                                ValidationGroup="a">
+                                                <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                                <asp:ListItem Value="Black">Black</asp:ListItem>
+                                                <asp:ListItem Value="Brown">Brown</asp:ListItem>
+                                                <asp:ListItem Value="Gray">Gray</asp:ListItem>
+                                                <asp:ListItem Value="White">White</asp:ListItem>
+                                                <asp:ListItem Value="Red">Red</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <span class="star">*</span><br />
+                                            <asp:RequiredFieldValidator ID="rfvHairColor" CssClass="textbox" runat="server" ControlToValidate="ddlHairColor"
+                                                ErrorMessage="Please Select Color Of Hair" ValidationGroup="a" Display="None"
+                                                SetFocusOnError="True" InitialValue="0" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left" class="style3">
+                                        <span style="width: 150px;">Color Of Eyes </span>
+                                    </td>
+                                    <td class="b11">
+                                        <span style="width: 190px;">
+                                            <asp:DropDownList ID="ddlEyeColor" runat="server" Enabled="false" CssClass="dropdown3"
+                                                ValidationGroup="a">
+                                                <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                                <asp:ListItem Value="Black">Black</asp:ListItem>
+                                                <asp:ListItem Value="Brown">Brown</asp:ListItem>
+                                                <asp:ListItem Value="Blue">Blue</asp:ListItem>
+                                                <asp:ListItem Value="Gray">Gray</asp:ListItem>
+                                                <asp:ListItem Value="Green">Green</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <span class="star">*</span><br />
+                                            <asp:RequiredFieldValidator ID="rfvEyeColor" CssClass="textbox" runat="server" ControlToValidate="ddlEyeColor"
+                                                ErrorMessage="Please Select Marital Status" ValidationGroup="a" Display="None"
+                                                SetFocusOnError="True" InitialValue="0" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="style3">Identification Marks </span>
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtMark" CssClass="textbox2" Enabled="false" runat="server" MaxLength="30"
+                                                ValidationGroup="a" Width="188px"></asp:TextBox>
+                                            <span class="star">*</span><br />
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator3" CssClass="textbox" runat="server"
+                                                ControlToValidate="txtMark" ErrorMessage="Please Enter Identification Marks"
+                                                ValidationGroup="a" Display="None" SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td align="left" class="style3">
+                                        <span class="style4">Height(in cm) </span>
+                                    </td>
+                                    <td class="b11">
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtHeights" CssClass="textbox2" Enabled="false" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" CssClass="textbox" runat="server"
+                                                ControlToValidate="txtHeights" ErrorMessage="Please Enter Height" ValidationGroup="a"
+                                                Display="None" SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        Marital Status
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlMS" runat="server" Enabled="false" CssClass="dropdown3"
+                                            ValidationGroup="a">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                            <asp:ListItem>Married</asp:ListItem>
+                                            <asp:ListItem>Single</asp:ListItem>
+                                            <asp:ListItem>Divorcee</asp:ListItem>
+                                            <asp:ListItem>Seperated</asp:ListItem>
+                                            <asp:ListItem>Widow</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvMaritalStatus" runat="server" ErrorMessage="Please Select Marital Status"
+                                            ControlToValidate="ddlMS" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Mobile Number
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="TxtMobileNumber" Enabled="false" CssClass="textbox2" runat="server"
+                                            MaxLength="15" Width="140px" onkeyup="NumNSign(this);" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvMobileNumber" runat="server" ErrorMessage="Please Enter Mobile Number"
+                                            ControlToValidate="TxtMobileNumber" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td style="display: none">
+                                        LandLine Number
+                                    </td>
+                                    <td style="display: none">
+                                        <asp:TextBox ID="TxtLandLineNumber" Enabled="false" CssClass="textbox2" runat="server"
+                                            Width="130px" MaxLength="15" onkeyup="NumNSign(this);" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Current Address
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox Enabled="false" ID="txtcurrentAdds" runat="server" TextMode="MultiLine"
+                                            CssClass="MultiLine_Textbox" MaxLength="200" onkeyDown="return checkTextAreaMaxLength(this,event,'200');"
+                                            onblur="return LenCount(this,'200');" ValidationGroup="a" Height="40px" Width="95%"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvCurrentAddress" runat="server" ErrorMessage="Please Enter Current Address"
+                                            ControlToValidate="txtcurrentAdds" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td>
+                                        Permanent Address
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPermanentAdds" Enabled="false" runat="server" TextMode="MultiLine"
+                                            CssClass="MultiLine_Textbox" MaxLength="200" onkeyDown="return checkTextAreaMaxLength(this,event,'200');"
+                                            onblur="return LenCount(this,'200');" ValidationGroup="a" Height="40px" Width="92%"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPermanentAddress" runat="server" ErrorMessage="Please Enter Permanent Address"
+                                            ControlToValidate="txtPermanentAdds" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                        
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        Visa Processing Information
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                              
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">Mode of travel </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlModeOfTravel" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                            <asp:ListItem Value="Air">Air</asp:ListItem>
+                                            <asp:ListItem Value="Land">Land</asp:ListItem>
+                                            <asp:ListItem Value="Sea">Sea</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td align="left">
+                                        Type of VISA
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlVISAType" runat="server" CssClass="dropdown3" ValidationGroup="a"
+                                            OnSelectedIndexChanged="ddlVISAType_SelectedIndexChanged" AutoPostBack="True">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvVisaType" runat="server" ErrorMessage="Please Select Visa Type"
+                                            ControlToValidate="ddlVISAType" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        Entry Type
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlEntryType" runat="server" CssClass="dropdown3" ValidationGroup="a"
+                                            AutoPostBack="True" OnSelectedIndexChanged="ddlEntryType_SelectedIndexChanged">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvEntryType" runat="server" ErrorMessage="Please Select Entry Type"
+                                            ControlToValidate="ddlEntryType" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td align="left">
+                                        <span style="width: 162px">Period Type </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlPeriodType" runat="server" CssClass="dropdown3" ValidationGroup="a"
+                                            AutoPostBack="True" OnSelectedIndexChanged="ddlPeriod_SelectedIndexChanged">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPeriodType" runat="server" ErrorMessage="Please Select Period Type"
+                                            ControlToValidate="ddlPeriodType" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        Duration
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlPeriod" runat="server" CssClass="dropdown3" ValidationGroup="a"
+                                            AutoPostBack="True" OnSelectedIndexChanged="ddlDuration_SelectedIndexChanged">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvPeriod" runat="server" ErrorMessage="Please Select Period"
+                                            ControlToValidate="ddlPeriod" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td align="left">
+                                        Rate
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtRate" runat="server" CssClass="textbox2" Width="130px" Enabled="False"
+                                            onKeyUp="OnlyNum(this);Fun_checkDecimals(this,2,16);" ReadOnly="true"></asp:TextBox>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvRate" runat="server" ErrorMessage="Rate cannot be blank"
+                                            ControlToValidate="txtRate" Display="None" ValidationGroup="a" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                        <br />
+                                        <asp:Label ID="lblRateCurrency" runat="server" Font-Bold="True" Font-Names="Arial"
+                                            ForeColor="#9EC550"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">Embassy of prefrence </span>
+                                    </td>
+                                    <td align="left">
+                                        <span style="width: 190px;">
+                                            <asp:DropDownList ID="ddlEmbassyPref" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                                <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <span class="star">*</span><br />
+                                            <asp:RequiredFieldValidator ID="rfvEmbassyPref" CssClass="textbox" runat="server"
+                                                ControlToValidate="ddlEmbassyPref" ErrorMessage="Please Select Embassy of prefrence"
+                                                ValidationGroup="a" Display="None" SetFocusOnError="True" InitialValue="0" ForeColor="#9EC550"></asp:RequiredFieldValidator></span>
+                                    </td>
+                                    <td align="left">
+                                        Arrival Date
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" class="textbox2" id="txtArrivalDate" readonly="readonly" style="border-width: 1px;
+                                            width: 130px;" runat="server" validationgroup="a" tabindex="10" />
+                                        <span class="star">*</span> <a id="AD" runat="server" href="javascript:NewCal('txtArrivalDate','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                        <asp:RequiredFieldValidator ID="rfvArrivalDate" runat="server" ControlToValidate="txtArrivalDate"
+                                            ErrorMessage="Please Select Arrival Date" ValidationGroup="a" Display="None"
+                                            SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">How much money do you have for this trip(USD) </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtMoney" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                        <span class="star">*</span><br />
+                                        <asp:RequiredFieldValidator ID="rfvMoney" CssClass="textbox" runat="server" ControlToValidate="txtMoney"
+                                            ErrorMessage="Please Enter money do you have for this trip" ValidationGroup="a"
+                                            Display="None" SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td align="left">
+                                        Departure Date
+                                    </td>
+                                    <td align="left">
+                                        <input type="text" class="textbox2" id="txtDepartureDate" readonly="readonly" style="border-width: 1px;
+                                            width: 130px;" runat="server" validationgroup="a" title="11" />
+                                        <span class="star">*</span> <a id="DD" runat="server" href="javascript:NewCal('txtDepartureDate','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                        <asp:RequiredFieldValidator ID="rfvDepartureDate" runat="server" ControlToValidate="txtDepartureDate"
+                                            ErrorMessage="Please Select Departure Date" ValidationGroup="a" Display="None"
+                                            SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 162px">Border Entry Point </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlEntryPoint" runat="server" CssClass="dropdown3" Width="150px"
+                                            ValidationGroup="a">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvEntryPoint" runat="server" ErrorMessage="Please Select Border Entry Point"
+                                            ControlToValidate="ddlEntryPoint" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                    <td align="left">
+                                        Border Exit Point
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlExitPoint" runat="server" CssClass="dropdown3" Width="150px"
+                                            ValidationGroup="a">
+                                            <asp:ListItem Value="0">----Select----</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <span class="star">*</span>
+                                        <asp:RequiredFieldValidator ID="rfvExitPoint" runat="server" ErrorMessage="Please Select Border Exit Point"
+                                            ControlToValidate="ddlExitPoint" Display="None" ValidationGroup="a" InitialValue="0"
+                                            ForeColor="#9EC550"></asp:RequiredFieldValidator>
+                                    </td>
+                                </tr>
+                               
+                                <tr class="b11" style="display: none">
+                                    <td align="left">
+                                        <span style="width: 15%">Country </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlCountry" runat="server" CssClass="dropdown3" Enabled="False">
+                                            <asp:ListItem Selected="True" Value="234">Nigeria</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                       
+                                    </td>
+                                    <td align="left" class="t11">
+                                     
+                                    </td>
+                                    <td align="left" class="t11">
+                                    
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                       
+                                    </td>
+                                    <td align="left" class="t11">
+                                     
+                                    </td>
+                                    <td align="left" class="t11">
+                                     <div class="buttonWrapper">
+                                            <input type="button" name="submit_first" id="submit_first" class="open1 nextbutton"
+                                                value="Next" />
+                                        </div>
+                                    </td>
+                                </tr>
+                              
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="clear">
+                            </div>
+                            <!-- /clearfix -->
+                        </div>
+                        <!-- #second_step -->
+                        <div id="second_step">
+                            <table width="730" cellspacing="3" cellpadding="5" border="0" class="BackGround2"
+                                style="display: table; overflow: visible; padding-top: 0px; padding-bottom: 0px;
+                                height: 462px;" role="tabpanel">
+                                <tr>
+                                    <td colspan="4">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td align="left">
+                                        Do you plan to make several journeys?(Y/N)
+                                    </td>
+                                    <td align="left">
+                                        <asp:RadioButtonList ID="rbl5" runat="server" RepeatDirection="Horizontal" Width="100px">
+                                            <asp:ListItem Value="1">Y</asp:ListItem>
+                                            <asp:ListItem Value="0" Selected="True">N</asp:ListItem>
+                                        </asp:RadioButtonList>
+                                    </td>
+                                    <td align="left">
+                                        <span style="width: 162px">Present Occupation </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtPO" runat="server" CssClass="textbox2" MaxLength="45" Width="130px"
+                                            onKeyUp="OnlyAlfa1(this);" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" valign="top">
+                                    <td align="left">
+                                        Do you have a return ticket?(Y/N)
+                                    </td>
+                                    <td align="left">
+                                        <asp:RadioButtonList ID="rbl6" runat="server" RepeatDirection="Horizontal" Width="100px">
+                                            <asp:ListItem Value="1">Y</asp:ListItem>
+                                            <asp:ListItem Value="0" Selected="True">N</asp:ListItem>
+                                        </asp:RadioButtonList>
+                                    </td>
+                                    <td align="left"  valign="top">
+                                        Purpose of Journey To Nigeria
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtPSB" runat="server" CssClass="MultiLine_Textbox" ValidationGroup="a"
+                                            Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                            MaxLength="200"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr style="display: none">
+                                    <td colspan="3" align="left" class="t11">
+                                        If you have served in militery, please state
+                                    </td>
+                                    <td width="219">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr style="display: none">
+                                    <td colspan="4">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td width="107" align="left">
+                                        <span class="style3">From Date </span>
+                                    </td>
+                                    <td width="177">
+                                        <input type="text" class="textbox2" id="txtFromDate" readonly="readonly" style="border-width: 1px;
+                                            width: 132px;" runat="server" disabled="disabled" />
+                                        <a id="FromDate" runat="server" href="javascript:NewCal('txtFromDate','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                    </td>
+                                    <td width="82" align="left">
+                                        IN
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtInMilitary" CssClass="textbox2" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display: none">
+                                    <td width="107" align="left">
+                                        To Date
+                                    </td>
+                                    <td width="177">
+                                        <input type="text" class="textbox2" id="txtToDate" style="border-width: 1px; width: 131px;"
+                                            readonly="readonly" runat="server" disabled="disabled" />
+                                        <a id="ToDate" runat="server" href="javascript:NewCal('txtToDate','DDMMMYYYY')">
+                                       <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a>
+                                    </td>
+                                </tr>
+                                 <tr class="b11" valign="top">
+                                    <td align="left">
+                                        Do you wish to avail fast processing of application?
+                                    </td>
+                                    <td align="left">
+                                        <asp:CheckBox id="chkFastTrack" runat="server"   />
+                                    </td>
+                                   
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="3" align="left" class="t11">
+                                        If the purpose of your journey to Nigeria is for employement,state
+                                    </td>
+                                    <td align="left">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span class="style3">Name Of Employer </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtEmployerName" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td align="left">
+                                        <span style="width: 150px;">Full Description Of Job </span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtJobDesc" runat="server" CssClass="MultiLine_Textbox" ValidationGroup="a"
+                                            Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                            MaxLength="200"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">Position to be occupied</span>
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtOcuPossition" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td align="left">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                              
+                              
+                              
+                                <tr class="b11" style ="display:none" >
+                                    <td colspan="4" align="left" class="t11">
+                                        Give particulars of the employement of parents/spouse in Nigeria(If Applicable)
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td align="left" class="style3">
+                                        Name Of Employer
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpName" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span style="width: 150px;">Phone Number </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpPhoneNo" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td align="left">
+                                        <span style="width: 150px;">How long your parents/spouse been in Nigeria(In Months)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpLivedFrom" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span style="width: 150px;">City </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpCity" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td align="left" class="style3">
+                                        Address1
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpAddr1" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span class="style3">State </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpState" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td align="left">
+                                        <span style="width: 150px;">Address2 </span>
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtEmpAddr2" CssClass="textbox2" runat="server" MaxLength="30" ValidationGroup="a"></asp:TextBox>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 150px;">District</span>
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <input type="text" class="textbox2" id="ctl00_ContentPlaceHolder1_txtIntededDistrict"
+                                                maxlength="30" name="ctl00$ContentPlaceHolder1$txtIntededDistrict" />
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style ="display:none">
+                                    <td align="left">
+                                        <span style="width: 150px;">Postcode </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtEmpPostCode" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td style="display: none;">
+                                        <span style="width: 150px;">Country </span>
+                                    </td>
+                                    <td style="display: none;">
+                                        <span class="t11">
+                                            <asp:DropDownList ID="ddlEmpCountry" Enabled="false" runat="server" CssClass="dropdown3"
+                                                ValidationGroup="a">
+                                                <asp:ListItem Selected="True" Value="234">Nigeria</asp:ListItem>
+                                            </asp:DropDownList>
+                                        </span>
+                                    </td>
+                                </tr>
+                               
+
+                                <tr class="b11">
+                                    <td colspan="3">
+                                        <span class="t11">Intended Address in Nigeria </span>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                               
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address1
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtBurundiAddress" CssClass="textbox2" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvIntedAddress1" CssClass="textbox" runat="server"
+                                                ControlToValidate="txtBurundiAddress" ErrorMessage="Please Enter Intended Address"
+                                                ValidationGroup="a" Display="None" SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator></span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 150px;">City </span>
+                                    </td>
+                                    <td>
+                                        <span style="width: 190px;"><span class="t11">
+                                            <asp:TextBox ID="txtIntedCity" CssClass="textbox2" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvIntedCity" CssClass="textbox" runat="server" ControlToValidate="txtIntedCity"
+                                                ErrorMessage="Please Enter Intended City" ValidationGroup="a" Display="None"
+                                                SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator></span></span>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">Address2 </span>
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtIntedAddress2" CssClass="textbox2" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="style3">State </span>
+                                    </td>
+                                    <td>
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtIntedState" CssClass="textbox2" runat="server" MaxLength="30"
+                                                ValidationGroup="a"></asp:TextBox>
+                                            <span class="star">*</span>
+                                            <asp:RequiredFieldValidator ID="rfvIntedSate" CssClass="textbox" runat="server" ControlToValidate="txtIntedState"
+                                                ErrorMessage="Please Enter Intended state" ValidationGroup="a" Display="None"
+                                                SetFocusOnError="True" ForeColor="#9EC550"></asp:RequiredFieldValidator></span>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left">
+                                        <span style="width: 150px;">Postcode </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtIntedPostcode" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span style="width: 150px;">District </span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtIntedDistrict" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               <!-- edit grv second slide start-->
+                                          <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <div class="buttonWrapper">
+                                         <input  type="button" name="submit_on_first" id="submit_on_first" class="open1 nextbutton" value="Back" />
+                                            <input class="open2 nextbutton" type="button" name="submit_second" id="submit_second"
+                                                value="Next" />
+                                           
+                                        </div>
+                                    </td>
+                                </tr>
+                              
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="clear">
+                            </div>
+                            <!-- /clearfix -->
+                        </div>
+                        <!-- #third_step -->
+                        <div id="third_step" >
+                            <table width="730" cellspacing="3" cellpadding="5" border="0" class="BackGround2"
+                                style="display: table; overflow: visible; padding-top: 0px; padding-bottom: 0px;
+                                height: 482px;" role="tabpanel">
+
+                               <!--edit end for grv second slide -->
+                               
+                               
+                               
+                                 <tr>
+                                    <td align="left" class="t11" colspan ="3">
+                                        Previous Application Information
+                                    </td>
+                                    
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>                                    
+                                </tr>
+                                 <tr class="b11">
+                                    <td colspan="2" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td align="left">
+                                        Have You Ever applied for Nigerian Visa?
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlPrevApplied" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td align="left">
+                                        Have You Ever Visited Nigerian ?
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlPrevVisit" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                   
+                                    <td align="left">
+                                        If Yes, Where Did You Apply For The Visa ?
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPrevAppliedVisaPlace" runat="server" CssClass="MultiLine_Textbox"
+                                            ValidationGroup="a" Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                            MaxLength="200"></asp:TextBox>
+                                    </td>
+                                     <td align="left">
+                                        If Yes , For What Reason
+                                    </td>
+                                    <td align="left">
+                                        <asp:TextBox ID="txtPrevVisitReason" runat="server" CssClass="MultiLine_Textbox"
+                                            ValidationGroup="a" Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                            MaxLength="200"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                 <td align="left">
+                                        Was The Visa Granted Or Rejected ?
+                                    </td>
+                                    <td align="left">
+                                        <asp:DropDownList ID="ddlVisaGranted" runat="server" CssClass="dropdown4" ValidationGroup="a">
+                                            <asp:ListItem Value="N">Granted</asp:ListItem>
+                                            <asp:ListItem Value="Y">Rejected</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+
+                                   
+                                    <td align="left">
+                                        If Rejected Then Please Provide The Reason
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPrevVisaRejReason" runat="server" CssClass="MultiLine_Textbox"
+                                            ValidationGroup="a" Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                            MaxLength="200"></asp:TextBox>
+                                    </td>
+                                </tr>
+                              
+
+
+
+
+
+
+                     <!-- replace second grv-->
+
+                                                                                    
+                                <tr>
+                                    <td colspan="4" align="left" class="t11">
+                                        State the period of previous visits to Nigeria and address at which you stayed
+                                    </td>                                   
+                                </tr>
+
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period1 </span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        From Date :
+                                    </td>
+                                    <td class="b11">
+                                        <span class="t11">
+                                            <input type="text" class="textbox2" id="txtPreVisit1FromDate" readonly="readonly"
+                                                style="border-width: 1px; width: 132px;" runat="server" />
+                                            <a id="aPreVisit1FromDate" runat="server" href="javascript:NewCal('txtPreVisit1FromDate','DDMMMYYYY')">
+                                                <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                            </a> </span>
+                                    </td>
+                                    <td>
+                                        <span class="style3">To Date </span>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtPreVisit1ToDate" class="textbox2" readonly="readonly" runat="server" __designer:mapid="58a" />
+                                        <a id="aPreVisit1ToDate" runat="server" href="javascript:NewCal('txtPreVisit1ToDate','DDMMMYYYY')"
+                                            __designer:mapid="58b">
+                                            <img alt="Pick a date" src="http://localhost:52224/OVPS/Images/cal.jpg" __designer:mapid="58c" /></a>
+                                    </td>
+                                </tr>
+                               
+                               
+                                   
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address 1
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit1Addr1" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Address 2
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit1Addr2" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit1City" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span class="style3">State</span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit1State" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        <span class="style3">District</span>
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit1District" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Postcode
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit1Postcode" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>   
+                               
+                               
+                               
+                               
+                               
+                               
+                               <!--edit slide 3 by grv -->
+                                <tr>
+                <td>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                 <div class="buttonWrapper">
+                        
+                          
+                                    <input  type="button" name="submit_first_back" id="submit_first_back" class="open1 nextbutton" value="Back" />
+                                   <input class="open2 nextbutton" type="button" name="submit_third" id="submit_third" value="Next" />
+                           
+                        </div>
+                </td>
+                </tr>
+                <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                </tr>
+                 
+            </table>
+    
+       
+       <div class="clear"></div><!-- /clearfix -->
+
+</div>
+            <!-- #third step -->
+            <div id="fourth_step">
+
+                <table width="730" cellspacing="3" cellpadding="5" border="0" class="BackGround2"
+                style="display: table; overflow: visible; padding-top: 0px; padding-bottom: 0px;
+                height: 462px;" role="tabpanel">
+
+                               
+                               <!-- end edit for 3 -->
+                               
+                               
+                                                       
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period2</span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        From Date
+                                    </td>
+                                    <td class="b11">
+                                        <span class="t11">
+                                            <input type="text" class="textbox2" id="txtPreVisit2FromDate" readonly="readonly" runat="server" __designer:mapid="5aa" />
+                                            <a id="aPreVisit2FromDate" runat="server" href="javascript:NewCal('txtPreVisit2FromDate','DDMMMYYYY')"
+                                                __designer:mapid="5ab">
+                                                <img alt="Pick a date" src="http://localhost:52224/OVPS/Images/cal.jpg" __designer:mapid="5ac" /></a>
+                                            <br __designer:mapid="5ad" />
+                                            <br />
+                                            </a> </span>
+                                    </td>
+                                    <td>
+                                        <span class="style3">To Date </span>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2" id="txtPreVisit2ToDate" readonly="readonly" runat="server" __designer:mapid="5b0" />
+                                        <a id="aPreVisit2ToDate" runat="server" href="javascript:NewCal('txtPreVisit2ToDate','DDMMMYYYY')"
+                                            __designer:mapid="5b1">
+                                            <img alt="Pick a date" src="http://localhost:52224/OVPS/Images/cal.jpg" __designer:mapid="5b2" /></a>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address 1
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit2Addr1" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Address 2
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit2Addr2" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        City:
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit2City" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span class="style3">State</span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit2State" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" >
+                                        <span class="style3">District</span>
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit2District" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Postcode
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit2Postcode" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" class="b11">
+                                        <span class="head5">Period3</span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        From Date
+                                    </td>
+                                    <td class="b11">
+                                        <span class="t11">
+                                            <input type="text" class="textbox2" id="txtPreVisit3FromDate" readonly="readonly" runat="server" __designer:mapid="5d0" />
+                                            <a id="aPreVisit3FromDate" runat="server" href="javascript:NewCal('txtPreVisit3FromDate','DDMMMYYYY')"
+                                                __designer:mapid="5d1">
+                                                <img alt="Pick a date" src="http://localhost:52224/OVPS/Images/cal.jpg" __designer:mapid="5d2" /></a>
+                                            <br __designer:mapid="5ad" />
+                                            <br />
+                                            </a> </span>
+                                    </td>
+                                    <td>
+                                        <span class="style3">To Date </span>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2" id="txtPreVisit3ToDate" readonly="readonly" runat="server" __designer:mapid="5d6" />
+                                        <a id="aPreVisit3ToDate" runat="server" href="javascript:NewCal('txtPreVisit3ToDate','DDMMMYYYY')"
+                                            __designer:mapid="5d7">
+                                            <img alt="Pick a date" src="http://localhost:52224/OVPS/Images/cal.jpg" __designer:mapid="5d8" /></a>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        Address 1
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit3Addr1" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Address 2
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit3Addr2" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit3City" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <span class="style3">State</span>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit3State" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" >
+                                        <span class="style3">District</span>
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtPreVisit3District" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        Postcode
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPreVisit3Postcode" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr style="display:none">
+                                    <td colspan="3" align="left" class="t11">
+                                        Travel History
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr style="display:none">
+                                    <td colspan="2" align="left" class="b11">
+                                        <span class="style3">How long have you lived in the country from where you are applying
+                                            for visa(In Years) ? </span>
+                                    </td>
+                                    <td width="144">
+                                        <span class="t11">
+                                            <asp:TextBox ID="txtApplyCountryYears" runat="server" CssClass="MultiLine_Textbox"
+                                                ValidationGroup="a" Height="61px" TextMode="MultiLine" Width="96%" onkeypress="return textboxMultilineMaxNumber(this,200)"
+                                                MaxLength="200"></asp:TextBox></span>
+                                    </td>
+                                    <td width="144">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="2" align="left" class="style3">
+                                        <span style="width: 150px;">Have you ever been infected by any contagious disease(e.g
+                                            Turbeculosis) or suffered serious mental illness ? </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlSeriousDisease" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="4" align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="2" align="left" class="style3">
+                                        <span style="width: 150px;">Have you ever been arrested or convicated for an offence(even
+                                            though subject to pardon)? </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlCrimeRecord" runat="server" CssClass="dropdown4" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="2" align="left">
+                                        <span class="style3">Have you ever been involved in narcotic activity? </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlDrugReport" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="2" align="left" class="style3">
+                                        <span style="width: 150px;">Have you ever been deported? </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlDeported" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        <span class="t11"><span style="color: #025902; display: none;" class="textbox" id="ctl00_ContentPlaceHolder1_rfvIntededState">
+                                        </span></span>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td colspan="2" align="left">
+                                        <span style="width: 150px;">Have you sought to obtain visa by mis-represantation or
+                                            fraud? </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlFraudRecord" runat="server" CssClass="dropdown4" ValidationGroup="a">
+                                            <asp:ListItem Value="N">No</asp:ListItem>
+                                            <asp:ListItem Value="Y">Yes</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="t11" style="display:none">
+                                    <td colspan="4" align="left">
+                                        <strong>Give a list of the countries you have visited in the last twelve(12) months
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period1 </span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <span class="head5">Period2 </span>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Country
+                                    </td>
+                                    <td class="b11">
+                                        <asp:DropDownList ID="ddlLastVisitCountry1" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        <span class="style3">Country </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlLastVisitCountry2" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtLastVisitCity1" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        City
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtLastVisitCity2" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Date Of Departure
+                                    </td>
+                                    <td class="b11">
+                                        <input type="text" class="textbox2" id="txtLastVisitDeptDate1" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="LastVisitDeptDate1" runat="server" href="javascript:NewCal('txtPreVisitDate1','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                    <td>
+                                        <span class="style3">Date Of Departure </span>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2" id="txtLastVisitDeptDate2" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="LastVisitDeptDate2" runat="server" href="javascript:NewCal('txtPreVisitDate1','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period3 </span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Country
+                                    </td>
+                                    <td class="b11">
+                                        <asp:DropDownList ID="ddlLastVisitCountry3" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtLastVisitCity3" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Date Of Departure
+                                    </td>
+                                    <td class="b11">
+                                        <input type="text" class="textbox2" id="txtLastVisitDeptDate3" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="LastVisitDeptDate3" runat="server" href="javascript:NewCal('txtLastVisitDeptDate3','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="t11" style="display:none">
+                                    <td colspan="4" align="left">
+                                        <strong>Give a list of the countries you have lived for more then one year </strong>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period1 </span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <span class="head5">Period2 </span>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Country
+                                    </td>
+                                    <td class="b11">
+                                        <asp:DropDownList ID="ddlLastLivedCountry1" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        <span class="style3">Country </span>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlLastLivedCountry2" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtLastLivedCityName1" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        City
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtLastLivedCityName2" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Date Of Departure
+                                    </td>
+                                    <td class="b11">
+                                        <input type="text" class="textbox2" id="txtLastLivedDepartureDate1" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="aLastLivedDepartureDate1" runat="server" href="javascript:NewCal('txtLastLivedDepartureDate1','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                    <td>
+                                        <span class="style3">Date Of Departure </span>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textbox2" id="txtLastLivedDepartureDate2" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="aLastLivedDepartureDate2" runat="server" href="javascript:NewCal('txtLastVisitDeptDate2','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        <span class="head5">Period3 </span>
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Country
+                                    </td>
+                                    <td class="b11">
+                                        <asp:DropDownList ID="ddlLastLivedCountry3" runat="server" CssClass="dropdown3" ValidationGroup="a">
+                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        City
+                                    </td>
+                                    <td class="b11">
+                                        <asp:TextBox ID="txtLastLivedCityName3" CssClass="textbox2" runat="server" MaxLength="30"
+                                            ValidationGroup="a"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11" style="display:none">
+                                    <td align="left" class="style3">
+                                        Date Of Departure
+                                    </td>
+                                    <td class="b11">
+                                        <input type="text" class="textbox2" id="txtLastLivedDepartureDate3" readonly="readonly"
+                                            style="border-width: 1px; width: 132px;" runat="server" />
+                                        <a id="aLastLivedDepartureDate3" runat="server" href="javascript:NewCal('txtLastVisitDeptDate3','DDMMMYYYY')">
+                                            <img alt="Pick a date" src="../Images/cal.jpg" style="border: 0" /></a><br />
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                 <tr class="b11" >
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="t11" >
+                                    <td colspan="4" align="left">
+                                        <strong>Documents Required</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                                                
+                                </tr>
+                                 <tr class="b11" >
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td align="left" class="style3" colspan = "4">
+                                         <asp:Panel ID="Panel2" runat="server" Height="114px">
+                            </asp:Panel>
+                                    </td>
+                                   
+                                </tr>
+
+                                <tr class="b11" >
+                                    <td colspan="4" align="left" class="style3">
+                                        <asp:CheckBox ID="chkcommunity" runat="server" Text="  For East Affrican Community" Visible="false" Checked="True" />
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td colspan="4" align="left" class="style3">
+                                        <asp:CheckBox ID="chkAgree" runat="server" Text="  I understand that I will be require to comply with immigration/alien and other laws governing entry of immegrants into the country to which I now apply for Visa/Entry permit." />
+                                    </td>
+                                </tr>
+                                 <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <%--<tr class="b11">
+                                    <td align="left" colspan="6">
+                                        <font color="red">
+                                            <h4>
+                                                PLEASE NOTE
+                                            </h4>
+                                            PRINT AND SIGN THIS APPLICATION AND TAKE IT WITH TWO(2) PASSPORT PHOTOGRAPHS TO
+                                            THE SELECTED PASSPORT OFFICE FOR FURTHER PROCESSING . </font>
+                                    </td>
+                                </tr>--%>
+                                <tr class="b11">
+                                    <td width="222" align="left" class="style3">
+                                        &nbsp;
+                                    </td>
+                                    <td width="144" class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td colspan="2">
+                                        <div class="buttonWrapper">
+                                         <input  type="button" name="submit_third_back" id="submit_third_back" class="open1 nextbutton" value="Back" />
+                                            <!--    <input class="open2 nextbutton" type="submit" name="submit_second" id="submit1" value="Back" />
+                         -->                
+                                            <asp:Button ID="btnSubmit" runat="server" CssClass="open1 nextbutton" Text="Submit" OnClick="btnSubmit_Click"
+                                                ValidationGroup="a" />
+                                            <asp:Button ID="BtnUpdate" runat="server" CssClass="open1 nextbutton" Text="Update" OnClick="BtnUpdate_Click" />
+                                            <asp:Button ID="btnClear" runat="server" CssClass="open1 nextbutton" Text="Clear" Visible="false" />&nbsp;</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left" class="t11">
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr class="b11">
+                                    <td align="left" class="style3">
+                                        &nbsp;
+                                        <asp:ValidationSummary ID="VSGetagent" runat="server" ValidationGroup="a" ShowMessageBox="True"
+                                            ShowSummary="False" ForeColor="#9EC550" />
+                                    </td>
+                                    <td class="b11">
+                                        &nbsp;
+                                    </td>
+                                    <td colspan="2">
+                                        <asp:ValidationSummary ID="ValidationSummary1" runat="server" ValidationGroup="b"
+                                            ShowMessageBox="True" ShowSummary="False" ForeColor="#9EC550" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="clear">
+                            </div>
+                            <!-- /clearfix -->
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</asp:Content>

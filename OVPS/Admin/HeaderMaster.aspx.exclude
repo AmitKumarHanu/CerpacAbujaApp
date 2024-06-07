@@ -1,0 +1,78 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage/MasterPageUser.master" AutoEventWireup="true" CodeFile="HeaderMaster.aspx.cs" Inherits="Admin_HeaderMaster" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <div align="center">
+
+<table cellpadding="2" cellspacing="10" style="border:1px; width:95%">
+    <tr>
+                    <td colspan="3" style="height:5px"><div class="PageNameHeadingCSS" style="text-align: center"><font class="b12"><spanstyle="fontsize:16px">&nbsp;Registered Company List  &nbsp; </span></font>
+                        </div>
+                    </td>
+                </tr>
+    <tr>
+        <td colspan="2" style="height: 5px"> 
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" style="width: 100%; text-align: left;">
+        <asp:GridView ID="GridViewCompanyList" PagerStyle-CssClass="pgr" runat="server" DataKeyNames="CompanyId" Width="100%" AutoGenerateColumns="False"    AllowPaging="True" CellSpacing="1" CssClass="GridBaseStyle" OnPageIndexChanging="GridViewCompanyList_PageIndexChanging" >
+            <Columns>
+                <asp:TemplateField HeaderText="Company Id">
+                    <ItemTemplate>
+                        <asp:Label ID="lblCompanyID" runat="server" Text='<%# Bind("CompanyId") %>'></asp:Label>
+                    </ItemTemplate>
+                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                    <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Company Name">
+                    <ItemStyle HorizontalAlign="Left" />
+                    <ItemTemplate>
+                        <asp:Label ID="lblCompanyName" runat="server" Text='<%# Bind("CompanyName") %>'></asp:Label>
+                    </ItemTemplate>
+                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                    <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                </asp:TemplateField>
+             
+               <asp:TemplateField HeaderText="Company Description">
+               <ItemStyle HorizontalAlign="Left" />
+                    <ItemTemplate>                    
+                        <asp:Label ID="LabelAddress" Text='<%# Eval("CompanyAddress") %>' runat="server"  ></asp:Label>
+                    </ItemTemplate>
+                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                    <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                </asp:TemplateField>           
+               
+               
+            </Columns>
+            <HeaderStyle CssClass="Grid_Header" />
+            <RowStyle CssClass="Grid_Item"/>
+            <AlternatingRowStyle CssClass="Grid_Item_Alternaterow" />
+            <SelectedRowStyle CssClass="Grid_Selected" />
+            <FooterStyle CssClass="Grid_Footer" />
+            
+        </asp:GridView>
+            </td></tr>
+            <tr><td colspan=2 align=center>
+            <table style="font-style:normal" width ="55%" align="center"> 
+                                
+                <tr>
+            
+        <td align="center">
+                            <asp:ImageButton ID="ImageButton1" runat="server" onclick="btnAdd_Click" 
+                                TabIndex="6" ImageUrl="~/Images/AddButton.png" />
+                            
+                        </td>
+        
+    </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</div>
+</asp:Content>
+
+
+
+
+  
+

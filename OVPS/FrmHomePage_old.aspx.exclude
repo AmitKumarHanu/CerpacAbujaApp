@@ -1,0 +1,132 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="FrmHomePage.aspx.cs" Inherits="FrmHomePage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Nigeria</title>
+	<%--<link href="includes/style.css" rel="stylesheet" type="text/css" />--%>
+    <link href="App_theme/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+	<body>
+		<div class="wraper_hm">
+			<div class="header_hmtp">
+				<div class="menu">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li><a href="#">About the Ministry</a></li>
+						<li><a href="http://www.fco.gov.uk/en/travel-and-living-abroad/travel-advice-by-country/country-profile/sub-saharan-africa/nigeria/">About Nigeria</a></li>
+						<li><a href="#">Media</a></li>
+						<li><a href="#">FAQ</a></li>
+						<li><a href="#">Foreign Policy Issues</a></li>
+						<li><a href="#">Trade & Investment</a></li>
+					</ul>
+				</div>
+				<div class="hm_banner"></div>
+			</div>
+			<div class="cont_hmtp">
+				<div class="cont_hmtplft">
+					<font style="color:#9f0109;font-size:18px;">Visas</font> <br/><br/>
+					Categories of visas are available to expatriates desirous of travelling to Nigeria for various reasons and purposes. 
+					The pricing information regarding visas for various foreign nationals planning to travel Nigeria can be obtained from Nigeria Immigration Service.<br/>
+
+					Nigerian Visas are obtained in the Countries where applicants are domiciled or the nearest Nigerian Mission nearest to their Countries of residence.
+				</div>
+				<div class="cont_hmtprt">
+					<div class="cont_line"></div>
+					<div class="cont_list">
+						<ul>
+							<li>Tourist Visa / Entry Permit</li>
+							<li>Business Visa / Entry Permit</li>
+							<li>Temporary Work Permit (TWP)</li>
+							<li>Transit Visa / Entry Permit</li>
+							<li>Direct Transit Visa (airside) / Entry Permit</li>
+						</ul>
+						<font style="color:#7d0000;font-family:Arial;font-size:12px;padding:6px 0 0 220px;"><a style="color:#7d0000;text-decoration:none;" href="#">More..</a></font>
+					</div>
+				</div>
+			</div>
+			<div class="cont_hmdwn">
+				<div class="cont_qkcnt">
+					<div class="cont_hdng">Quick contact</div>
+					<div class="cont_fmcnt">
+						<div class="cnt_fmtxt">
+							<label>Name</label>
+							<input type="text" value=""/>
+						</div>
+						<div class="cnt_fmtxt" style="margin-top:10px;">
+							<label>Email</label>
+							<input type="text" value=""/>
+						</div>
+						<div class="cnt_fmtxt" style="margin-top:10px;">
+							<label>Phone</label>
+							<input type="text" value=""/>
+						</div>
+						<div class="cnt_fmtxt" style="margin-top:10px;">
+							<input type="button" value="Submit"/>
+						</div>
+						
+					</div>
+				</div>
+				<div class="cont_news">
+					<div class="cont_hdng">News</div>
+					<div class="cont_nwstxt">
+						<div class="cnt_sbhdng">Democracy Day</div>
+						<div class="cnt_subbx">
+							<div class="cnt_subpic">
+								<img src="./images/pic1.jpg" alt="pic1"/>
+							</div>
+							<div class="cnt_subtxt">
+								Democracy Day - 29th May 2012 the office would be closed 
+							</div>
+						</div>
+						
+					</div>
+					<div class="cont_nwstxt">
+						<div class="cnt_sbhdng">Independence Day</div>
+						<div class="cnt_subbx">
+							<div class="cnt_subpic">
+								<img src="./images/pic2.jpg" alt="pic2"/>
+							</div>
+							<div class="cnt_subtxt">
+								Office would be closed on October 1, 2012 for Independence Day.
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<div class="cont_monu">
+					<div class="online_bx">
+						<a href="Login.aspx"><img src="./images/online_band.png" alt="band"/></a>
+					</div>
+				</div>
+			</div>
+			<div class="footer_hm">
+				<div class="footer_hmlft">
+				<%--<a href ="Login.aspx"></a>--%> 
+					<div style="width:75px;height:75px;float:left;">
+						<a href="http://ecowas.int/" target="_blank"><img src="./images/ft_icon1.png" alt="icon1"/></a>
+					</div>
+					<div style="width:106px;height:29px;float:left;margin:30px 0 0 20px;">
+						<a href="http://www.african-union.org/" target="_blank"><img src="./images/ft_icon2.png" alt="icon2"/></a>
+					</div>
+					<div style="width:81px;height:51px;float:left;margin:10px 0 0 20px;">
+						<a href="http://www.mfa.gov.ng/deight/" target="_blank"><img src="./images/ft_icon3.png" alt="icon3"/></a>
+					</div>
+					<div style="width:68px;height:60px;float:left;margin:10px 0 0 20px;">
+						<a href="http://www.un.org/" target="_blank"><img src="./images/ft_icon4.png" alt="icon4"/></a>
+					</div>
+					<div style="width:166px;height:37px;float:left;margin:20px 0 0 20px;">
+						<a href="http://www.opec.org/opec_web/en/" target="_blank"><img src="./images/ft_icon5.png" alt="icon5"/></a>
+					</div>
+				</div>
+				<div class="footer_hmrt">
+					&copy; 2012 (MFA) Ministry of Foreign Affairs <br/>
+					Federal Republic of Nigeria.<br/>
+					All Rights Reserved.
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

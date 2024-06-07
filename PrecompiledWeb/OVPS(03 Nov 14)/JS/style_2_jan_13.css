@@ -1,0 +1,23 @@
+/* CSS Reset (Eric Meyer) */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;outline:0;padding-top:6px; font-size:100%;vertical-align:top;background:transparent;margin:0;padding:0}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}:focus{outline:0}ins{text-decoration:none}del{text-decoration:line-through}
+
+
+
+@font-face {
+   font-family: 'Cantarell';
+   src: url(../fonts/Cantarell-Regular.eot);
+   src: local('Cantarell'), url('../fonts/Cantarell-Regular.ttf') format('truetype');
+}
+
+
+
+
+.clear { clear: both; }
+
+
+    #container #first_step, #second_step, #third_step, #fourth_step,#fifth_step,#sixth_step { display: none; }
+    #container #first_step { display: block; }
+
+  
+   
+       

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0"?>
+<!-- 
+  Visual Studio global web project settings.
+-->
+<VisualWebDeveloper>
+
+  <comReferences>
+    <reference Name="interop.shdocvw" ID="{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}\1.1\0"/>
+  </comReferences>
+</VisualWebDeveloper>

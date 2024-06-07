@@ -1,0 +1,185 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+
+
+public partial class Admin_FrmViewApprovedVisaCommandCenter : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    #endregion
+
+
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+
+        if (!IsPostBack)
+        {
+            BindGrid();
+        }
+    }
+
+
+    protected void BindGrid()
+    {
+        // int UserId = 3; //from current session
+        //int ApplicantStatusId=3;
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+
+        BusinessEntityLayer.BalApplicantStatus ObjBalApplicantStatus = null;
+        try
+        {
+            ObjBalApplicantStatus = new BusinessEntityLayer.BalApplicantStatus();
+
+            string L1id = null;
+            L1id = objectSessionHolderPersistingData.User_ID.ToString();
+            dt = ObjBalApplicantStatus.GetApplicantStatusListApprovedVisa(L1id);
+
+            GridViewApplicantStatusList.DataSource = dt;
+            GridViewApplicantStatusList.DataBind();
+
+
+
+        }
+        catch (Exception ex)
+        {
+            Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString();
+
+        }
+        finally
+        {
+            ObjBalApplicantStatus = null;
+            dt = null;
+        }
+    }
+
+    protected void GridViewApplicantStatusList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+
+        if (e.CommandName.Equals("Edit"))
+        {
+            //    string flag = "y";
+            //    int index = Convert.ToInt32(e.CommandArgument);
+            //    int ApplicantStatusID = (int)GridViewApplicantStatusList.DataKeys[index].Value;
+            //    int keyvalue = (int)GridViewApplicantStatusList.DataKeys[index].Value;
+            //    //Label lblApplicantStatusName = (Label)GridViewApplicantStatusList.Rows[index].FindControl("lblApplicantStatusName");
+            //    //string ApplicantStatusName = lblApplicantStatusName.Text.ToString();
+
+
+
+
+        }
+        //else if (e.CommandName.Equals("Delete"))
+        //{
+        //    //string ss = "";
+        //    int index = Convert.ToInt32(e.CommandArgument);
+        //    int keyvalue = (int)GridViewApplicantStatusList.DataKeys[index].Value;
+        //    Label lblApplicantStatusName = (Label)GridViewApplicantStatusList.Rows[index].FindControl("lblApplicantStatusName");
+        //    string ApplicantStatusName = lblApplicantStatusName.Text.ToString();
+        //    BusinessEntityLayer.BalApplicantStatus ObjBalApplicantStatus = null;
+        //    ObjBalApplicantStatus = new BusinessEntityLayer.BalApplicantStatus();
+        //    int statusid = ObjBalApplicantStatus.DeleteDataRow(keyvalue);
+
+        //    if (statusid == 1)
+        //    {
+        //        BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+        //        ObjGenBal.audittype = ENUMAUDITTYPE.ApplicantStatusDeleted.GetHashCode().ToString();
+        //        ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+        //        ObjGenBal.auditdetail = "ApplicantStatus '" + ApplicantStatusName + "(ID:" + keyvalue + ")' Deleted";
+        //        ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+        //        ObjGenBal.AuditInsert();
+        //        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        //        LabelMessage.CssClass = "successmsg";
+        //        LabelMessage.Text = "Record Successfully deleted.";
+
+        //        //ss = GridViewApplicantStatusList.Rows[index].Cells[5].Text; --for Bound field
+
+        //    }
+
+        //}
+
+    }
+
+    protected void GridViewApplicantStatusList_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        string keyvalue;
+        keyvalue = GridViewApplicantStatusList.DataKeys[e.NewEditIndex].Value.ToString();
+
+        Response.Redirect("FrmApplicantReviewCommandCenter.aspx?ApplicationId=" + keyvalue);
+    }
+
+    protected void GridViewApplicantStatusList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        BindGrid();
+    }
+
+    protected void GridViewApplicantStatusList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+
+        GridViewApplicantStatusList.PageIndex = e.NewPageIndex;
+        BindGrid();
+    }
+
+    protected void btnAdd_Click1(object sender, ImageClickEventArgs e)
+    {
+        Response.Redirect("FrmApplicantStatus.aspx");
+    }
+    protected void btnApprove_Click(object sender, EventArgs e)
+    {
+
+        Response.Redirect("FrmApplicationReview1.aspx");
+    }
+    protected void Go_Click(object sender, EventArgs e)
+    {
+        BusinessEntityLayer.BalApplicantStatus ObjBalApplicantStatusById = null;
+
+        DataTable dt = null;
+        dt = new DataTable();
+
+        try
+        {
+            string ApplicationId = TextAppId.Text.ToString();
+
+            ObjBalApplicantStatusById = new BusinessEntityLayer.BalApplicantStatus();
+
+            dt = ObjBalApplicantStatusById.GetApplicantStatusById(ApplicationId);
+
+            GridViewApplicantStatusList.DataSource = dt;
+            GridViewApplicantStatusList.DataBind();
+        }
+        catch (Exception ex)
+        {
+            Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString();
+
+        }
+        finally
+        {
+            ObjBalApplicantStatusById = null;
+            dt = null;
+        }
+    }
+}

@@ -1,0 +1,592 @@
+﻿*{
+	padding:0px;
+	top:0px;
+	left:0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+body{
+	font-family:Arial;
+	text-align:left;
+	padding-top:0px;
+	padding-left:0px;
+	padding-right:0px;
+}
+#main
+{
+	margin-bottom:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+	width: 100%;
+	/*text-align:center;*/
+	background-color:Transparent;
+}
+.Project_Text
+{
+	font-family: Palatino Linotype;
+	font-size: 26px;
+	font-weight: bold; /*color:#40A86E; sumit*/
+	color: #990000;
+}
+
+/*Background colour in hole application          added by dilip */
+
+.bcolour
+{
+	background-image:url(../../images/headerbg_app.png);
+	
+	
+}
+.bgcolour5
+{
+background-image:url(../../images/bckgdimg.jpg);	
+	
+}
+bgcolour
+{
+	
+}
+.bgcolour1
+{
+	width:949px;
+	background:#00CC99;
+	height:658px;
+	margin:0 auto;
+	overflow:hidden;
+	
+}
+
+/*START Header small link have this class*/
+#smallwhitelink a
+{
+	color: #0000FF;
+	font-family:Arial Narrow;
+	font-weight:bold;
+	font-size:12px;	
+}
+#smallwhitelink a:hover
+{
+	color: #63659C;
+}
+/*END Header small link have this class*/
+
+/* small link On pages have this class*/
+#smallwhitelinkOnPage a
+{
+	color: #00CCFF;
+	font-size:11px;
+}
+#smallwhitelinkOnPage a:hover{color: #63659C;
+}
+
+/*START Login PAge Big link have this class*/
+#LoginLink a
+{
+	color: #CCCCFF;
+	font-size:12px;
+}
+#LoginLink a:hover
+{
+	font-size:12px;
+	text-decoration:underline;
+	color: #FFFFFF;
+}
+/*END Header small link have this class*/
+
+/*START Plan Text have this class*/
+
+.t9
+{
+	font-size:9px;
+	font-family:Arial;
+}
+.t10
+{
+	font-size:10px;
+	font-family:Arial;
+}
+.t11
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+}
+/*TextWithout */
+.t11WB
+{
+	font-size:11px;
+	font-family:Arial;
+	font-weight:normal;
+}
+
+.t12
+{
+	font-size:12px;
+	font-family:Arial;
+}
+.t13
+{
+	font-size:13px;
+	font-family:Arial;
+}
+.t14
+{
+	font-size:14px;
+	font-family:Arial;
+}
+.t15
+{
+	font-size:15px;
+	font-family:Arial;
+}
+
+/*START Bold Text have this class*/
+.b9
+{
+	font-size:9px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b10
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b11
+{
+	font-size:11px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b12
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b13
+{
+	font-size:13px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.b15
+{
+	font-size:15px;
+	font-family:Arial;
+	font-weight:bold;
+}/*START Bold Text have this class*/
+.w9
+{
+	font-size:9px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w10
+{
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w11
+{
+	font-size:11px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w12
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w13
+{
+	font-size:13px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+.w15
+{
+	font-size:15px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+
+/*START Heading Text have this class*/
+.h14
+{
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.h16
+{
+	color:#000000;
+	font-size:16px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+/*START Login Page Text have this class*/
+.l18
+{
+	color:#FFFFFF;
+	font-size:18px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:underline;
+}
+.l22
+{
+	color:#FFFFFF;
+	font-size:22px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+
+/*START Page Name CSS Start Here  */
+.PageNameHeadingCSS
+{
+	background-color: #FFFF99; /*background-image:url(../../Images/Content_New.gif);*/
+	color: #800000;
+	border-style: none;
+	font-size: 14px;
+	font-family: Arial;
+	font-weight: bold;
+	text-decoration: none;
+}	
+
+.PageNameHeadingCSS_2
+{
+	 /*background-image:url(../../Images/Content_New.gif);*/
+	color: #800000;
+	border-style: none;
+	font-size: 14px;
+	font-family: Arial;
+	font-weight: bold;
+	text-decoration: none;
+}	
+/*End Page Name CSS End Here  */
+
+.master
+{
+	
+	color: #800000;
+	font-family: Verdana;
+	font-weight: bold;
+	font-size: medium;
+}	
+.error_msg
+{
+	width: 55%; 
+	font-family:Arial;
+	text-align: center; 
+	padding-left: 0px; 
+	padding-bottom: 0px; 
+	height: 15px;
+	/*background-color:#336699;*/
+	color:Red;
+	}
+
+/*START Error msg. have this class*/
+.errormsg
+{
+	font-size:12px;
+	font-family:Arial;
+	font-weight:bold;
+	height:10px;
+	/*background-color:Red;*/
+	color:Red;
+}
+
+/*START Success msg. have this class*/
+.successmsg
+{
+	font-size: 12px;
+	font-family: Arial;
+	font-weight: bold;
+	/*background-color: Green;*/
+	color: Green;
+}
+/*START Controls CSS Start From Here Please Add here only */
+
+/* Textbox have this class*/
+.textbox
+{
+	border:#999999 solid 1px;
+	background-color:#FFFF99;
+	height:17px;
+	font-family:Arial;
+	font-size:11px;	
+	width:130px
+}
+.textbox active
+{
+	border:#000000 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;
+	width:130px
+}
+.textbox1
+{
+	background-color:#FFFF99;
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+	width:70px
+}
+
+/* Textbox Right Align have this class*/
+.textboxRA
+{
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;
+	width:130px;
+	}
+
+/* Textbox have this class*/
+.textbox-medium
+{
+	border:#384467 1px solid;
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+	width:80px
+}
+/* Textarea have this class*/
+.textarea
+{
+	/*background-color:#FFFF99;*/
+	border:#384467 1px solid;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+}
+
+/* Label have this class*/
+.lbl
+{
+	/*border:#384467= 1px solid;*/
+	height:17px;
+	color:#000000;
+	font-family:Arial;
+	font-size:11px;	
+}
+
+/* DropDown have this class*/
+.dropdown
+{
+
+	background-color:#FFFF99;
+	border-color:#384467;
+	border-style:solid;
+	border-width:1px;
+	height:20px;
+	color:#000000;	
+	font-family:Arial;
+	font-size:12px;
+	width:130px;
+}
+
+/* Radio Button have this class*/
+.radiobtn
+{
+	/*border:#384467 1px solid;*/
+	height:17px;
+	color:#000000;	
+}
+
+/* CheckBox Button have this class*/
+.chkbtn
+{
+	/*border:#384467 1px solid;*/
+	height:17px;
+	color:#000000;	
+}
+
+/* Button have this class*/
+.button {
+	/*background:url("../../Images/btn_bg.gif") repeat-x;*/
+	/*border:#6FB3EC 1px solid;*/
+	height:22px;
+	color:#63659C;
+	font-weight:bold;
+	cursor:hand;
+}
+
+/*END Controls CSS End Here Please Add here only */
+
+/*START GRID CSS Start From Here Please Add here only */
+
+.GridBaseStyle
+{
+	border-color: #FFFFFF;
+	border-style: ridge;
+	border-width: 2px;
+	width: 100%;
+	font-family: Verdana;
+	font-size: medium;
+	color: #000000;
+}
+	
+.Grid_Header
+{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFF00;
+	background-color: #800000;
+	text-align: center;
+}
+
+.Grid_Item
+{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: normal;
+	color: #800000;
+	background-color: #FFFF00;
+	text-align: left;
+}
+
+.Grid_Item_Alternaterow
+{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: normal;
+	color: #800000;
+	background-color: #FFFFCC;
+	text-align: left;
+}
+
+.Grid_Selected
+{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FF9966;
+	text-align: left;
+}
+
+.Grid_Footer
+{
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFF00;
+	background-color: #800000;
+	text-align: right;
+}
+
+/*END GRID CSS End Here */
+
+/*START Main Div CSS Start Here */
+
+#Div_ContentPlaceHolder
+{
+	width:98%;
+	min-width:98%;
+	height:400%;
+	background-color:#FFFFFF;
+	float:left;
+	margin-bottom:-20px;
+	margin-top:0px;
+	margin-left:auto;
+	margin-right:0px;
+	
+	overflow:auto;
+	text-align:center;
+	vertical-align:top;
+}
+
+/*END Main Div CSS End Here */
+
+/*START Main Footer CSS Start Here */
+#footer 
+{
+	clear: left; 
+	font-size: 10px; 
+	width: 98%; 
+	line-height: 20px; 
+	height: 20px; 
+	text-align: center;
+	background-color:#FFFFFF;
+}
+/*End Main Footer CSS End Here */
+
+#push 
+{
+	CLEAR: left; 
+	FONT-SIZE: 10px; 
+	WIDTH: 100%; 
+	LINE-HEIGHT: 20px; 
+	HEIGHT: 20px; 
+	TEXT-ALIGN: center;
+}
+
+.tbl3{
+	width:753px; 
+	background-color:#000000; 
+	height: 409px;
+}
+.listbox
+{
+	
+	
+}
+
+
+/*Page header here */
+.PageNameHeadingCSSHeader
+{
+	padding-top:5px;
+	padding-left:2px;
+	background-color:#C8D09A;
+	/*background-image:url(../../Images/Content_New.gif);*/
+	color:#384467; 	
+	border-style:none;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	text-decoration:none;
+	height:25px;
+	width:690px;
+	vertical-align:middle;
+	text-align:left;
+}

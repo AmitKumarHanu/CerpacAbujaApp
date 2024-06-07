@@ -1,0 +1,173 @@
+﻿<%@ master language="C#" autoeventwireup="true" inherits="MasterPage_MasterPageUser, App_Web_masterpageuser.master.ec608581" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+    <title>CERPAC Processing System</title>
+       <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+      
+      
+    <script language="javascript" type="text/javascript">
+        window.history.forward(1);
+        // window.history.back(1);
+        if (window.history.length > 0) {
+            window.history.go(4);
+        }
+
+        function DisplayPaperVisa(AppID) {
+            window.open('FrmPrintPaperVisa.aspx?ApplicationId=' + AppID, 'PaperVisa', 'menubar=no,status=yes,Width=1000,Height=768,top=50,left=5');
+        }
+
+        var c = 0
+      //  setTimeout("count()", 5000);
+        function count() {
+
+            var user = document.getElementById('ctl00_lbl_id').innerHTML;
+            MasterPage_MasterPageUser.GetData(user);
+            setTimeout("count()", 5000)
+
+        }
+
+        function pageLoad() {
+            //code here
+          //  window.history.replaceState('c', 'c', ' 11981156');
+
+        }
+    </script>
+
+    <link href="../App_theme/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../App_theme/css/StyleSheet_Sugar.css" rel="stylesheet" type="text/css" />
+    <link href="../App_theme/css/color.css" rel="stylesheet" type="text/css" />
+    <link href="../App_theme/css/country.css" rel="stylesheet" type="text/css" />  
+    <link href="../App_theme/css/global.css" rel="stylesheet" type="text/css" />  
+
+    <script language="javascript" type="text/javascript" src="../JS/datetimepicker.js"></script>
+    <script language="javascript" type="text/javascript" src="../JS/checkFileExt.js"></script>
+    <script language="javascript" type="text/javascript" src="../JS/validation.js"></script>
+    <script language="javascript" type="text/javascript">   
+    </script>    
+</head>
+ <body>
+  <form id="theForm" runat="server" enctype="multipart/form-data" >
+      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" >
+    </asp:ScriptManager>
+
+
+      <asp:UpdatePanel runat="server" id="UpdatePanel1">
+<ContentTemplate>
+<asp:Timer runat="server" id="Timer1" Interval="5000" OnTick="Timer1_Tick"></asp:Timer>
+
+</ContentTemplate>
+</asp:UpdatePanel>
+
+    <div class="wraper_app">
+<!--.........................................................header start................................................-->
+	<div class="header_app">	
+		<div class="flag_app"></div>
+		<div class="hdtxt_app"></div>
+		
+	    <div class="hdtext2_app">
+          <asp:LinkButton ID="btnlogout" runat="server" Font-Size="14px" 
+              OnClick="btnlogout_Click" Text="[Logout]"
+           CssClass="lbl" ForeColor="White"></asp:LinkButton>
+           <br/>
+          <asp:Label ID="LabelLoginUser" CssClass="LogName" style="margin-left: -134px;" runat="server"></asp:Label>
+                           
+		  <asp:Label ID="LabelSysDate" Font-Size="Smaller" runat="Server" CssClass="lbl" style="font-size: 11px;"></asp:Label>
+	        <br/>
+                           
+	</div>
+
+        <div style="display:none;"> <asp:Label ID="lbl_id" runat="Server"></asp:Label></div>
+
+	</div>	
+<!--.........................................................header end................................................-->
+
+<!--.........................................................content start................................................-->
+	<div class="content_app">
+	
+<table width="100%" cellpadding="0" cellspacing="0">  
+      <!--Header Part Start -->   
+         <tr>
+            <td colspan="3" >         
+             <table width="100%" cellpadding="0" cellspacing="0">
+                 <tr>
+                    <td class="contlft_part4_app" style="width:25%; min-height:350px" valign="top">
+                    <!--  Google Translator start
+                        <div id="google_translate_element" style="width: 90%; margin-top:70px; " ></div>
+                         <script type="text/javascript">                             function googleTranslateElementInit() {
+                                 new google.translate.TranslateElement({
+                                     pageLanguage: 'en', includedLanguages: 'en,fr,de,hi,ja,es,sv'
+                                 }, 'google_translate_element');
+                             }                                    
+                         </script>
+                    <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+                        type="text/javascript"></script> 
+                        
+                        -->               
+                 <div class="contlft_part4_app" style="min-height: 264px;" >
+                    <asp:HyperLink ID="hypHome" runat="Server" Visible="false" Font-Names="Arial" Font-Size="12px" ForeColor="Black" Text="Home" HorizontalPadding="5px"></asp:HyperLink>
+                    
+                    
+                  <asp:TreeView ID="TVLeftMenu" runat="server" CssClass="AspNet-TreeView"  Width="99%" NodeWrap="True" 
+                            Font-Size="0.89em" ExpandDepth="2">
+                        <NodeStyle BorderStyle="None"  Width="100%" 
+                            ChildNodesPadding="5px" ForeColor="Black"   />
+                        <RootNodeStyle Font-Bold="true" CssClass="AspNet-TreeView-Root" />
+                        <LeafNodeStyle VerticalPadding="9px" CssClass="AspNet-TreeView-Leaf" />
+                        <Nodes>
+                            <asp:TreeNode Text="DMS" Value="DMS"></asp:TreeNode>
+                        </Nodes>
+                    </asp:TreeView>
+
+                    </div>
+                     </td>                
+                 <td class="bgcolour" valign="top">
+                      <div class="rttop_app">
+			  <div style="text-align:center" class="rttoptxt_app">				
+				<asp:Label  ID="lblmsg" Visible="false" runat="server" Font-Size="Medium" Font-Italic="False" 
+                      Font-Bold="True" BorderWidth="1px" CssClass="btn"></asp:Label>
+			  </div>
+              <br />
+			  <div class="contrt_app">
+				 <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"> </asp:ContentPlaceHolder>
+			</div>
+			</div>
+                </td>                
+               </tr>
+               
+                 <tr>
+                    <td style="width:25%">
+                       <span style="font-size:10px"> Powered By Continental Transfert Technique </span>
+                    </td>
+                    <td class="t11"> 
+                       <div style="float: left; padding-left: 5px; font-size:10px;">
+                               <strong> This Site is Best Viewed in Google Chrome or Mozilla Firefox @ 1024 * 768 Screen Resolution.</strong> </div>
+                        <br />
+                        <asp:Label ID="LabelCompanyAddress" runat="server" CssClass="lbl"></asp:Label>
+                    </td>
+            </tr>
+             </table>        
+           </td>
+        </tr>      
+         <tr>
+         <%-- <td colspan="3" class="bcolour">
+            <table width="100%" cellpadding="0" cellspacing="0">
+                
+            </table>
+          </td>  --%>
+         </tr>    
+       </table>
+
+   </div>
+	  </div>
+	  
+ <!--.........................................................content end................................................-->
+
+	</form>
+  </body>
+</html>

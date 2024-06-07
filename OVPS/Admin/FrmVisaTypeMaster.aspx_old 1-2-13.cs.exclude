@@ -1,0 +1,509 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Xml;
+using System.Data.Sql;
+using System.Data.SqlClient;
+
+public partial class FrmVisaTypeMaster : System.Web.UI.Page
+{
+   
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    #endregion
+
+    BaseLayer.General_function objGeneral = null;
+    BusinessEntityLayer.BalVisaTypeDetails ObjBalVisaTypeDetails = null;
+    string con = "Data Source=CHITRESH-PC;Initial Catalog=Nigeria;User ID=sa;Password=contecglobal";
+
+    protected void Page_PreInit(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        string companyid = objectSessionHolderPersistingData.CompanyId;
+        if (companyid == "0")
+
+            this.Page.MasterPageFile = "~/MasterPage/MasterPageCompany.master";
+        else
+            this.Page.MasterPageFile = "~/MasterPage/MasterPageUser.master";
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        string[] a = new string[100]; 
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        ObjBalVisaTypeDetails = new BusinessEntityLayer.BalVisaTypeDetails();
+        objGeneral = new BaseLayer.General_function();
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        ////////////////////////////////////////////////////////
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.Cache.SetExpires(DateTime.Now.AddDays(-1));
+        Response.Cache.SetNoStore();
+        if (Request.Cookies.Count > 0)
+        {
+            //HttpCookie cookie = Request.Cookies["ASPXAUTH"];
+            //cookie.Expires = DateTime.Now.AddYears(-10);
+            //Response.AppendCookie(cookie);
+        }
+        ///////////////////////////////////////////////////////
+        //-----Alerts for save and Update Buttons.----
+        string strScriptSave = "if(!confirm('Do you want to save this record ?'))  return false; ";
+        string strScriptUpdate = "if(!confirm('Do you want to update this record  ?'))  return false; ";
+        btnUpdate.Attributes.Add("onclick", strScriptUpdate);
+        btnSave.Attributes.Add("onclick", strScriptSave);
+        //----End---------------
+
+        try
+        {
+            LabelMessage.CssClass = "";
+            LabelMessage.Text = "";
+
+            if (!IsPostBack)
+            {
+
+                if (Session["mode"].ToString() == "insert")
+                {
+                    bindgrid();
+                    btnSave.Visible = true;
+                    btnUpdate.Visible = false;
+
+                }
+                else
+                    if (Session["mode"].ToString() == "update")
+                    {
+                        bindgrid();
+                        btnSave.Visible = false;
+                        btnUpdate.Visible = true;
+                        if (Session["id"] != null)
+                        {
+                            FillFormField(Session["id"].ToString());
+                            string query = "select DocCode,FlagMmendatory from VisatypeDocLink where VisaTypeCode='" + Session["id"].ToString() + "'";
+                            DataTable dt = new DataTable();
+                            dt = objGeneral.FetchData(query);
+                            Session["count"] = dt.Rows.Count.ToString();
+                            for (int i = 0; i < dt.Rows.Count; i++)
+                            {
+                                foreach (GridViewRow dg in GridView1.Rows)
+                                {
+                                    if (dt.Rows[i]["DocCode"].ToString().Trim() == (Convert.ToInt32(GridView1.DataKeys[dg.RowIndex].Value)).ToString().Trim() && dt.Rows[i]["FlagMmendatory"].ToString() == "y")
+                                    {
+                                        CheckBox cb1 = ((CheckBox)dg.FindControl("CheckBox1"));
+                                        CheckBox cb2 = ((CheckBox)dg.FindControl("CheckBox_mand"));
+                                        cb1.Checked = true;
+                                        cb2.Checked = true;
+                                        a[i] = dt.Rows[i]["DocCode"].ToString();
+
+                                        Trace.Warn("a[i]" + a[i].ToString());
+                                    }
+                                    else if (dt.Rows[i]["DocCode"].ToString().Trim() == (Convert.ToInt32(GridView1.DataKeys[dg.RowIndex].Value)).ToString().Trim() && dt.Rows[i]["FlagMmendatory"].ToString() == "n")
+                                    {
+                                        CheckBox cb1 = ((CheckBox)dg.FindControl("CheckBox1"));
+                                        CheckBox cb2 = ((CheckBox)dg.FindControl("CheckBox_mand"));
+                                        cb1.Checked = true;
+                                        cb2.Checked = false;
+                                        a[i] = dt.Rows[i]["DocCode"].ToString();
+                                    }
+                                }
+                            }
+                            Session["a"] = a;
+                            Trace.Warn("aa" + Session["a"].ToString());
+
+                        }
+                    }
+            }
+        }
+        catch (Exception ex)
+        {
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString(); ;
+        }
+    }
+
+    private void bindgrid()
+    {
+        DataSet ds = new DataSet();
+        ObjBalVisaTypeDetails = new BusinessEntityLayer.BalVisaTypeDetails();
+        ds = ObjBalVisaTypeDetails.GetDocList();
+        GridView1.DataSource = ds;
+        GridView1.DataBind();
+    }
+    private void FillFormField(string id)
+    {
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        // code to create the object at bussiness layer
+       
+        DataTable ObjDt = null;
+        ObjDt = new DataTable();
+
+        try
+        {
+            ObjBalVisaTypeDetails.VisaTypeCode = id;
+            ObjDt = ObjBalVisaTypeDetails.FetchVisaTypeDetails_VisaTypeCode();
+
+            if (ObjDt.Rows.Count > 0)
+            {
+
+                txtVisaTypecode.Text = ObjDt.Rows[0]["VisaTypeCode"].ToString();
+                txtVisaTypecode.ReadOnly = true;
+                Txtsvisaname.Text = ObjDt.Rows[0]["SVisaTypeName"].ToString();
+                txtVisaTypeName.Text = ObjDt.Rows[0]["VisaTypeName"].ToString();
+                chkactive.Checked = ObjDt.Rows[0]["Status"].ToString() == "A" ? true : false;
+                
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString();
+
+        }
+        finally
+        {
+            ObjBalVisaTypeDetails = null;
+            ObjDt = null;
+        }
+    }
+
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        Session["Mode"] = null;
+        Session["id"] = null;
+        Response.Redirect("FrmVisaTypeList.aspx");
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string Message = "";
+        try
+        {
+            ObjBalVisaTypeDetails.VisaTypeCode = txtVisaTypecode.Text;
+            ObjBalVisaTypeDetails.SVisaTypeName = Txtsvisaname.Text;
+            ObjBalVisaTypeDetails.VisaTypeName = txtVisaTypeName.Text;
+            ObjBalVisaTypeDetails.Status = chkactive.Checked == true ? "A" : "I";
+            ObjBalVisaTypeDetails.ModifiedBy = Int32.Parse(objectSessionHolderPersistingData.User_ID);
+            //-----------------------------by chitresh-----------------
+            foreach (GridViewRow dg in GridView1.Rows)
+            {
+                CheckBox cb = ((CheckBox)dg.FindControl("CheckBox1"));
+                CheckBox cb1 = ((CheckBox)dg.FindControl("CheckBox_mand"));
+                if (cb.Checked == true && cb1.Checked == true)
+                {
+                    int Docid = Convert.ToInt32(GridView1.DataKeys[dg.RowIndex].Value);
+                    // ObjBalVisaTypeDetails.DocCode = Docid;
+                    SqlConnection con = new SqlConnection("Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("Insert into VisatypeDocLink(VisaTypeCode,DocCode,FlagMmendatory) values('" + txtVisaTypecode.Text + "','" + Docid.ToString() + "','y')", con);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                else if (cb.Checked == true && cb1.Checked == false)
+                {
+                    int Docid = Convert.ToInt32(GridView1.DataKeys[dg.RowIndex].Value);
+                    // ObjBalVisaTypeDetails.DocCode = Docid;
+                    SqlConnection con = new SqlConnection("Server=contec;Database=NigeriaLatest;Uid=sa;Pwd=C0Nt3C;");
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("Insert into VisatypeDocLink(VisaTypeCode,DocCode,FlagMmendatory) values('" + txtVisaTypecode.Text + "','" + Docid.ToString() + "','n')", con);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                  }
+            }
+            //--------------------------------end task --------------------------
+            
+
+            int statusid = ObjBalVisaTypeDetails.InsertVisaTypeDetail();
+            Message = getXmlMessage((Int32)ENUMFORMCODE.VisaTypeMaster.GetHashCode(), statusid, "save");
+
+            if (statusid == 1)
+            {
+                //----------------Insert into Audit---------
+                BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+                ObjGenBal.audittype = ENUMAUDITTYPE.VisaTypeCreated.GetHashCode().ToString();
+                ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                ObjGenBal.auditdetail = "VisaType '" + txtVisaTypeName.Text + "'(Code:'" + txtVisaTypecode.Text + "')'" + "' Created.";
+                ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                ObjGenBal.AuditInsert();
+                //---------------End----------------------
+
+                Session["Status"] = Message;//"Record successfully saved";
+                Response.Redirect("FrmVisaTypeList.aspx", false);
+
+
+            }
+            else if (statusid == 2)
+            {
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = Message;// "VisaType Code Already Exist";
+                txtVisaTypecode.Focus();
+                
+            }
+            else if (statusid == 3)
+            {
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = Message;//"VisaType Name Already Exist";
+                txtVisaTypeName.Focus();
+            }
+           
+            else
+            {
+                Message = getXmlMessage((Int32)ENUMFORMCODE.VisaTypeMaster.GetHashCode(), 0, "save");
+                LabelMessage.CssClass = "errormsg";
+                LabelMessage.Text = "Record Can not be saved";
+            }
+
+
+
+        }
+        catch (Exception ex)
+        {
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString(); ;
+        }
+        finally
+        {
+            ObjBalVisaTypeDetails = null;
+
+        }
+    }
+
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        int count = 0;
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string id = null;
+        string Message = "";
+        try
+        {
+            if (Session["id"] != null)
+            {
+                id = Session["id"].ToString();
+            }
+            if (Session["a"] != null)
+            {
+                count = Convert.ToInt32(Session["count"].ToString());
+                for (int i = 0; i < count; i++)
+                {
+                    string[] a = (string[])Session["a"];
+                    //Trace.Warn("a[i]" + a[i].ToString());
+                    string VisaTypeCode = txtVisaTypecode.Text.ToString();
+                    int status = ObjBalVisaTypeDetails.DeletePrevDoc(a[i].ToString(), VisaTypeCode);
+                }
+            }
+
+            //set the properties defined at business layer
+            foreach (GridViewRow gr in GridView1.Rows)
+            {
+                CheckBox cb = ((CheckBox)gr.FindControl("CheckBox1"));
+                CheckBox cb1 = ((CheckBox)gr.FindControl("CheckBox_mand"));
+                if (cb.Checked == true && cb1.Checked == true)
+                {
+                    int Docid = Convert.ToInt32(GridView1.DataKeys[gr.RowIndex].Value);
+                    ObjBalVisaTypeDetails.VisaTypeCode = id;
+                    // ObjBalVisaTypeDetails.VisaTypeName = txtVisaTypeName.Text;
+                    // ObjBalVisaTypeDetails.SVisaTypeName = Txtsvisaname.Text;
+                    // ObjBalVisaTypeDetails.Status = chkactive.Checked == true ? "A" : "I";
+                    ObjBalVisaTypeDetails.DocCode = Docid.ToString();
+                    ObjBalVisaTypeDetails.FlagMmendatory = "y";
+                    ObjBalVisaTypeDetails.CreatedBy = Int32.Parse(objectSessionHolderPersistingData.User_ID);
+                    //string CityName = GridView1.DataKeys[gr.RowIndex].Values.ToString();
+                    //ObjBalZonDetails.CityName = CityName.ToString();
+                    int statusid = ObjBalVisaTypeDetails.InsertDocUpdated();
+                    //Message = getXmlMessage(Convert.ToInt32(ENUMFORMCODE.Zonemaster.GetHashCode()), statusid, "save");
+                    if (statusid == 1)
+                    {
+                        BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+                        ObjGenBal.audittype = ENUMAUDITTYPE.VisaTypeUpdated.GetHashCode().ToString();
+                        ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                        ObjGenBal.auditdetail = "VisaType '" + txtVisaTypeName.Text + "'(Code:'" + id + "')'" + "' updated.";
+                        ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                        ObjGenBal.AuditInsert();
+                        //Session["Status"] = Message;//"Record successfully saved";
+                        //Response.Redirect("FrmVisaTypeList.aspx", false);
+                    }
+                    else if (statusid == 2)
+                    {
+                        LabelMessage.CssClass = "errormsg";
+                        LabelMessage.Text = "Record not updated"; //"VisaType Name Already Exist";
+                        txtVisaTypeName.Focus();
+                        //LabelMessage.CssClass = "errormsg";
+                        // LabelMessage.Text = "This City is under another Zone";// "City Code Already Exist";
+                        //ddlZoneName.Focus();
+                    }
+                    else
+                    {
+                        Message = getXmlMessage(Convert.ToInt32(ENUMFORMCODE.Zonemaster.GetHashCode()), 0, "save");
+                        LabelMessage.CssClass = "errormsg";
+                        LabelMessage.Text = Message;//"Record Can not be saved";
+
+                    }
+
+                }
+                else if (cb.Checked == true && cb1.Checked == false)
+                {
+                    int Docid = Convert.ToInt32(GridView1.DataKeys[gr.RowIndex].Value);
+                    ObjBalVisaTypeDetails.VisaTypeCode = id;
+                    // ObjBalVisaTypeDetails.VisaTypeName = txtVisaTypeName.Text;
+                    // ObjBalVisaTypeDetails.SVisaTypeName = Txtsvisaname.Text;
+                    // ObjBalVisaTypeDetails.Status = chkactive.Checked == true ? "A" : "I";
+                    ObjBalVisaTypeDetails.DocCode = Docid.ToString();
+                    ObjBalVisaTypeDetails.FlagMmendatory = "n";
+                    ObjBalVisaTypeDetails.CreatedBy = Int32.Parse(objectSessionHolderPersistingData.User_ID);
+                    //string CityName = GridView1.DataKeys[gr.RowIndex].Values.ToString();
+                    //ObjBalZonDetails.CityName = CityName.ToString();
+                    int statusid = ObjBalVisaTypeDetails.InsertDocUpdated();
+                    //Message = getXmlMessage(Convert.ToInt32(ENUMFORMCODE.Zonemaster.GetHashCode()), statusid, "save");
+                    if (statusid == 1)
+                    {
+                        BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+                        ObjGenBal.audittype = ENUMAUDITTYPE.VisaTypeUpdated.GetHashCode().ToString();
+                        ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                        ObjGenBal.auditdetail = "VisaType '" + txtVisaTypeName.Text + "'(Code:'" + id + "')'" + "' updated.";
+                        ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                        ObjGenBal.AuditInsert();
+                        //Session["Status"] = Message;//"Record successfully saved";
+                        //Response.Redirect("FrmVisaTypeList.aspx", false);
+                    }
+                    else if (statusid == 2)
+                    {
+                        LabelMessage.CssClass = "errormsg";
+                        LabelMessage.Text = "Record not updated"; //"VisaType Name Already Exist";
+                        txtVisaTypeName.Focus();
+                        //LabelMessage.CssClass = "errormsg";
+                        // LabelMessage.Text = "This City is under another Zone";// "City Code Already Exist";
+                        //ddlZoneName.Focus();
+                    }
+                    else
+                    {
+                        Message = getXmlMessage(Convert.ToInt32(ENUMFORMCODE.Zonemaster.GetHashCode()), 0, "save");
+                        LabelMessage.CssClass = "errormsg";
+                        LabelMessage.Text = Message;//"Record Can not be saved";
+
+                    }
+
+                }
+            }
+
+            /* ObjBalVisaTypeDetails.VisaTypeCode = id;
+             ObjBalVisaTypeDetails.VisaTypeName = txtVisaTypeName.Text;
+             ObjBalVisaTypeDetails.SVisaTypeName = Txtsvisaname.Text;
+             ObjBalVisaTypeDetails.Status = chkactive.Checked == true ? "A" : "I";
+             ObjBalVisaTypeDetails.ModifiedBy = Int32.Parse(objectSessionHolderPersistingData.User_ID);
+
+
+             int statusid = ObjBalVisaTypeDetails.UpdateVisaTypeDetail();
+             Message = getXmlMessage((Int32)ENUMFORMCODE.VisaTypeMaster.GetHashCode(), statusid, "update");
+             if (statusid == 1)
+             {
+                 //----------------Insert into Audit---------
+                 BaseLayer.General_function ObjGenBal = new BaseLayer.General_function();
+                 ObjGenBal.audittype = ENUMAUDITTYPE.VisaTypeUpdated.GetHashCode().ToString();
+                 ObjGenBal.userid = objectSessionHolderPersistingData.User_ID;
+                 ObjGenBal.auditdetail = "VisaType '" + txtVisaTypeName.Text + "'(Code:'" + id + "')'"+ "' updated.";
+                 ObjGenBal.machineIP = Request.UserHostAddress.ToString();
+                 ObjGenBal.AuditInsert();
+                 //---------------End----------------------
+                 Session["Status"] = Message;//"Record successfully Updated";
+                 Response.Redirect("FrmVisaTypeList.aspx", false);
+             }
+             else if (statusid == 2)
+             {
+                 LabelMessage.CssClass = "errormsg";
+                 LabelMessage.Text = Message; //"VisaType Name Already Exist";
+                 txtVisaTypeName.Focus();
+             }
+          
+             else
+             {
+                 Message = getXmlMessage((Int32)ENUMFORMCODE.VisaTypeMaster.GetHashCode(), 0, "update");
+                 LabelMessage.CssClass = "errormsg";
+                 LabelMessage.Text = Message;// "Record Can not be saved";
+
+             }
+             * */
+
+
+
+        }
+        catch (Exception ex)
+        {
+            LabelMessage.CssClass = "errormsg";
+            LabelMessage.Text = "Please contact to System Administrator; Error message is: " + ex.Message.ToString(); ;
+        }
+        finally
+        {
+            ObjBalVisaTypeDetails = null;
+            Session["a"] = null;
+            Session["count"] = null;
+            Response.Redirect("FrmVisaTypeList.aspx", false);
+        }
+    }
+
+    public string getXmlMessage(int FormID, int ErrorID, string Mode)
+    {
+        string errormessage = string.Empty;
+        string XMLPath = Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["XMLPath"].ToString()) + "Error.xml";
+        XmlDocument xd = new XmlDocument();
+
+        //xd.Load(@"D:\Projects\OVPS\OVPS\Error.xml");
+        xd.Load(XMLPath);
+        XmlNodeList FormList = xd.SelectNodes("/RootMessage/form");
+        foreach (XmlNode FormNode in FormList)
+        {
+            if (Convert.ToInt32(FormNode.Attributes["id"].Value) == FormID)
+            {
+                foreach (XmlNode Errornode in FormNode.ChildNodes)
+                {
+                    if (Convert.ToInt32(Errornode.Attributes["id"].Value) == ErrorID && Errornode.Attributes["mode"].Value == Mode)
+                    {
+                        errormessage = Errornode.InnerText;
+                        return errormessage;
+                    }
+                }
+            }
+        }
+        errormessage = FormList[0].ParentNode.ChildNodes[0].InnerText;
+        return errormessage;
+    }
+    //-----------------------------by chitresh-----------------
+    private void ToggleCheckState(bool checkState)
+    {
+        // Iterate through the Products.Rows property
+        foreach (GridViewRow row in GridView1.Rows)
+        {
+            // Access the CheckBox
+            CheckBox cb = (CheckBox)row.FindControl("CheckBox1");
+            if (cb != null)
+                cb.Checked = checkState;
+        }
+    }
+ 
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        ToggleCheckState(true);
+
+    }
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+        ToggleCheckState(false);
+
+    }
+    protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
+    //----------------------------end task ---------------------------
+}

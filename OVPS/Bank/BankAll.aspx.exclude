@@ -1,0 +1,173 @@
+﻿<%@ page title="" language="C#" masterpagefile="~/MasterPage/MasterPageUser.master" autoeventwireup="true" inherits="Bank_BankAll, App_Web_bankall.aspx.fc41e3a" enableeventvalidation="false" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+<div>
+    
+    
+
+<table width="100%" id="combox">
+<tr>
+                
+                <td colspan="3" style="height: 5px">
+                    <div class="PageNameHeadingCSS" style="width:749px; text-align: center;">
+                        <font class="b12"><span style="font-size: 16px; color:White;" id="sp1" runat="server">&nbsp;Correct Uploaded Data In Bulk (A0 to AO) &nbsp; </span>
+                        </font>
+                    </div>
+                </td>
+
+</tr>
+             
+<tr>
+<td>
+     <%--
+          ID="ScriptManager1" runat="server">--%>
+<%--</asp:ScriptManager>--%>
+   
+<asp:UpdatePanel ID="UpdatePanel1" runat="server">
+
+    
+        <contenttemplate>
+            <div style="overflow-y:scroll !important; overflow-x:scroll !important;" >
+    <div style="text-align: center; width:700px !important;">
+
+        <asp:GridView ID="grd_display_data" runat="server" AutoGenerateColumns="false" 
+            CssClass="GridBaseStyle" PagerStyle-CssClass="pgr"  
+            CellSpacing="1" CellPadding="3" GriBorderWidth="2px" EmptyDataText="No Data Avialable "
+             AllowPaging="true" 
+            PageSize="10" OnPageIndexChanging="grd_display_data_PageIndexChanging" 
+            onrowcreated="grd_display_data_RowCreated" style="font-size: 12px;"
+            onselectedindexchanged="grd_display_data_SelectedIndexChanged" 
+            onselectedindexchanging="grd_display_data_SelectedIndexChanging" 
+            onrowdatabound="grd_display_data_RowDataBound">
+            <AlternatingRowStyle CssClass="Grid_Item_Alternaterow" />
+            <Columns>
+                <asp:TemplateField Visible="false">
+                    <ItemTemplate>
+                        <asp:CheckBox ID="chkbox" runat="server" AutoPostBack="true" Checked='<%#Convert.ToBoolean(Eval("Exist")) %>' />
+
+                    </ItemTemplate>
+
+                </asp:TemplateField>
+
+
+                <asp:BoundField DataField="FirstName" HeaderText="First Name" SortExpression="FirstName" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="MiddleName" HeaderText="MiddleName" SortExpression="MiddleName" Visible="false" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="LastName" HeaderText="Last Name" SortExpression="LastName" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="Company" HeaderText="Company" SortExpression="Company" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="Nationality" HeaderText="Nationality" SortExpression="Nationality" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="RequisitionNo" HeaderText="ReqNo." SortExpression="RequisitionNo" Visible="false" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="FormNo" HeaderText="FrmNo." SortExpression="FormNo" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="CerpacNo" HeaderText="CerpacNo." SortExpression="CerpacNo" ItemStyle-HorizontalAlign="Left" Visible="false">
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="TellerNo" HeaderText="TellerNo" SortExpression="TellerNo" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="Amount" HeaderText="Amount" SortExpression="Amount" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="Branch" HeaderText="Branch" SortExpression="Branch" Visible="false" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="Date1" HeaderText="Date" SortExpression="Date1" DataFormatString="{0:dd-MM-yyyy}"/>
+
+                <asp:BoundField DataField="PassportNo" HeaderText="PassportNo." SortExpression="PassportNo" Visible="false" ItemStyle-HorizontalAlign="Left" >
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="StrVisaNo" HeaderText="StrVisa No." SortExpression="StrVisaNo" Visible="false" ItemStyle-HorizontalAlign="Left" >
+
+
+
+                <ItemStyle HorizontalAlign="Left" />
+                </asp:BoundField>
+
+
+
+                <asp:TemplateField HeaderText="Status" Visible="false">
+                    <ItemStyle HorizontalAlign="left" VerticalAlign="Middle" Wrap="False" />
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_status" runat="server"></asp:Label>
+                        <asp:Image ID="Image1" runat="server" Width="38px" Height="38px" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField DataField="Exist" HeaderText="Exist" SortExpression="Exist" />
+
+
+
+            </Columns>
+            <PagerStyle CssClass="pgr" />
+        </asp:GridView>
+
+    </div>
+                </div>
+    </contenttemplate>
+        
+        </asp:UpdatePanel>
+        
+</td>
+    
+</tr>
+<tr>
+<td align="center">
+    <br />
+    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+<ContentTemplate>
+
+<asp:Button ID="btn_submit" runat="server" Text="Auto-Correct" class="adminbutton" 
+        onclick="btn_submit_Click" />
+
+        
+<asp:Button ID="btnCancel" runat="server" Text="Cancel" class="adminbutton" 
+        onclick="btnCancel_Click" />
+
+    <asp:Button ID="btn_upload_correction" runat="server" Text="Exit & Upload Correction" class="adminbutton" OnClick="btn_upload_correction_Click" Visible="false"/>
+</ContentTemplate></asp:UpdatePanel>
+    <br />
+</td>
+</tr>
+    </table>
+    </div>
+</asp:Content>
+

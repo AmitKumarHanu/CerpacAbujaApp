@@ -1,0 +1,74 @@
+<%@ Page Language="C#" MasterPageFile="~/MasterPage/MasterPageCompany.master" AutoEventWireup="true" CodeFile="RegisteredCompanyList.aspx.cs" Inherits="CompanyPage_RegisteredCompanyList" Title="List of Registered Company" %>
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<div align="center">
+
+<table cellpadding="2" cellspacing="10" style="border:1px; width:95%">
+    <tr>
+        <td colspan="2" align="center" class="PageNameHeadingCSS_2" style="height: 16px"> Registered Company List
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="height: 5px"> 
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" style="width: 100%; text-align: left; height: 315px;">
+        <asp:GridView ID="GridViewCompanyList"  runat="server" DataKeyNames="CompanyId" Width="100%" AutoGenerateColumns="False"   OnRowCommand="GridViewCompanyList_RowCommand" OnRowDeleting="GridViewCompanyList_RowDeleting" AllowPaging="True" CellSpacing="1" CssClass="GridBaseStyle" OnPageIndexChanging="GridViewCompanyList_PageIndexChanging" >
+            <Columns>
+                <asp:TemplateField HeaderText="Company Id" Visible="False">
+                    <ItemTemplate>
+                        <asp:Label ID="lblCompanyID" runat="server" Text='<%# Bind("CompanyId") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Company Name">
+                    <ItemStyle HorizontalAlign="Left" />
+                    <ItemTemplate>
+                        <asp:Label ID="lblCompanyName" runat="server" Text='<%# Bind("CompanyName") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+             
+               <asp:TemplateField HeaderText="Company Address">
+               <ItemStyle HorizontalAlign="Left" />
+                    <ItemTemplate>                    
+                        <asp:Label ID="LabelAddress" Text='<%# Eval("CompanyAddress") %>' runat="server"  ></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>           
+                <asp:CommandField  HeaderText="Update"   ShowEditButton="True" ButtonType="Button" >
+                    <ControlStyle CssClass="button" />
+                    <ItemStyle Width="10%" HorizontalAlign="Center" />
+                </asp:CommandField>
+                <asp:CommandField HeaderText="Delete" ShowDeleteButton="True" ButtonType="Button" >
+                    <ControlStyle CssClass="button" />
+                    <ItemStyle Width="10%" HorizontalAlign="Center" />
+                </asp:CommandField>
+               
+            </Columns>
+            <HeaderStyle CssClass="Grid_Header" />
+            <RowStyle CssClass="Grid_Item"/>
+            <AlternatingRowStyle CssClass="Grid_Item_Alternaterow" />
+            <SelectedRowStyle CssClass="Grid_Selected" />
+            <FooterStyle CssClass="Grid_Footer" />
+            
+        </asp:GridView>
+            <br />
+            <table style="font-style:normal" width ="55%" align="center"> 
+                                
+                <tr>
+            
+        <td align="center">
+                            <asp:Button ID="btnAdd" runat="server" CssClass="button" Text="Add Company" Width="115px"
+                                ValidationGroup="a"  TabIndex="6" onclick="btnAdd_Click" />
+                        </td>
+        
+    </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</div>
+
+
+</asp:Content>
+

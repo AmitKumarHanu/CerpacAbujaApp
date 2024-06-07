@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class Admin_FrmVisaApplicationSubmission : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    #endregion
+
+    
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //lblinfo.Text = (string)Session["community"];
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+    }
+    protected void BtnPrint_Click(object sender, EventArgs e)
+    {
+
+    }
+    protected void BtnReprint_Click(object sender, EventArgs e)
+    {
+
+    }
+}

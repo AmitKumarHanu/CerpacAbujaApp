@@ -1,0 +1,150 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage/internal.master" AutoEventWireup="true"
+    CodeFile="FrmVisaStatus.aspx.cs" Inherits="Admin_FrmVisaStatus" Title="Applicant Visa Status" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/cj.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" language="javascript">
+        function openPopup(strOpen) {
+            open(strOpen, "Info", "status=1, width=300, height=150, top=30, left=850");
+        }
+    
+    </script>
+    <style type="text/css" >
+        .errormsg
+{
+	
+	Color:#333333;
+	background-color:#E9ACAC;
+	border:Solid 1px; 
+	border-color:Red;
+  }
+    </style>
+    <div align="center">
+        <table cellpadding="2" cellspacing="10" style="width: 95%">
+            <tr>
+                <td colspan="3" style="height: 5px">
+                    <div class="PageNameHeadingCSS" style="text-align: center">
+                        <font class="b12"><span style="font-size: 16px">&nbsp;Applicant Visa Status &nbsp; </span>
+                        </font>
+                    </div>
+                </td>
+            </tr>
+            <tr >
+                <td colspan="3" align="center">
+                    <asp:Label ID="lblmessage"  runat="server" Text="Label"  Width="600px" Visible=false Height="20px" ></asp:Label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" style="width: 100%; text-align: left; height: 100px;">
+                    <asp:GridView ID="GridViewApplicant" runat="server" PagerStyle-CssClass="pgr" AutoGenerateColumns="False"
+                        CssClass="GridBaseStyle" OnRowDeleting="GridViewApplicant_RowDeleting" DataKeyNames="ApplicationId"
+                        OnRowEditing="GridViewApplicant_RowEditing" OnRowDataBound="GridViewApplicant_RowDataBound">
+                        <Columns>
+                            <asp:BoundField DataField="flagComplete" HeaderText="flagComplete" Visible="false" >
+                            </asp:BoundField>
+                             <asp:BoundField DataField="PaymentMadeYN" HeaderText="PaymentMadeYN" Visible="false" >
+                            </asp:BoundField>
+                            <asp:TemplateField HeaderText="Application ID">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblApplicationNo" runat="server" Text='<%# Bind("ApplicationId") %>'></asp:Label>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="AppliedOn">
+                                <ItemStyle HorizontalAlign="Left" />
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAppliedOn" runat="server" Text='<%# Bind("AppliedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Passport No">
+                                <ItemStyle HorizontalAlign="Left" />
+                                <ItemTemplate>
+                                    <asp:Label ID="lblPASSPORTNO" runat="server" Text='<%# Bind("PASSPORTNUMBER") %>'></asp:Label>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Visa Type">
+                                <ItemStyle HorizontalAlign="Left" />
+                                <ItemTemplate>
+                                    <asp:Label ID="lblVisaType" runat="server" Text='<%# Bind("VisaTypeName") %>'></asp:Label>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Applicant Name">
+                                <ItemStyle HorizontalAlign="Left" />
+                                <ItemTemplate>
+                                    <asp:Label ID="lblApplicantName" runat="server" Text='<%# Bind("ApplicantName") %>'></asp:Label>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Status">
+                                <ItemStyle HorizontalAlign="Left" />
+                                <ItemTemplate>
+                                    <a id="A1" runat="server" title='<%# Eval("message")%>' href="javascript:">
+                                        <asp:Label ID="LblApproverL3" Text='<%# Eval("status")%>' runat="server"></asp:Label></a>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="View">                                
+                                <ItemTemplate>                                    
+                                        <asp:ImageButton runat="server" id="btnViewApplication" ImageUrl ="~/Images/view.png"/>
+                                </ItemTemplate>
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>                           
+                            <asp:TemplateField HeaderText="Update" ShowHeader="False">
+                            
+                                <ItemTemplate>     
+                                    <a id="A2" runat="server" title='<%# Eval("editmessage")%>' style="height:40px; width:40px;" href="javascript:">    
+                                    <asp:ImageButton ID="btnUpdate" 
+                                        runat="server" CausesValidation="False" CommandName="Edit"  ImageUrl="~/Images/Edit-icon.png"
+                                        Text="Update" />
+                                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </a>
+                                </ItemTemplate>                                                               
+                               <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Delete" ShowHeader="False">
+                                <ItemTemplate>
+                                <a id="A3" runat="server" title='<%# Eval("deletemessage")%>' style="height:40px; width:40px;" href="javascript:">    
+                                    <asp:ImageButton ID="btnDelete" OnClientClick='return confirm("Do you want to delete this record ?");'
+                                        runat="server" CausesValidation="False" CommandName="Delete" ImageUrl="~/Images/Delete.png"
+                                        Text="Delete" />
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </a> 
+                                </ItemTemplate>
+                                <ControlStyle CssClass="button" />
+                               <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="False" />
+                            </asp:TemplateField>                           
+                        </Columns>
+                        <HeaderStyle CssClass="Grid_Header" />
+                        <RowStyle CssClass="Grid_Item" />
+                        <AlternatingRowStyle CssClass="Grid_Item_Alternaterow" />
+                        <SelectedRowStyle CssClass="Grid_Selected" />
+                        <FooterStyle CssClass="Grid_Footer" />
+                    </asp:GridView>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="height: 16px;" colspan="3">
+                </td>
+            </tr>
+        </table>
+    </div>
+</asp:Content>

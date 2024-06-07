@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{041931E4-B768-41B7-AC7F-04EC743BD2AF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccessLayer</RootNamespace>
+    <AssemblyName>DataAccessLayer</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppSetting.cs" />
+    <Compile Include="DalAccountUserData.cs" />
+    <Compile Include="DalActivityDetails.cs" />
+    <Compile Include="DalAgentHistory.cs" />
+    <Compile Include="DalAgentVisaStatusList.cs" />
+    <Compile Include="DalApplicantHistory.cs" />
+    <Compile Include="DalApplicantPrintpaperVisa.cs" />
+    <Compile Include="DalApplicantRegist.cs" />
+    <Compile Include="DalApplicantStatusChangeL3.cs" />
+    <Compile Include="DalApplicationReview1.cs" />
+    <Compile Include="DalApprovalL1.cs" />
+    <Compile Include="DalApprovalL2.cs" />
+    <Compile Include="DalApprovalL3.cs" />
+    <Compile Include="DalApprovalProcess.cs" />
+    <Compile Include="DalApprovalReviewL1.cs" />
+    <Compile Include="DalApprovalReviewL2.cs" />
+    <Compile Include="DalApprovalReviewL3.cs" />
+    <Compile Include="DalBankRegDetails.cs" />
+    <Compile Include="DalBankUserData.cs" />
+    <Compile Include="DalBlacklistedPassportListDetails.cs" />
+    <Compile Include="DalBranchdetails.cs" />
+    <Compile Include="DalCompanyRegistration.cs" />
+    <Compile Include="DalContactListDetails.cs" />
+    <Compile Include="DalDocdetails.cs" />
+    <Compile Include="DalFrmImmigrationForm.cs" />
+    <Compile Include="DalGuestLogin.cs" />
+    <Compile Include="DalItemMaster.cs" />
+    <Compile Include="DalL2status.cs" />
+    <Compile Include="DalMyProfile.cs" />
+    <Compile Include="DalPayableListBank.cs" />
+    <Compile Include="DalPrintPaperVisa.cs" />
+    <Compile Include="DalPrintPaperVisaL2.cs" />
+    <Compile Include="DalProductionModule.cs" />
+    <Compile Include="DalRejectionMaster.cs" />
+    <Compile Include="DalReportMaster.cs" />
+    <Compile Include="DalSystemSettingDetails.cs" />
+    <Compile Include="DalUserCountryVisaTypeRelation.cs" />
+    <Compile Include="DalUserMasterDetails.cs" />
+    <Compile Include="DalAgentRegistrationDetails.cs" />
+    <Compile Include="DalApplicantStatus.cs" />
+    <Compile Include="DalBorderMaster.cs" />
+    <Compile Include="DalCityDetails.cs" />
+    <Compile Include="DalCountryDetails.cs" />
+    <Compile Include="DalAssociatedDocUpload.cs" />
+    <Compile Include="DalCountryVisaMasterDetails.cs" />
+    <Compile Include="DalCountryVisaTypeDetails.cs" />
+    <Compile Include="DalCurrencyDetails.cs" />
+    <Compile Include="DalEmbassyRegistrationDetails.cs" />
+    <Compile Include="DalGeographicInfo.cs" />
+    <Compile Include="DalAdminDocType.cs" />
+    <Compile Include="DalAdminGroup.cs" />
+    <Compile Include="DalAdminKeyword.cs" />
+    <Compile Include="DalAdminModule.cs" />
+    <Compile Include="DalAdminForm.cs" />
+    <Compile Include="DalCompanyDetails.cs" />
+    <Compile Include="DalDocGroupRelation.cs" />
+    <Compile Include="DalFileUpload.cs" />
+    <Compile Include="DalFormAccess.cs" />
+    <Compile Include="DalGeneral_function.cs" />
+    <Compile Include="DalGroupFormRelation.cs" />
+    <Compile Include="DalReport.cs" />
+    <Compile Include="DalStickerDetails.cs" />
+    <Compile Include="DalVisaApplicationSubmit.cs" />
+    <Compile Include="DalVisaAppSearchL1.cs" />
+    <Compile Include="DalVisaAppSearchL2.cs" />
+    <Compile Include="DalVisaAppSearchL3.cs" />
+    <Compile Include="DalVisaIssuedListL1.cs" />
+    <Compile Include="DalVisaIssuedListL2.cs" />
+    <Compile Include="DalVisaIssueList.cs" />
+    <Compile Include="DalVisaStatus.cs" />
+    <Compile Include="DalVisaStickerPrintingList.cs.cs" />
+    <Compile Include="DalVisaTypeDetails.cs" />
+    <Compile Include="DalBorderDetails.cs" />
+    <Compile Include="DalWorkCenterDetails.cs" />
+    <Compile Include="DalZonDetails.cs" />
+    <Compile Include="DalZoneDetails.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

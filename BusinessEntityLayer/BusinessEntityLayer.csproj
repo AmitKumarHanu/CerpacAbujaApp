@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6D84D4E0-A283-412A-8E63-E332B7F795F8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BusinessEntityLayer</RootNamespace>
+    <AssemblyName>BusinessEntityLayer</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BaseLayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BaseLayer\bin\Debug\BaseLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountUserData.cs" />
+    <Compile Include="BalActivityDetails.cs" />
+    <Compile Include="BalAdminForm.cs" />
+    <Compile Include="BalAdminGroup.cs" />
+    <Compile Include="BalAdminKeyword.cs" />
+    <Compile Include="BalAdminModule.cs" />
+    <Compile Include="BalAgentHistory.cs" />
+    <Compile Include="BalAgentVisaStatusList.cs" />
+    <Compile Include="BalApplicantHistory.cs" />
+    <Compile Include="BalApplicantPrintpaperVisa.cs" />
+    <Compile Include="BalApplicantRegistration.cs" />
+    <Compile Include="BalApplicantStatus.cs" />
+    <Compile Include="BalApplicantStatusChangeL3.cs" />
+    <Compile Include="BalApplicationReview1.cs" />
+    <Compile Include="BalApprovalL1.cs" />
+    <Compile Include="BalApprovalL2.cs" />
+    <Compile Include="BalApprovalL3.cs" />
+    <Compile Include="BalApprovalProcess.cs" />
+    <Compile Include="BalApprovalReviewL1.cs" />
+    <Compile Include="BalApprovalReviewL2.cs" />
+    <Compile Include="BalApprovalReviewL3.cs" />
+    <Compile Include="BalBlacklistedPassportListDetails.cs" />
+    <Compile Include="BalBorderMaster.cs" />
+    <Compile Include="BalBranchdetails.cs" />
+    <Compile Include="BalCityDetails.cs" />
+    <Compile Include="BalCompanyRegistration.cs" />
+    <Compile Include="BalContactListDetails.cs" />
+    <Compile Include="BalCountryDetails.cs" />
+    <Compile Include="BalCountryVisaMasterDetails.cs" />
+    <Compile Include="BalCountryVisaTypeDetails.cs" />
+    <Compile Include="BalCurrencyDetails.cs" />
+    <Compile Include="BalDocdetails.cs" />
+    <Compile Include="BalDocGroupRelation.cs" />
+    <Compile Include="BalEmbassyRegistrationDetails.cs" />
+    <Compile Include="BalFileUpload.cs" />
+    <Compile Include="BalFormAccess.cs" />
+    <Compile Include="BalFrmImmigrationForm.cs" />
+    <Compile Include="BalGroupFormRelation.cs" />
+    <Compile Include="BalGuestLogin.cs" />
+    <Compile Include="BalItemMaster.cs" />
+    <Compile Include="BalL2Status.cs" />
+    <Compile Include="BalMyProfile.cs" />
+    <Compile Include="BalPayableListBank.cs" />
+    <Compile Include="BalPrintPaperVisa.cs" />
+    <Compile Include="BalPrintPaperVisaL2.cs" />
+    <Compile Include="BalProductionModule.cs" />
+    <Compile Include="BalRejectionMaster.cs" />
+    <Compile Include="BalReportMaster.cs" />
+    <Compile Include="BalStickerDetails.cs" />
+    <Compile Include="BalSystemSettingDetails.cs" />
+    <Compile Include="BalUserCountryVisaTypeRelation.cs" />
+    <Compile Include="BalUserMasterDetails.cs" />
+    <Compile Include="BalVisaApplicationSubmit.cs" />
+    <Compile Include="BalVisaAppSearchL1.cs" />
+    <Compile Include="BalVisaAppSearchL2.cs" />
+    <Compile Include="BalVisaAppSearchL3.cs" />
+    <Compile Include="BalVisaIssuedListL1.cs" />
+    <Compile Include="BalVisaIssuedListL2.cs" />
+    <Compile Include="BalVisaIssueList.cs" />
+    <Compile Include="BalVisaStatus.cs" />
+    <Compile Include="BalVisaStickerPrintingList.cs" />
+    <Compile Include="BalVisaTypeDetails.cs" />
+    <Compile Include="BalBorderDetails.cs" />
+    <Compile Include="BalAgentRegistrationDetails.cs" />
+    <Compile Include="BalWorkCenterDetails.cs" />
+    <Compile Include="BalZonDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BalZoneDetails.cs" />
+    <Compile Include="BalCompanyDetails.cs" />
+    <Compile Include="BankRegDetails.cs" />
+    <Compile Include="BankUserData.cs" />
+    <Compile Include="DalDocdetails.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
+      <Project>{041931E4-B768-41B7-AC7F-04EC743BD2AF}</Project>
+      <Name>DataAccessLayer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,187 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage/MasterPageUser.master" AutoEventWireup="true" CodeBehind ="~/Admin/repCardPro.aspx.cs" Inherits="Admin_repCardPro" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+  <script language="javascript" type="text/javascript">
+      function ExportDivDataToExcel() {
+
+          // alert('hi');
+          // var html = "<html>";
+          // html += document.getElementById("DivReport").innerHTML;
+          // html += "</html>";
+          var html = "<html>";
+          // alert('hi');
+          html += document.getElementById("DivReport").innerHTML;
+          html += "</html>";
+          //  alert(html);
+
+          html = html.replace(/>/g, '&gt;');
+          html = html.replace(/</g, '&lt;');
+
+          document.getElementById('<%=HdnValue.ClientID %>').value = html;
+          //   alert(html);
+
+      }
+
+
+</script>
+  
+
+<div id="R1" align="center"   runat="server" >
+    
+    <table style="width:100%;" align="center" id="Table1" runat="server">
+                            <tr>
+                            <td align="right"><asp:ImageButton ID="btn_excel" runat="server"  ImageUrl="~/Images/excel_logo.gif" CssClass="Adminshortcut" Height="25px" Width="25px"     OnClientClick="ExportDivDataToExcel()" OnClick="btn_excel_Click"/></td>
+                            </tr>
+     </table>
+                <div id="DivReport" style="width: 800px;">
+                    
+                        <table style="width:100%;" align="center" id="tab1" runat="server">
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td align="center" colspan="4" style="font-size:large;">PRODUCTION REPORT TILL DATE</td>
+                                <td align="center">&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="4">&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td align="center" colspan="4">&nbsp;</td>
+                                <td align="center"></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            
+                        </table>
+                        <% if (objDs.Tables.Count > 0)
+               {
+                   if (objDs.Tables[0].Rows.Count > 0)
+                   { %>
+                        <table class="GridBaseStyle"   border="1" cellspacing="1"  rules="all" style="width: 90%; overflow: scroll; clip: rect(auto, auto, auto, auto);">
+                            
+                             <tr class="Grid_Header">
+                            <th align="center" scope="col" style="white-space: nowrap;" valign="middle" rowspan="2">Month</th>
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle" rowspan="2">Zone Name</th>                                
+                            <th align="center" scope="col" style="white-space: nowrap;" valign="middle" colspan="2">Form Sold</th>
+                            <th align="center" scope="col" style="white-space: nowrap;" valign="middle" colspan="3">Total Card Produced</th>
+                            <th align="center" scope="col" style="white-space: nowrap;" valign="middle" rowspan="2">Total Personalized</th>
+                                 <th align="center" scope="col" style="white-space: nowrap;" valign="middle" rowspan="2">Cards Wasted</th>
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle" rowspan="2">Physical Cards Used </th>
+                            </tr>
+                            <tr class="Grid_Header">
+                                
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle">AO</th>
+                                
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle">CR</th>
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle">AO</th>  
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle">CR</th>
+                                <th align="center" scope="col" style="white-space: nowrap;" valign="middle">AR</th>
+
+                                
+                                   
+                                
+                                                            
+                                
+                            </tr>
+                    <%
+                       for (int i = 0; i < objDs.Tables[0].Rows.Count; i++)
+                       { 
+                       %>
+                       <tr>
+                       <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["Month_S"]) +" " + Convert.ToString(objDs.Tables[0].Rows[i]["Year_S"]) %></th>
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["ZoneName"]) %></th>                                
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["AO_S"]) %></th>
+                                
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["CR_S"]) %></th>
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["AO"]) %></th>  
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["CR"]) %></th>
+                                <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["AR"]) %></th>
+
+                                
+                                 <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs.Tables[0].Rows[i]["Total"]) %></th>
+                         
+                         <%
+                           int flg = 0;
+                           int ph_cnt = 0;
+                           for (int j = 0; j < objDs_wasted.Tables[0].Rows.Count; j++)
+                           {
+                               if (Convert.ToString(objDs.Tables[0].Rows[i]["Month_S"]) + " " + Convert.ToString(objDs.Tables[0].Rows[i]["Year_S"]) == Convert.ToString(objDs_wasted.Tables[0].Rows[j]["Month"]) + " " + Convert.ToString(objDs_wasted.Tables[0].Rows[j]["Year"]) && Convert.ToString(objDs.Tables[0].Rows[i]["ZoneName"]) == Convert.ToString(objDs_wasted.Tables[0].Rows[j]["ZoneName"]))
+                               {
+                                   flg = 1;
+                                   ph_cnt = Convert.ToInt32(objDs_wasted.Tables[0].Rows[j]["wastecards"]);
+                       %>
+                                 <th align="center" class="b11" style="white-space: nowrap;" valign="middle"><%= Convert.ToString(objDs_wasted.Tables[0].Rows[j]["wastecards"])%></th>
+                                 <%}
+                               else
+                               {
+                                   
+                                   %>
+
+                                   <%-- <th align="center" scope="col" style="white-space: nowrap;" valign="middle">0</th>--%>
+                          <% }
+                           }
+                           if (flg == 0)
+                           {
+                            %>
+                            <th align="center" class="b11" style="white-space: nowrap;" valign="middle">0</th>
+                            <%} %>
+                            <%if (flg == 0)
+                              {
+                                   %>
+                                <th align="left" class="b11" style="white-space: nowrap;" valign="middle"><%=Convert.ToString(objDs.Tables[0].Rows[i]["Total"]) %> </th>  
+
+                                <%} %>
+
+
+                                <%if (flg == 1)
+                              {
+                                   %>
+                                <th align="left" class="b11" style="white-space: nowrap;" valign="middle"><%=Convert.ToInt32(objDs.Tables[0].Rows[i]["Total"])+ph_cnt %> </th>  
+
+                                <%} %>
+                       </tr>
+                       
+                       <%
+                       }
+                       %>     
+                        </table>
+                        <%}
+               }
+                          
+                %>                        <%--<div style=" height: 73px;" width="100px">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <rsweb:ReportViewer ID="ReportViewer1" runat="server" DocumentMapWidth="100%" Font-Names="Verdana" Font-Size="8pt" Height="100%" InteractiveDeviceInfos="(Collection)" ShowPrintButton="true" Width="100%">
+                                            <LocalReport ReportPath="Admin\Reports\RdlcReport1.rdlc">
+                                            </LocalReport>
+                                        </rsweb:ReportViewer>
+                                        <asp:GridView ID="GridView1" runat="server">     </asp:GridView>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>--%>
+
+                    <br />
+    
+                    </div>
+
+
+       
+      
+    <asp:HiddenField ID="HdnValue" runat="server" />
+
+       
+  </div>
+    
+    <div id="divmain" runat="server"> </div>
+    
+</asp:Content>
+

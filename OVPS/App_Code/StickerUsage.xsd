@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StickerUsage" targetNamespace="http://tempuri.org/StickerUsage.xsd" xmlns:mstns="http://tempuri.org/StickerUsage.xsd" xmlns="http://tempuri.org/StickerUsage.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="StickerUsage" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="StickerUsage" msprop:Generator_DataSetName="StickerUsage">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="StickerUsage" msprop:Generator_UserTableName="StickerUsage" msprop:Generator_RowDeletedName="StickerUsageRowDeleted" msprop:Generator_TableClassName="StickerUsageDataTable" msprop:Generator_RowChangedName="StickerUsageRowChanged" msprop:Generator_RowClassName="StickerUsageRow" msprop:Generator_RowChangingName="StickerUsageRowChanging" msprop:Generator_RowEvArgName="StickerUsageRowChangeEvent" msprop:Generator_RowEvHandlerName="StickerUsageRowChangeEventHandler" msprop:Generator_TablePropName="_StickerUsage" msprop:Generator_TableVarName="tableStickerUsage" msprop:Generator_RowDeletingName="StickerUsageRowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="StickerNumber" msprop:Generator_UserColumnName="StickerNumber" msprop:Generator_ColumnPropNameInRow="StickerNumber" msprop:Generator_ColumnVarNameInTable="columnStickerNumber" msprop:Generator_ColumnPropNameInTable="StickerNumberColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="ModifiedOn" msprop:Generator_UserColumnName="ModifiedOn" msprop:Generator_ColumnPropNameInRow="ModifiedOn" msprop:Generator_ColumnVarNameInTable="columnModifiedOn" msprop:Generator_ColumnPropNameInTable="ModifiedOnColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Name_of_User" msprop:Generator_UserColumnName="Name_of_User" msprop:Generator_ColumnPropNameInRow="Name_of_User" msprop:Generator_ColumnVarNameInTable="columnName_of_User" msprop:Generator_ColumnPropNameInTable="Name_of_UserColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Sticker_status" msprop:Generator_UserColumnName="Sticker_status" msprop:Generator_ColumnPropNameInRow="Sticker_status" msprop:Generator_ColumnVarNameInTable="columnSticker_status" msprop:Generator_ColumnPropNameInTable="Sticker_statusColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

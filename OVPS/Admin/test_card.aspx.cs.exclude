@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Net.NetworkInformation;
+using System.Threading;
+using System.Threading.Tasks;
+
+public partial class Admin_test_card : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+        new Thread(new ThreadStart(delegate
+        {
+          //  var d = new setLabelTextDelegate(setLabelText);
+            Label5.Invoke(d, new object[] { "string 1" });
+            Thread.Sleep(3000); // sleep 3 seconds
+            label1.Invoke(d, new object[] { "string 2" });
+            Thread.Sleep(5000); // sleep 5 seconds
+            label1.Invoke(d, new object[] { "string 3" });
+        })).Start();
+
+
+        PhysicalAddress mac = GetMacAddress();
+       // NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+        string IP = System.Web.HttpContext.Current.Request.UserHostAddress;
+
+      //  Response.Write("<script> alert('" + mac.GetAddressBytes().GetValue(0).ToString() + mac.GetAddressBytes().GetValue(1).ToString() + mac.GetAddressBytes().GetValue(2).ToString() + mac.GetAddressBytes().GetValue(3).ToString() + mac.GetAddressBytes().GetValue(4).ToString() + mac.GetAddressBytes().GetValue(5).ToString() + "')</script>");
+        Response.Write("<script> alert('" + IP + "')</script>");
+    }
+
+
+    public static PhysicalAddress GetMacAddress()
+    {
+        foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            // Only consider Ethernet network interfacess
+            if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+            {
+                return nic.GetPhysicalAddress();
+
+            }
+        }
+
+        return null;
+    }
+}

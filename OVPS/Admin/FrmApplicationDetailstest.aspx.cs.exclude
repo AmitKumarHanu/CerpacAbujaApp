@@ -1,0 +1,343 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Net.Mail;
+//using Microsoft.Reporting.WebForms;
+using System.Xml.Linq;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
+using DataAccessLayer;
+using System.Globalization;
+using System.Text;
+using System.Net;
+using System.Windows;
+using SHDocVw;
+using System.Drawing.Drawing2D;
+using System.Threading;
+public partial class FrmApplicationDetailstest : System.Web.UI.Page
+{
+    #region "Declarations"
+    //Session Holder  for Persisting Data Class Object intialization
+    BaseLayer.SessionHolderPersistingData objectSessionHolderPersistingData = null;
+    BusinessEntityLayer.BalApprovalReviewL1 ObjbalApporvalL1 = null;
+    protected BaseLayer.General_function ObjGenBal = null;
+    string AppID = "";
+    string FRNno = "";
+    //string drpdwn = "";
+    string LogoPath1 = "";
+    string UserID = null;
+    int Length = 0;
+    byte[] Content;
+
+    #endregion
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        objectSessionHolderPersistingData = (BaseLayer.SessionHolderPersistingData)HttpContext.Current.Session["SessionHolderPersistingData"];
+        if (objectSessionHolderPersistingData == null)
+        {
+            Response.Redirect("../Login.aspx");
+        }
+
+        if (Session["company_id"] != null)
+        {
+            if (Session["company_id"].ToString() != "")
+            {
+
+                txtcompid.Text = Session["company_id"].ToString();
+                Session["company_id"] = "";
+            }
+        }
+
+        if (Session["company_name"] != null)
+        {
+            if (Session["company_name"].ToString() != "")
+            {
+                txtcompname.Text = Session["company_name"].ToString();
+                txtcompname.ToolTip = Session["company_name"].ToString();
+                Session["company_name"] = "";
+            }
+        }
+
+        UserID = objectSessionHolderPersistingData.User_ID.ToString();
+        Label LabelMessage = (Label)this.Page.Master.FindControl("lblmsg");
+        string queryforzonename = "select b.ZoneName,b.ZoneCode from UserZoneRelation as a, Zonemaster as b where a.ZoneCode=b.ZoneCode and a.UserId=" + objectSessionHolderPersistingData.User_ID + "";
+        ObjGenBal = new BaseLayer.General_function();
+        DataTable dt = new DataTable();
+        try
+        {
+            dt = ObjGenBal.FetchData(queryforzonename);
+            if (dt.Rows.Count > 0)
+            {
+                LabelMessage.Text = "Zone" + " " + dt.Rows[0]["ZoneName"].ToString();
+                LabelMessage.Visible = true;
+                LabelMessage.BorderStyle = BorderStyle.None;
+                txtZoneCode.Text = dt.Rows[0]["ZoneName"].ToString() + "--" + dt.Rows[0]["ZoneCode"].ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            dt = null;
+            ObjGenBal = null;
+        }
+        if (string.IsNullOrEmpty(Request.QueryString["no"]) == false && Request.QueryString["no"] != "" && string.IsNullOrEmpty(Request.QueryString["fno"]) == false && Request.QueryString["fno"] != "")
+        {
+            AppID = Convert.ToString(Request.QueryString["no"]);
+            FRNno = Convert.ToString(Request.QueryString["fno"]);
+            //drpdwn = Convert.ToString(Request.QueryString["dpr"]);
+        }
+
+        // BtnPreviewRecord.Attributes.Add("onclick", "window.open('viewcc.aspx?AppID=" + AppID + "', 'newwindow','toolbar=yes,location=no,menubar=no,width=770,height=650,resizable=no,scrollbars=yes,top=50,left=250');");
+        // btnAppHistory.Attributes.Add("onclick", "window.open('viewAppHistory.aspx?AppID=" + AppID + "', 'newwindow','toolbar=no,location=no,menubar=no,width=775,height=750,fullscreen=no,resizable=no,scrollbars=no,top=50');");
+        if (FRNno.ToString().Substring(0, 2) == "AR")
+        {
+            bnkdata.Style.Add("display", "none");
+            bnkfname.Style.Add("display", "none");
+            bnklname.Style.Add("display", "none");
+            bnkmname.Style.Add("display", "none");
+            bnknationality.Style.Add("display", "none");
+        }
+        if (!IsPostBack)
+        {
+            
+            ViewState["imagepath"] = null;
+            if (string.IsNullOrEmpty(Request.QueryString["no"]) == false && Request.QueryString["no"] != "" && string.IsNullOrEmpty(Request.QueryString["fno"]) == false && Request.QueryString["fno"] != "")
+            {
+                GetData(AppID);
+                // GetComments(AppID);
+
+                A1.HRef = "javascript:NewCal('" + TxtDateOfIssue.ClientID + "','DDMMMYYYY','','',20,1)";
+                doe.HRef = "javascript:NewCal('" + txtdoe.ClientID + "','DDMMMYYYY','','',1,10)";
+                A2.HRef = "javascript:NewCal('" + TxtIssueDate.ClientID + "','DDMMMYYYY','','',5,5)";
+                A3.HRef = "javascript:NewCal('" + TxtExpDate.ClientID + "','DDMMMYYYY','','',5,5)";
+                A4.HRef = "javascript:NewCal('" + TxtDob.ClientID + "','DDMMMYYYY','','',78,1)";
+                A5.HRef = "javascript:NewCal('" + txtdtemploymnt.ClientID + "','DDMMMYYYY','','',53,1)";
+                binddrpdwn();
+            }
+
+
+            //  string CountryQuery = "Select Rejection_Description, Rejection_Code from rejection where Status= 'A' ";
+            //ObjGenBal = new BaseLayer.General_function();
+            // ObjGenBal.Fill_DDL(ddlRejection, CountryQuery, "Rejection_Description", "Rejection_Code");
+
+            //  ShowHideButtons(AppID);
+        }
+    }
+    protected void binddrpdwn()
+    {
+        ObjGenBal = new BaseLayer.General_function();
+       
+        string queryfortitle = "Select * from TitleMaster";
+        ObjGenBal.Fill_DDL(drptitle, queryfortitle, "Title", "TitleCode");
+
+        string queryfornationality = "Select * from NationalityMaster";
+        ObjGenBal.Fill_DDL(TxtNationality, queryfornationality, "adjective", "adjective");
+    }
+
+    private void GetData(string ApplicationId)
+    {
+        //----------------------------------------------------------------- data from db------------------------------------------------------
+
+        Session["CerpaxNo"] = AppID.ToString().Trim();
+        if (AppID.Substring(0, 2) == "AO")
+        {
+            lbl_comp_rc.Visible = true;
+            txtcompid.Visible = true;
+        }
+        else
+        {
+            lbl_comp_rc.Visible = false;
+            txtcompid.Visible = false;
+        }
+
+        DataTable Dt = null;
+        Dt = new DataTable();
+        DataTable dtcomp = null;
+        dtcomp = new DataTable();
+        ObjGenBal = new BaseLayer.General_function();
+        string queryforcerpac = "select * from People where cerpac_no='" + ApplicationId.ToString() + "'";
+        Dt = ObjGenBal.FetchData(queryforcerpac);
+        if (Dt.Rows.Count > 0)
+        {
+            byte[] picData = Dt.Rows[0]["userimage"] as byte[] ?? null;
+            System.Drawing.Image newImage;
+
+            if (picData != null)
+            {
+                using (MemoryStream ms = new MemoryStream(picData))
+                {
+                    // Load the image from the memory stream. How you do it depends
+                    // on whether you're using Windows Forms or WPF.
+                    // For Windows Forms you could write:
+                    // System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(ms);
+
+                    newImage = System.Drawing.Image.FromStream(ms);
+
+                    if (!File.Exists(Server.MapPath("~") + "/Images/Logo/" + Dt.Rows[0]["picture"].ToString().Trim()))
+                        newImage.Save(Server.MapPath("~") + "/Images/Logo/" + Dt.Rows[0]["picture"].ToString().Trim());
+                    // newImage.Save("g:/Saurabh" + Dt.Rows[0]["picture"].ToString().Trim());
+
+                }
+            }
+
+
+            ViewState["imagepath"] = Dt.Rows[0]["picture"].ToString().Trim();
+            if (ViewState["imagepath"] != null || ViewState["imagepath"] != "")
+            {
+                  if (File.Exists(Server.MapPath("~") + "/Images/Logo/" + Dt.Rows[0]["picture"].ToString().Trim()))
+                    ImgPhoto.ImageUrl = "~/Images/Logo/" + Dt.Rows[0]["picture"].ToString().Trim();
+
+                else
+                    ImgPhoto.ImageUrl = "~/Images/Logo/default_logo.gif";
+            }
+
+            else
+            {
+                ImgPhoto.ImageUrl = "~/Images/Logo/default_logo.gif";
+
+            }
+
+
+
+
+            TxtPassportNo.Text = Dt.Rows[0]["passport_no"].ToString().Trim();
+            TxtPassportType.Text = Dt.Rows[0]["passport_issue_by"].ToString().Trim();
+            TxtDateOfIssue.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["passport_issue_date"]).ToString().Trim();
+            txtdoe.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["passport_expiry_date"]).ToString().Trim();
+            TxtPlaceOfIssue.Text = Dt.Rows[0]["passport_issue_loc"].ToString().Trim();
+            TxtFirstName.Text = Dt.Rows[0]["forename"].ToString().Trim();
+            TxtMiddleName.Text = Dt.Rows[0]["middle_name"].ToString().Trim();
+            TxtLastName.Text = Dt.Rows[0]["surname"].ToString().Trim();
+            txtcompid.Text = Dt.Rows[0]["company"].ToString().Trim();
+            TxtNationality.Text = Dt.Rows[0]["nationality"].ToString().Trim();
+            //--------------------------------------fetching company name from comp master-------------------------------
+            string queryforcomp = "";
+            if (AppID.Substring(0, 2) == "AO")
+            {
+                queryforcomp = "Select regno,company from compmaster where regno = '" + Dt.Rows[0]["company"].ToString().Trim() + "'";
+            }
+            else
+            {
+                queryforcomp = "Select regno,company from CompMasterForARCR where regno = '" + Dt.Rows[0]["company"].ToString().Trim() + "'";
+            }
+
+
+
+            //  string queryforcomp = "Select company from compmaster where regno='" + Dt.Rows[0]["company"].ToString().Trim() + "'";
+            ObjGenBal = new BaseLayer.General_function();
+            dtcomp = ObjGenBal.FetchData(queryforcomp);
+            if (dtcomp.Rows.Count > 0)
+            {
+                txtcompname.Text = dtcomp.Rows[0]["company"].ToString().Trim();
+                txtcompname.ToolTip = dtcomp.Rows[0]["company"].ToString().Trim();
+
+            }
+            else
+            {
+                txtcompid.Text = "";
+                txtcompname.Text = "";
+            }
+            //-----------------------------------------------------------------end----------------------------------------
+
+            txtcompadd1.Text = Dt.Rows[0]["company_add_1"].ToString().Trim();
+            txtcompadd2.Text = Dt.Rows[0]["company_add_2"].ToString().Trim();
+            txtdesig.Text = Dt.Rows[0]["designation"].ToString().Trim();
+            txtphno.Text = Dt.Rows[0]["company_tel_no"].ToString().Trim();
+            txtfaxno.Text = Dt.Rows[0]["company_fax_no"].ToString().Trim();
+            txtfileno.Text = FRNno.ToString();
+            txtemailprsn.Text = Dt.Rows[0]["Email"].ToString().Trim();
+            txtcntcnoprsn.Text = Dt.Rows[0]["ContactNo"].ToString().Trim();
+            radsex.SelectedValue = Dt.Rows[0]["sex"].ToString().Trim();
+            TxtCerpacNo.Text = Dt.Rows[0]["cerpac_no"].ToString().Trim();
+            TxtFirstNamedb.Text = Dt.Rows[0]["forename"].ToString().Trim(); ;
+            TxtLastNamedb.Text = Dt.Rows[0]["surname"].ToString().Trim();
+            TxtNationalitydb.Text = Dt.Rows[0]["nationality"].ToString().Trim();
+            //---------------------------------------------new changes---------------------------------------------
+            drptitle.SelectedValue = Dt.Rows[0]["title"].ToString().Trim();
+            txtpob.Text = Dt.Rows[0]["place_of_birth"].ToString().Trim();
+            txtdtemploymnt.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["employment_date"]).ToString().Trim();
+            TxtDob.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["date_of_birth"]).ToString().Trim();
+            txtaddrnigeria1.Text = Dt.Rows[0]["nigeria_add_1"].ToString().Trim();
+            txtaddrnigeria2.Text = Dt.Rows[0]["nigeria_add_2"].ToString().Trim();
+            txtaddrabroad1.Text = Dt.Rows[0]["abroad_add_1"].ToString().Trim();
+            txtaddrabroad2.Text = Dt.Rows[0]["abroad_add_2"].ToString().Trim();
+            //------------------------------------------------end--------------------------------------------------
+            if (Dt.Rows[0]["cerpac_receipt_date"].ToString().Trim() != null || Dt.Rows[0]["cerpac_receipt_date"].ToString().Trim() != "")
+            {
+                TxtIssueDate.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["cerpac_receipt_date"]).ToString().Trim();
+                TxtExpDate.Text = string.Format("{0:d-MM-yyyy}", Dt.Rows[0]["cerpac_expiry_date"]).ToString().Trim();
+            }
+            else
+            {
+                TxtIssueDate.Text = "-----";
+                TxtExpDate.Text = "-----";
+            }
+        }
+        else
+        {
+            detailtable.Style.Add("display", "none");
+            warn.Style.Add("display", "");
+        }
+        //---------------------------------------------------------end----------------------------------------------------------------------
+        //----------------------------------------------------------for generating documents-------------------------------------
+        string cerpactype = FRNno.ToString().Trim().Substring(0, 2);
+       // getdocuments(cerpactype);
+        //------------------------------------------------------------------end--------------------------------------------------
+        //----------------------------------------------------data from bank--------------------------------------------
+        DataTable dtbnk = new DataTable();
+        string queryforbank = "select * from Uploaded_Excel_Data where FORMNO='" + FRNno.ToString().Trim() + "'";
+        dtbnk = ObjGenBal.FetchData(queryforbank);
+        if (dtbnk.Rows.Count > 0)
+        {
+
+            txtfnamebank.Text = dtbnk.Rows[0]["FirstName"].ToString().Trim();
+            TxtLastNamebank.Text = dtbnk.Rows[0]["LastName"].ToString().Trim();
+            TxtNationalitybank.Text = dtbnk.Rows[0]["NATIONALITY"].ToString().Trim();
+        }
+        //---------------------------------------------------- end -----------------------------------------------------
+        //===================================================MRZ Data Fetch====================================================================
+        DataTable dtmrz = new DataTable();
+        string querymrz = "select * from MRZData where CerpacNo='" + TxtCerpacNo.Text.ToString().Trim() + "'";
+        dtmrz = ObjGenBal.FetchData(querymrz);
+        if (dtmrz.Rows.Count > 0)
+        {
+            TxtFirstNamemrz.Text = dtmrz.Rows[0]["MrzFirstName"].ToString().Trim();
+            TxtLastNamemrz.Text = dtmrz.Rows[0]["MrzLastName"].ToString().Trim();
+            TxtNationalitymrz.Text = dtmrz.Rows[0]["Nationality"].ToString().Trim();
+        }
+
+        //=====================================================end=============================================================================
+
+
+        /******************************* Start Code to fetch max exp date ************************************************/
+
+        DataTable dt_exp_date = new DataTable();
+        string query_exp = "select MAX(cerpac_expiry_date) as cerpac_expiry_date from PeopleChild  where CerpacNo='" + TxtCerpacNo.Text + "' ";
+        dt_exp_date = ObjGenBal.FetchData(query_exp);
+        //txt_max_exp_date.Text = string.Format("{0:d-MM-yyyy}", dt_exp_date.Rows[0]["cerpac_expiry_date"]).ToString().Trim();
+        //
+        /******************************* End Code to fetch max exp date ************************************************/
+
+
+    }
+    protected void btnAppliHist_Click(object sender, EventArgs e)
+    {
+        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Onclick", "<script>window.open('viewAppliHist.aspx?AppID=" + TxtCerpacNo.Text.ToString() + "','PaperVisa','menubar=no,status=yes,Width=1400,Height=1020,top=50,left=5,scrollbar=yes');</script>");
+    }
+}
